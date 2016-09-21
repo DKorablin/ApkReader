@@ -9,7 +9,7 @@ namespace Demo
 {
 	class Program
 	{
-		private const String FilePath = @"C:\Visual Studio Projects\C#\Shared.Classes\AlphaOmega.Debug\FileReader\DexReader\Demo\classes.dex";
+		private const String FilePath = @"C:\Visual Studio Projects\C#\Shared.Classes\AlphaOmega.Debug\FileReader\classes.dex";
 
 		static void Main(string[] args)
 		{
