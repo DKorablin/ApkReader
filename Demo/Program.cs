@@ -42,36 +42,38 @@ namespace Demo
 
 		static void ReadApk(String filePath)
 		{
-			ApkFile apk = new ApkFile(filePath);
-			Console.WriteLine("Package: {0}", apk.AndroidManifest.Package);
-			Console.WriteLine("Application name: {0} ({1})", apk.AndroidManifest.Application.Label, apk.AndroidManifest.VersionName);
+			using(ApkFile apk = new ApkFile(filePath))
+			{
+				Console.WriteLine("Package: {0}", apk.AndroidManifest.Package);
+				Console.WriteLine("Application name: {0} ({1})", apk.AndroidManifest.Application.Label, apk.AndroidManifest.VersionName);
 
-			foreach(String xmlFile in apk.GetHeaderFiles())
-				switch(Path.GetExtension(xmlFile).ToLowerInvariant())
-				{
-				case ".xml":
-					/*if(xmlFile.Equals("AndroidManifest.xml", StringComparison.OrdinalIgnoreCase))
-						continue;*/
-
-					Byte[] file = apk.GetFile(xmlFile);
-					//ManifestFile manifest = new ManifestFile(file);
-					//Console.WriteLine(manifest.Xml.ConvertToString());
-
-					AxmlFile axml = new AxmlFile(StreamLoader.FromMemory(file, xmlFile));
-					if(axml.Header.IsValid)
+				foreach(String xmlFile in apk.GetHeaderFiles())
+					switch(Path.GetExtension(xmlFile).ToLowerInvariant())
 					{
-						XmlNode xml = axml.RootNode;
-						Console.WriteLine("---"+xmlFile+":");
-						Console.WriteLine(xml.ConvertToString());
-					}else
-					{
-						Console.WriteLine("---" + xmlFile + ":");
-						Console.WriteLine(System.Text.Encoding.UTF8.GetString(file));
+					case ".xml":
+						/*if(xmlFile.Equals("AndroidManifest.xml", StringComparison.OrdinalIgnoreCase))
+							continue;*/
+
+						Byte[] file = apk.GetFile(xmlFile);
+						//ManifestFile manifest = new ManifestFile(file);
+						//Console.WriteLine(manifest.Xml.ConvertToString());
+
+						AxmlFile axml = new AxmlFile(StreamLoader.FromMemory(file, xmlFile));
+						if(axml.Header.IsValid)
+						{
+							XmlNode xml = axml.RootNode;
+							Console.WriteLine("---" + xmlFile + ":");
+							Console.WriteLine(xml.ConvertToString());
+						} else
+						{
+							Console.WriteLine("---" + xmlFile + ":");
+							Console.WriteLine(System.Text.Encoding.UTF8.GetString(file));
+						}
+						break;
 					}
-					break;
-				}
 
-			ReadApkManifestRecursive(apk.AndroidManifest);
+				ReadApkManifestRecursive(apk.AndroidManifest);
+			}
 		}
 
 		static void ReadManifest(String filePath)
