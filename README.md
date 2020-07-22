@@ -1,4 +1,4 @@
-ApkReader assembly
+Apk reader
 ===============
 
 Android package file reader assembly. Can read apk files (http://icsharpcode.github.io/SharpZipLib/), android xml files (AndroidManifes.xml, *.xml), Dalvik executable format (dex), android resource files (arsc).
