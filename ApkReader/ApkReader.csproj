@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A8E7CD9B-ABDE-4F5A-880F-29D06414FF3D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AlphaOmega.Debug</RootNamespace>
+    <AssemblyName>ApkReader</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\bin\ApkReader.xml</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\..\..\..\AlphaOmega %28NoPwd%29.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>.\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\ImageData\IBaseRow.cs">
+      <Link>Data\Interface\IBaseRow.cs</Link>
+    </Compile>
+    <Compile Include="..\..\ImageData\ICell.cs">
+      <Link>Data\Interface\ICell.cs</Link>
+    </Compile>
+    <Compile Include="..\..\ImageData\IColumn.cs">
+      <Link>Data\Interface\IColumn.cs</Link>
+    </Compile>
+    <Compile Include="..\..\ImageData\IRow.cs">
+      <Link>Data\Interface\IRow.cs</Link>
+    </Compile>
+    <Compile Include="..\..\ImageData\IRowPointer.cs">
+      <Link>Data\Interface\IRowPointer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\ImageData\ITable.cs">
+      <Link>Data\Interface\ITable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\ImageData\ITables.cs">
+      <Link>Data\Interface\ITables.cs</Link>
+    </Compile>
+    <Compile Include="..\..\ImageLoader\BinaryEndianReader.cs">
+      <Link>ImageLoader\BinaryEndianReader.cs</Link>
+    </Compile>
+    <Compile Include="..\..\ImageLoader\EndianHelper.cs">
+      <Link>ImageLoader\EndianHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\ImageLoader\IImageLoader.cs">
+      <Link>ImageLoader\IImageLoader.cs</Link>
+    </Compile>
+    <Compile Include="..\..\ImageLoader\LookupLoader.cs">
+      <Link>ImageLoader\LookupLoader.cs</Link>
+    </Compile>
+    <Compile Include="..\..\ImageLoader\StreamLoader.cs">
+      <Link>ImageLoader\StreamLoader.cs</Link>
+    </Compile>
+    <Compile Include="ArscApi.cs" />
+    <Compile Include="Arsc\ResourcePackage.cs" />
+    <Compile Include="Arsc\ResourceRow.cs" />
+    <Compile Include="Arsc\ResourceType.cs" />
+    <Compile Include="Arsc\ResourceTypeEntryComplex.cs" />
+    <Compile Include="Arsc\ResourceTypeEntry.cs" />
+    <Compile Include="Arsc\ResourceTypeEntrySimple.cs" />
+    <Compile Include="Arsc\StringPool.cs" />
+    <Compile Include="Arsc\TypeSpec.cs" />
+    <Compile Include="AxmlApi.cs" />
+    <Compile Include="AxmlFile.cs" />
+    <Compile Include="Axml\AxmlChunk.cs" />
+    <Compile Include="Dex\Constant.cs" />
+    <Compile Include="Dex\BaseRow.cs" />
+    <Compile Include="Dex\BaseTable.cs" />
+    <Compile Include="Dex\Cell.cs" />
+    <Compile Include="Dex\Column.cs" />
+    <Compile Include="Dex\ColumnType.cs" />
+    <Compile Include="Dex\Row.cs" />
+    <Compile Include="Dex\RowReference.cs" />
+    <Compile Include="Dex\Table.cs" />
+    <Compile Include="Dex\TableAnnotationDirectory.cs" />
+    <Compile Include="Dex\TableCode.cs" />
+    <Compile Include="Dex\TableEncodedCatchHandler.cs" />
+    <Compile Include="Dex\TableString.cs" />
+    <Compile Include="Dex\Tables\annotation_directory_row.cs" />
+    <Compile Include="Dex\Tables\annotation_set_ref_row.cs" />
+    <Compile Include="Dex\Tables\annotation_set_row.cs" />
+    <Compile Include="Dex\Tables\class_data_row.cs" />
+    <Compile Include="Dex\Tables\class_def_row.cs" />
+    <Compile Include="Dex\Tables\code_row.cs" />
+    <Compile Include="Dex\Tables\encoded_catch_handler_row.cs" />
+    <Compile Include="Dex\Tables\encoded_field_row.cs" />
+    <Compile Include="Dex\Tables\encoded_method_row.cs" />
+    <Compile Include="Dex\Tables\encoded_type_addr_pair_row.cs" />
+    <Compile Include="Dex\Tables\field_annotation_row.cs" />
+    <Compile Include="Dex\Tables\field_id_row.cs" />
+    <Compile Include="Dex\Tables\method_annotation_row.cs" />
+    <Compile Include="Dex\Tables\method_id_row.cs" />
+    <Compile Include="Dex\Tables\parameter_annotation_row.cs" />
+    <Compile Include="Dex\Tables\proto_id_row.cs" />
+    <Compile Include="Dex\Tables\string_data_row.cs" />
+    <Compile Include="Dex\Tables\string_id_row.cs" />
+    <Compile Include="Dex\Tables\try_item_row.cs" />
+    <Compile Include="Dex\Tables\type_id_row.cs" />
+    <Compile Include="Dex\Tables\type_list_row.cs" />
+    <Compile Include="Dex\TableType.cs" />
+    <Compile Include="DexApi.cs" />
+    <Compile Include="DexFile.cs" />
+    <Compile Include="Manifest\ApkAction.cs" />
+    <Compile Include="Manifest\ApkActivity.cs" />
+    <Compile Include="Manifest\ApkActivityAlias.cs" />
+    <Compile Include="Manifest\ApkApplication.cs" />
+    <Compile Include="Manifest\ApkCategory.cs" />
+    <Compile Include="Manifest\ApkData.cs" />
+    <Compile Include="Manifest\ApkGrantUriPermission.cs" />
+    <Compile Include="Manifest\ApkIntentFilter.cs" />
+    <Compile Include="Manifest\AndroidManifest.cs" />
+    <Compile Include="Manifest\ApkMetaData.cs" />
+    <Compile Include="Manifest\ApkNode.cs" />
+    <Compile Include="Manifest\ApkNodeT.cs" />
+    <Compile Include="Manifest\ApkPathPermission.cs" />
+    <Compile Include="Manifest\ApkPermission.cs" />
+    <Compile Include="Manifest\ApkPermissionGroup.cs" />
+    <Compile Include="Manifest\ApkPermissionTree.cs" />
+    <Compile Include="Manifest\ApkProvider.cs" />
+    <Compile Include="Manifest\ApkReceiver.cs" />
+    <Compile Include="Manifest\ApkService.cs" />
+    <Compile Include="Manifest\ApkSupportsGlTexture.cs" />
+    <Compile Include="Manifest\ApkSupportsScreen.cs" />
+    <Compile Include="Manifest\ApkUsesConfiguration.cs" />
+    <Compile Include="Manifest\ApkUsesLibrary.cs" />
+    <Compile Include="Manifest\ApkUsesPermission.cs" />
+    <Compile Include="Manifest\ApkUsesFeature.cs" />
+    <Compile Include="Manifest\ApkUsesPermissionSdk23.cs" />
+    <Compile Include="Manifest\IApkIntentedNode.cs" />
+    <Compile Include="XmlNode.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Dex\TableClass.cs" />
+    <Compile Include="ArscFile.cs" />
+    <Compile Include="ApkFile.cs" />
+    <Compile Include="Resources.cs" />
+    <Compile Include="Utils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\AlphaOmega %28NoPwd%29.snk">
+      <Link>AlphaOmega %28NoPwd%29.snk</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Features.resx" />
+    <EmbeddedResource Include="Intent.resx" />
+    <EmbeddedResource Include="Permission.resx" />
+    <EmbeddedResource Include="PermissionGroup.resx" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>if $(ConfigurationName) == Release (
+..\..\..\..\..\..\ILMerge.exe  "/out:$(ProjectDir)..\..\bin\$(TargetFileName)" "$(TargetPath)" "$(TargetDir)ICSharpCode.SharpZipLib.dll"
+)</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -36,5 +36,14 @@ namespace Demo
 
 			return result.ToString();
 		}
+
+		public static Boolean IsGenericType(Type type, Type genericType)
+		{
+			if(type.IsGenericType)
+			{
+				Type genericDef = type.GetGenericTypeDefinition();
+				return genericDef == genericType;
+			} else return false;
+		}
 	}
 }

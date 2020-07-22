@@ -1,0 +1,938 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="android.permission.ACCEPT_HANDOVER" xml:space="preserve">
+    <value>Allows a calling app to continue a call which was started in another app. An example is a video calling app that wants to continue a voice call on the user's mobile network.
+
+When the handover of a call from one app to another takes place, there are two devices which are involved in the handover; the initiating and receiving devices. The initiating device is where the request to handover the call was started, and the receiving device is where the handover request is confirmed by the other party.
+
+Protection level: dangerous</value>
+  </data>
+  <data name="android.permission.ACCESS_BACKGROUND_LOCATION" xml:space="preserve">
+    <value>Allows an app to access location in the background. If you're requesting this permission, you must also request either ACCESS_COARSE_LOCATION or ACCESS_FINE_LOCATION. Requesting this permission by itself doesn't give you location access.
+
+Protection level: dangerous</value>
+  </data>
+  <data name="android.permission.ACCESS_CALL_AUDIO" xml:space="preserve">
+    <value>Allows an application assigned to the Dialer role to be granted access to the telephony call audio streams, both TX and RX.
+
+Protection level: signature|appop</value>
+  </data>
+  <data name="android.permission.ACCESS_CHECKIN_PROPERTIES" xml:space="preserve">
+    <value>Allows read/write access to the "properties" table in the checkin database, to change values that get uploaded.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.ACCESS_COARSE_LOCATION" xml:space="preserve">
+    <value>Allows an app to access approximate location. Alternatively, you might want ACCESS_FINE_LOCATION.
+
+Protection level: dangerous</value>
+  </data>
+  <data name="android.permission.ACCESS_FINE_LOCATION" xml:space="preserve">
+    <value>Allows an app to access precise location. Alternatively, you might want ACCESS_COARSE_LOCATION.
+
+Protection level: dangerous</value>
+  </data>
+  <data name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" xml:space="preserve">
+    <value>Allows an application to access extra location provider commands.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.ACCESS_MEDIA_LOCATION" xml:space="preserve">
+    <value>Allows an application to access any geographic locations persisted in the user's shared collection.
+
+Protection level: dangerous</value>
+  </data>
+  <data name="android.permission.ACCESS_NETWORK_STATE" xml:space="preserve">
+    <value>Allows applications to access information about networks.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.ACCESS_NOTIFICATION_POLICY" xml:space="preserve">
+    <value>Marker permission for applications that wish to access notification policy. This permission is not supported on managed profiles.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.ACCESS_WIFI_STATE" xml:space="preserve">
+    <value>Allows applications to access information about Wi-Fi networks.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.ACCOUNT_MANAGER" xml:space="preserve">
+    <value>Allows applications to call into AccountAuthenticators.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.ACTIVITY_RECOGNITION" xml:space="preserve">
+    <value>Allows an application to recognize physical activity.
+
+Protection level: dangerous</value>
+  </data>
+  <data name="android.permission.ANSWER_PHONE_CALLS" xml:space="preserve">
+    <value>Allows the app to answer an incoming phone call.
+
+Protection level: dangerous</value>
+  </data>
+  <data name="android.permission.AUTHENTICATE_ACCOUNTS" xml:space="preserve">
+    <value>create accounts and set passwords
+    Allows the app to use the account authenticator capabilities of the AccountManager, including creating accounts and getting and setting their passwords.</value>
+  </data>
+  <data name="android.permission.BATTERY_STATS" xml:space="preserve">
+    <value>Allows an application to collect battery statistics.
+
+Protection level: signature | privileged | development</value>
+  </data>
+  <data name="android.permission.BIND_ACCESSIBILITY_SERVICE" xml:space="preserve">
+    <value>Must be required by an AccessibilityService, to ensure that only the system can bind to it.
+
+Protection level: signature</value>
+  </data>
+  <data name="android.permission.BIND_APPWIDGET" xml:space="preserve">
+    <value>Allows an application to tell the AppWidget service which application can access AppWidget's data. The normal user flow is that a user picks an AppWidget to go into a particular host, thereby giving that host application access to the private data from the AppWidget app. An application that has this permission should honor that contract.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.BIND_AUTOFILL_SERVICE" xml:space="preserve">
+    <value>Must be required by a AutofillService, to ensure that only the system can bind to it.
+
+Protection level: signature</value>
+  </data>
+  <data name="android.permission.BIND_CALL_REDIRECTION_SERVICE" xml:space="preserve">
+    <value>Must be required by a CallRedirectionService, to ensure that only the system can bind to it.
+
+Protection level: signature | privileged</value>
+  </data>
+  <data name="android.permission.BIND_CARRIER_MESSAGING_CLIENT_SERVICE" xml:space="preserve">
+    <value>A subclass of CarrierMessagingClientService must be protected with this permission.
+
+Protection level: signature</value>
+  </data>
+  <data name="android.permission.BIND_CARRIER_SERVICES" xml:space="preserve">
+    <value>The system process that is allowed to bind to services in carrier apps will have this permission. Carrier apps should use this permission to protect their services that only the system is allowed to bind to.
+
+Protection level: signature | privileged</value>
+  </data>
+  <data name="android.permission.BIND_CONDITION_PROVIDER_SERVICE" xml:space="preserve">
+    <value>Must be required by a ConditionProviderService, to ensure that only the system can bind to it.
+
+Protection level: signature</value>
+  </data>
+  <data name="android.permission.BIND_CONTROLS" xml:space="preserve">
+    <value>Allows SystemUI to request third party controls.
+
+Should only be requested by the System and required by ControlsProviderService declarations.</value>
+  </data>
+  <data name="android.permission.BIND_DEVICE_ADMIN" xml:space="preserve">
+    <value>Must be required by device administration receiver, to ensure that only the system can interact with it.
+
+Protection level: signature</value>
+  </data>
+  <data name="android.permission.BIND_DREAM_SERVICE" xml:space="preserve">
+    <value>Must be required by an DreamService, to ensure that only the system can bind to it.
+
+Protection level: signature</value>
+  </data>
+  <data name="android.permission.BIND_INCALL_SERVICE" xml:space="preserve">
+    <value>Must be required by a InCallService, to ensure that only the system can bind to it.
+
+Protection level: signature | privileged</value>
+  </data>
+  <data name="android.permission.BIND_INPUT_METHOD" xml:space="preserve">
+    <value>Must be required by an InputMethodService, to ensure that only the system can bind to it.
+
+Protection level: signature</value>
+  </data>
+  <data name="android.permission.BIND_MIDI_DEVICE_SERVICE" xml:space="preserve">
+    <value>Must be required by an MidiDeviceService, to ensure that only the system can bind to it.
+
+Protection level: signature</value>
+  </data>
+  <data name="android.permission.BIND_NFC_SERVICE" xml:space="preserve">
+    <value>Must be required by a HostApduService or OffHostApduService to ensure that only the system can bind to it.
+
+Protection level: signature</value>
+  </data>
+  <data name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" xml:space="preserve">
+    <value>Must be required by an NotificationListenerService, to ensure that only the system can bind to it.
+
+Protection level: signature</value>
+  </data>
+  <data name="android.permission.BIND_PRINT_SERVICE" xml:space="preserve">
+    <value>Must be required by a PrintService, to ensure that only the system can bind to it.
+
+Protection level: signature</value>
+  </data>
+  <data name="android.permission.BIND_QUICK_ACCESS_WALLET_SERVICE" xml:space="preserve">
+    <value>Must be required by a QuickAccessWalletService to ensure that only the system can bind to it.
+
+Protection level: signature</value>
+  </data>
+  <data name="android.permission.BIND_QUICK_SETTINGS_TILE" xml:space="preserve">
+    <value>Allows an application to bind to third party quick settings tiles.
+
+Should only be requested by the System, should be required by TileService declarations.</value>
+  </data>
+  <data name="android.permission.BIND_REMOTEVIEWS" xml:space="preserve">
+    <value>Must be required by a RemoteViewsService, to ensure that only the system can bind to it.
+
+Protection level: signature | privileged</value>
+  </data>
+  <data name="android.permission.BIND_SCREENING_SERVICE" xml:space="preserve">
+    <value>Must be required by a CallScreeningService, to ensure that only the system can bind to it.
+
+Protection level: signature | privileged</value>
+  </data>
+  <data name="android.permission.BIND_TELECOM_CONNECTION_SERVICE" xml:space="preserve">
+    <value>Must be required by a ConnectionService, to ensure that only the system can bind to it.
+
+Protection level: signature | privileged</value>
+  </data>
+  <data name="android.permission.BIND_TEXT_SERVICE" xml:space="preserve">
+    <value>Must be required by a TextService (e.g. SpellCheckerService) to ensure that only the system can bind to it.
+
+Protection level: signature</value>
+  </data>
+  <data name="android.permission.BIND_TV_INPUT" xml:space="preserve">
+    <value>Must be required by a TvInputService to ensure that only the system can bind to it.
+
+Protection level: signature | privileged</value>
+  </data>
+  <data name="android.permission.BIND_VISUAL_VOICEMAIL_SERVICE" xml:space="preserve">
+    <value>Must be required by a link VisualVoicemailService to ensure that only the system can bind to it.
+
+Protection level: signature | privileged</value>
+  </data>
+  <data name="android.permission.BIND_VOICE_INTERACTION" xml:space="preserve">
+    <value>Must be required by a VoiceInteractionService, to ensure that only the system can bind to it.
+
+Protection level: signature</value>
+  </data>
+  <data name="android.permission.BIND_VPN_SERVICE" xml:space="preserve">
+    <value>Must be required by a VpnService, to ensure that only the system can bind to it.
+
+Protection level: signature</value>
+  </data>
+  <data name="android.permission.BIND_VR_LISTENER_SERVICE" xml:space="preserve">
+    <value>Must be required by an VrListenerService, to ensure that only the system can bind to it.
+
+Protection level: signature</value>
+  </data>
+  <data name="android.permission.BIND_WALLPAPER" xml:space="preserve">
+    <value>Must be required by a WallpaperService, to ensure that only the system can bind to it.
+
+Protection level: signature | privileged</value>
+  </data>
+  <data name="android.permission.BLUETOOTH" xml:space="preserve">
+    <value>Allows applications to connect to paired bluetooth devices.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.BLUETOOTH_ADMIN" xml:space="preserve">
+    <value>Allows applications to discover and pair bluetooth devices.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.BLUETOOTH_PRIVILEGED" xml:space="preserve">
+    <value>Allows applications to pair bluetooth devices without user interaction, and to allow or disallow phonebook access or message access.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.BODY_SENSORS" xml:space="preserve">
+    <value>Allows an application to access data from sensors that the user uses to measure what is happening inside his/her body, such as heart rate.
+
+Protection level: dangerous</value>
+  </data>
+  <data name="android.permission.BROADCAST_PACKAGE_REMOVED" xml:space="preserve">
+    <value>Allows an application to broadcast a notification that an application package has been removed.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.BROADCAST_SMS" xml:space="preserve">
+    <value>Allows an application to broadcast an SMS receipt notification.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.BROADCAST_STICKY" xml:space="preserve">
+    <value>Allows an application to broadcast sticky intents. These are broadcasts whose data is held by the system after being finished, so that clients can quickly retrieve that data without having to wait for the next broadcast.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.BROADCAST_WAP_PUSH" xml:space="preserve">
+    <value>Allows an application to broadcast a WAP PUSH receipt notification.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.CALL_COMPANION_APP" xml:space="preserve">
+    <value>Allows an app which implements the InCallService API to be eligible to be enabled as a calling companion app. This means that the Telecom framework will bind to the app's InCallService implementation when there are calls active. The app can use the InCallService API to view information about calls on the system and control these calls.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.CALL_PHONE" xml:space="preserve">
+    <value>Allows an application to initiate a phone call without going through the Dialer user interface for the user to confirm the call.
+
+Protection level: dangerous</value>
+  </data>
+  <data name="android.permission.CALL_PRIVILEGED" xml:space="preserve">
+    <value>Allows an application to call any phone number, including emergency numbers, without going through the Dialer user interface for the user to confirm the call being placed.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.CAMERA" xml:space="preserve">
+    <value>Required to be able to access the camera device.
+
+This will automatically enforce the uses-feature manifest element for all camera features. If you do not require all camera features or can properly operate if a camera is not available, then you must modify your manifest as appropriate in order to install on devices that don't support all camera features.
+
+Protection level: dangerous</value>
+  </data>
+  <data name="android.permission.CAPTURE_AUDIO_OUTPUT" xml:space="preserve">
+    <value>Allows an application to capture audio output. Use the CAPTURE_MEDIA_OUTPUT permission if only the USAGE_UNKNOWN), USAGE_MEDIA) or USAGE_GAME) usages are intended to be captured.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.CHANGE_COMPONENT_ENABLED_STATE" xml:space="preserve">
+    <value>Allows an application to change whether an application component (other than its own) is enabled or not.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.CHANGE_CONFIGURATION" xml:space="preserve">
+    <value>Allows an application to modify the current configuration, such as locale.
+
+Protection level: signature | privileged | development</value>
+  </data>
+  <data name="android.permission.CHANGE_NETWORK_STATE" xml:space="preserve">
+    <value>Allows applications to change network connectivity state.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.CHANGE_WIFI_MULTICAST_STATE" xml:space="preserve">
+    <value>Allows applications to enter Wi-Fi Multicast mode.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.CHANGE_WIFI_STATE" xml:space="preserve">
+    <value>Allows applications to change Wi-Fi connectivity state.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.CLEAR_APP_CACHE" xml:space="preserve">
+    <value>Allows an application to clear the caches of all installed applications on the device.
+
+Protection level: signature | privileged</value>
+  </data>
+  <data name="android.permission.CONTROL_LOCATION_UPDATES" xml:space="preserve">
+    <value>Allows enabling/disabling location update notifications from the radio.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.DELETE_CACHE_FILES" xml:space="preserve">
+    <value>Old permission for deleting an app's cache files, no longer used, but signals for us to quietly ignore calls instead of throwing an exception.
+
+Protection level: signature | privileged</value>
+  </data>
+  <data name="android.permission.DELETE_PACKAGES" xml:space="preserve">
+    <value>Allows an application to delete packages.
+
+Not for use by third-party applications.
+
+Starting in Build.VERSION_CODES.N, user confirmation is requested when the application deleting the package is not the same application that installed the package.</value>
+  </data>
+  <data name="android.permission.DIAGNOSTIC" xml:space="preserve">
+    <value>Allows applications to RW to diagnostic resources.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.DISABLE_KEYGUARD" xml:space="preserve">
+    <value>Allows applications to disable the keyguard if it is not secure.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.DUMP" xml:space="preserve">
+    <value>Allows an application to retrieve state dump information from system services.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.EXPAND_STATUS_BAR" xml:space="preserve">
+    <value>Allows an application to expand or collapse the status bar.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.FACTORY_TEST" xml:space="preserve">
+    <value>Run as a manufacturer test application, running as the root user. Only available when the device is running in manufacturer test mode.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.FOREGROUND_SERVICE" xml:space="preserve">
+    <value>Allows a regular application to use Service.startForeground.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.GET_ACCOUNTS" xml:space="preserve">
+    <value>Allows access to the list of accounts in the Accounts Service.
+
+Protection level: dangerous</value>
+  </data>
+  <data name="android.permission.GET_ACCOUNTS_PRIVILEGED" xml:space="preserve">
+    <value>Allows access to the list of accounts in the Accounts Service.
+
+Protection level: signature | privileged</value>
+  </data>
+  <data name="android.permission.GET_PACKAGE_SIZE" xml:space="preserve">
+    <value>Allows an application to find out the space used by any package.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.GLOBAL_SEARCH" xml:space="preserve">
+    <value>This permission can be used on content providers to allow the global search system to access their data. Typically it used when the provider has some permissions protecting it (which global search would not be expected to hold), and added as a read-only permission to the path in the provider where global search queries are performed. This permission can not be held by regular applications; it is used by applications to protect themselves from everyone else besides global search.
+
+Protection level: signature | privileged</value>
+  </data>
+  <data name="android.permission.INSTALL_LOCATION_PROVIDER" xml:space="preserve">
+    <value>Allows an application to install a location provider into the Location Manager.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.INSTALL_PACKAGES" xml:space="preserve">
+    <value>Allows an application to install packages.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.INSTANT_APP_FOREGROUND_SERVICE" xml:space="preserve">
+    <value>Allows an instant app to create foreground services.
+
+Protection level: signature | development | instant | appop</value>
+  </data>
+  <data name="android.permission.INTERACT_ACROSS_PROFILES" xml:space="preserve">
+    <value>Allows interaction across profiles in the same profile group.</value>
+  </data>
+  <data name="android.permission.INTERACT_ACROSS_USERS" xml:space="preserve">
+    <value>interact across users
+    Allows the app to perform actions across different users on the device. Malicious apps may use this to violate the protection between users.</value>
+  </data>
+  <data name="android.permission.INTERNET" xml:space="preserve">
+    <value>Allows applications to open network sockets.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.KILL_BACKGROUND_PROCESSES" xml:space="preserve">
+    <value>Allows an application to call ActivityManager.killBackgroundProcesses(String).
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.LOADER_USAGE_STATS" xml:space="preserve">
+    <value>Allows a data loader to read a package's access logs. The access logs contain the set of pages referenced over time.
+
+Declaring the permission implies intention to use the API and the user of the device can grant permission through the Settings application.
+
+Protection level: signature | privileged | appop</value>
+  </data>
+  <data name="android.permission.LOCATION_HARDWARE" xml:space="preserve">
+    <value>Allows an application to use location features in hardware, such as the geofencing api.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.MANAGE_ACCOUNTS" xml:space="preserve">
+    <value>add or remove accounts
+    Allows the app to perform operations like adding and removing accounts, and deleting their password.</value>
+  </data>
+  <data name="android.permission.MANAGE_DOCUMENTS" xml:space="preserve">
+    <value>Allows an application to manage access to documents, usually as part of a document picker.
+
+This permission should only be requested by the platform document management app. This permission cannot be granted to third-party apps.</value>
+  </data>
+  <data name="android.permission.MANAGE_EXTERNAL_STORAGE" xml:space="preserve">
+    <value>Allows an application a broad access to external storage in scoped storage. Intended to be used by few apps that need to manage files on behalf of the users.
+
+Protection level: signature | appop | preinstalled</value>
+  </data>
+  <data name="android.permission.MANAGE_OWN_CALLS" xml:space="preserve">
+    <value>Allows a calling application which manages it own calls through the self-managed ConnectionService APIs. See PhoneAccount.CAPABILITY_SELF_MANAGED for more information on the self-managed ConnectionService APIs.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.MANAGE_USERS" xml:space="preserve">
+    <value>manage users
+    Allows apps to manage users on the device, including query, creation and deletion.</value>
+  </data>
+  <data name="android.permission.MASTER_CLEAR" xml:space="preserve">
+    <value>Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.MEDIA_CONTENT_CONTROL" xml:space="preserve">
+    <value>Allows an application to know what content is playing and control its playback.
+
+Not for use by third-party applications due to privacy of media consumption.</value>
+  </data>
+  <data name="android.permission.MODIFY_AUDIO_SETTINGS" xml:space="preserve">
+    <value>Allows an application to modify global audio settings.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.MODIFY_PHONE_STATE" xml:space="preserve">
+    <value>Allows modification of the telephony state - power on, mmi, etc. Does not include placing calls.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.MOUNT_FORMAT_FILESYSTEMS" xml:space="preserve">
+    <value>Allows formatting file systems for removable storage.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" xml:space="preserve">
+    <value>Allows mounting and unmounting file systems for removable storage.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.NFC" xml:space="preserve">
+    <value>Allows applications to perform I/O operations over NFC.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.NFC_PREFERRED_PAYMENT_INFO" xml:space="preserve">
+    <value>Allows applications to receive NFC preferred payment service information.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.NFC_TRANSACTION_EVENT" xml:space="preserve">
+    <value>Allows applications to receive NFC transaction events.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.PACKAGE_USAGE_STATS" xml:space="preserve">
+    <value>Allows an application to collect component usage statistics
+
+Declaring the permission implies intention to use the API and the user of the device can grant permission through the Settings application.
+
+Protection level: signature | privileged | development | appop | retailDemo</value>
+  </data>
+  <data name="android.permission.QUERY_ALL_PACKAGES" xml:space="preserve">
+    <value>Allows query of any normal app on the device, regardless of manifest declarations.</value>
+  </data>
+  <data name="android.permission.READ_CALENDAR" xml:space="preserve">
+    <value>Allows an application to read the user's calendar data.
+
+Protection level: dangerous</value>
+  </data>
+  <data name="android.permission.READ_CALL_LOG" xml:space="preserve">
+    <value>Allows an application to read the user's call log.
+
+Protection level: dangerous</value>
+  </data>
+  <data name="android.permission.READ_CONTACTS" xml:space="preserve">
+    <value>Allows an application to read the user's contacts data.
+
+Protection level: dangerous</value>
+  </data>
+  <data name="android.permission.READ_EXTERNAL_STORAGE" xml:space="preserve">
+    <value>Allows an application to read from external storage.
+
+This is a soft restricted permission which cannot be held by an app it its full form until the installer on record whitelists the permission. Specifically, if the permission is whitelisted the holder app can access external storage and the visual and aural media collections while if the permission is not whitelisted the holder app can only access to the visual and aural medial collections. Also the permission is immutably restricted meaning that the whitelist state can be specified only at install time and cannot change until the app is installed. For more details see PackageInstaller.SessionParams.setWhitelistedRestrictedPermissions(Set).
+
+Protection level: dangerous</value>
+  </data>
+  <data name="android.permission.READ_FRAME_BUFFER" xml:space="preserve">
+    <value>Allows application to read the content of the frame buffer.</value>
+  </data>
+  <data name="android.permission.READ_LOGS" xml:space="preserve">
+    <value>Allows an application to read the low-level system log files.
+
+Not for use by third-party applications, because Log entries can contain the user's private information.</value>
+  </data>
+  <data name="android.permission.READ_PHONE_NUMBERS" xml:space="preserve">
+    <value>Allows read access to the device's phone number(s). This is a subset of the capabilities granted by READ_PHONE_STATE but is exposed to instant applications.
+
+Protection level: dangerous</value>
+  </data>
+  <data name="android.permission.READ_PHONE_STATE" xml:space="preserve">
+    <value>Allows read only access to phone state, including the phone number of the device, current cellular network information, the status of any ongoing calls, and a list of any PhoneAccounts registered on the device.
+
+Protection level: dangerous</value>
+  </data>
+  <data name="android.permission.READ_PRECISE_PHONE_STATE" xml:space="preserve">
+    <value>Allows read only access to precise phone state. Allows reading of detailed information about phone state for special-use applications such as dialers, carrier applications, or ims applications.</value>
+  </data>
+  <data name="android.permission.READ_SMS" xml:space="preserve">
+    <value>Allows an application to read SMS messages.
+
+Protection level: dangerous</value>
+  </data>
+  <data name="android.permission.READ_SYNC_SETTINGS" xml:space="preserve">
+    <value>Allows applications to read the sync settings.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.READ_SYNC_STATS" xml:space="preserve">
+    <value>Allows applications to read the sync stats.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.REBOOT" xml:space="preserve">
+    <value>Required to be able to reboot the device.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.RECEIVE_BOOT_COMPLETED" xml:space="preserve">
+    <value>Allows an application to receive the Intent.ACTION_BOOT_COMPLETED that is broadcast after the system finishes booting. If you don't request this permission, you will not receive the broadcast at that time. Though holding this permission does not have any security implications, it can have a negative impact on the user experience by increasing the amount of time it takes the system to start and allowing applications to have themselves running without the user being aware of them. As such, you must explicitly declare your use of this facility to make that visible to the user.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.RECEIVE_MMS" xml:space="preserve">
+    <value>Allows an application to monitor incoming MMS messages.
+
+Protection level: dangerous</value>
+  </data>
+  <data name="android.permission.RECEIVE_SMS" xml:space="preserve">
+    <value>Allows an application to receive SMS messages.
+
+Protection level: dangerous</value>
+  </data>
+  <data name="android.permission.RECEIVE_WAP_PUSH" xml:space="preserve">
+    <value>Allows an application to receive WAP push messages.
+
+Protection level: dangerous</value>
+  </data>
+  <data name="android.permission.RECORD_AUDIO" xml:space="preserve">
+    <value>Allows an application to record audio.
+
+Protection level: dangerous</value>
+  </data>
+  <data name="android.permission.REORDER_TASKS" xml:space="preserve">
+    <value>Allows an application to change the Z-order of tasks.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.REQUEST_COMPANION_RUN_IN_BACKGROUND" xml:space="preserve">
+    <value>Allows a companion app to run in the background.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.REQUEST_COMPANION_USE_DATA_IN_BACKGROUND" xml:space="preserve">
+    <value>Allows a companion app to use data in the background.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.REQUEST_DELETE_PACKAGES" xml:space="preserve">
+    <value>Allows an application to request deleting packages. Apps targeting APIs Build.VERSION_CODES.P or greater must hold this permission in order to use Intent.ACTION_UNINSTALL_PACKAGE or PackageInstaller.uninstall(VersionedPackage, IntentSender).
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" xml:space="preserve">
+    <value>Permission an application must hold in order to use Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.REQUEST_INSTALL_PACKAGES" xml:space="preserve">
+    <value>Allows an application to request installing packages. Apps targeting APIs greater than 25 must hold this permission in order to use Intent.ACTION_INSTALL_PACKAGE.
+
+Protection level: signature</value>
+  </data>
+  <data name="android.permission.REQUEST_PASSWORD_COMPLEXITY" xml:space="preserve">
+    <value>Allows an application to request the screen lock complexity and prompt users to update the screen lock to a certain complexity level.</value>
+  </data>
+  <data name="android.permission.SEND_RESPOND_VIA_MESSAGE" xml:space="preserve">
+    <value>Allows an application (Phone) to send a request to other applications to handle the respond-via-message action during incoming calls.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.SEND_SMS" xml:space="preserve">
+    <value>Allows an application to send SMS messages.
+
+Protection level: dangerous</value>
+  </data>
+  <data name="android.permission.SET_ALWAYS_FINISH" xml:space="preserve">
+    <value>Allows an application to control whether activities are immediately finished when put in the background.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.SET_ANIMATION_SCALE" xml:space="preserve">
+    <value>Modify the global animation scaling factor.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.SET_DEBUG_APP" xml:space="preserve">
+    <value>Configure an application for debugging.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.SET_PROCESS_LIMIT" xml:space="preserve">
+    <value>Allows an application to set the maximum number of (not needed) application processes that can be running.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.SET_TIME" xml:space="preserve">
+    <value>Allows applications to set the system time directly.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.SET_TIME_ZONE" xml:space="preserve">
+    <value>Allows applications to set the system time zone directly.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.SET_WALLPAPER" xml:space="preserve">
+    <value>Allows applications to set the wallpaper.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.SET_WALLPAPER_HINTS" xml:space="preserve">
+    <value>Allows applications to set the wallpaper hints.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.SIGNAL_PERSISTENT_PROCESSES" xml:space="preserve">
+    <value>Allow an application to request that a signal be sent to all persistent processes.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.SMS_FINANCIAL_TRANSACTIONS" xml:space="preserve">
+    <value>Allows financial apps to read filtered sms messages.
+
+Protection level: signature | appop</value>
+  </data>
+  <data name="android.permission.START_VIEW_PERMISSION_USAGE" xml:space="preserve">
+    <value>Allows the holder to start the permission usage screen for an app.
+
+Protection level: signature | installer</value>
+  </data>
+  <data name="android.permission.STATUS_BAR" xml:space="preserve">
+    <value>Allows an application to open, close, or disable the status bar and its icons.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.SYSTEM_ALERT_WINDOW" xml:space="preserve">
+    <value>Allows an app to create windows using the type WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, shown on top of all other apps. Very few apps should use this permission; these windows are intended for system-level interaction with the user.
+
+Protection level: signature | preinstalled | appop | pre23 | development</value>
+  </data>
+  <data name="android.permission.TRANSMIT_IR" xml:space="preserve">
+    <value>Allows using the device's IR transmitter, if available.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.UPDATE_DEVICE_STATS" xml:space="preserve">
+    <value>Allows an application to update device statistics.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.USE_BIOMETRIC" xml:space="preserve">
+    <value>Allows an app to use device supported biometric modalities.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.USE_CREDENTIALS" xml:space="preserve">
+    <value>Allows the app to request authentication tokens.</value>
+  </data>
+  <data name="android.permission.USE_FULL_SCREEN_INTENT" xml:space="preserve">
+    <value>Required for apps targeting Build.VERSION_CODES.Q that want to use notification full screen intents.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.USE_SIP" xml:space="preserve">
+    <value>Allows an application to use SIP service.
+
+Protection level: dangerous</value>
+  </data>
+  <data name="android.permission.VIBRATE" xml:space="preserve">
+    <value>Allows access to the vibrator.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.WAKE_LOCK" xml:space="preserve">
+    <value>Allows using PowerManager WakeLocks to keep processor from sleeping or screen from dimming.
+
+Protection level: normal</value>
+  </data>
+  <data name="android.permission.WRITE_APN_SETTINGS" xml:space="preserve">
+    <value>Allows applications to write the apn settings and read sensitive fields of an existing apn settings like user and password.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.WRITE_CALENDAR" xml:space="preserve">
+    <value>Allows an application to write the user's calendar data.
+
+Protection level: dangerous</value>
+  </data>
+  <data name="android.permission.WRITE_CALL_LOG" xml:space="preserve">
+    <value>Allows an application to write (but not read) the user's call log data.
+
+Protection level: dangerous</value>
+  </data>
+  <data name="android.permission.WRITE_CONTACTS" xml:space="preserve">
+    <value>Allows an application to write the user's contacts data.
+
+Protection level: dangerous</value>
+  </data>
+  <data name="android.permission.WRITE_EXTERNAL_STORAGE" xml:space="preserve">
+    <value>Allows an application to write to external storage.
+
+Protection level: dangerous</value>
+  </data>
+  <data name="android.permission.WRITE_GSERVICES" xml:space="preserve">
+    <value>Allows an application to modify the Google service map.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.WRITE_MEDIA_STORAGE" xml:space="preserve">
+    <value>modify/delete internal media storage contents
+    Allows the app to modify the contents of the internal media storage.</value>
+  </data>
+  <data name="android.permission.WRITE_SECURE_SETTINGS" xml:space="preserve">
+    <value>Allows an application to read or write the secure system settings.
+
+Not for use by third-party applications.</value>
+  </data>
+  <data name="android.permission.WRITE_SETTINGS" xml:space="preserve">
+    <value>Allows an application to read or write the system settings.
+
+Protection level: signature | preinstalled | appop | pre23</value>
+  </data>
+  <data name="android.permission.WRITE_SYNC_SETTINGS" xml:space="preserve">
+    <value>Allows applications to write the sync settings.
+
+Protection level: normal</value>
+  </data>
+  <data name="com.android.alarm.permission.SET_ALARM" xml:space="preserve">
+    <value>Allows an application to broadcast an Intent to set an alarm for the user.
+
+Protection level: normal</value>
+  </data>
+  <data name="com.android.launcher.permission.INSTALL_SHORTCUT" xml:space="preserve">
+    <value>Allows an application to install a shortcut in Launcher.
+
+In Android O (API level 26) and higher, the INSTALL_SHORTCUT broadcast no longer has any effect on your app because it's a private, implicit broadcast. Instead, you should create an app shortcut by using the requestPinShortcut() method from the ShortcutManager class.
+
+Protection level: normal</value>
+  </data>
+  <data name="com.android.vending.CHECK_LICENSE" xml:space="preserve">
+    <value>To use the Google Play application for sending a license check to the server, your application must request the proper permission, com.android.vending.CHECK_LICENSE. If your application does not declare the licensing permission but attempts to initiate a license check, the LVL throws a security exception.</value>
+  </data>
+  <data name="com.android.voicemail.permission.ADD_VOICEMAIL" xml:space="preserve">
+    <value>Allows an application to add voicemails into the system.
+
+Protection level: dangerous</value>
+  </data>
+  <data name="com.android.voicemail.permission.READ_VOICEMAIL" xml:space="preserve">
+    <value>Allows an application to read voicemails in the system.
+
+Protection level: signature | privileged</value>
+  </data>
+  <data name="com.android.voicemail.permission.WRITE_VOICEMAIL" xml:space="preserve">
+    <value>Allows an application to modify and remove existing voicemails in the system.
+
+Protection level: signature | privileged</value>
+  </data>
+</root>
