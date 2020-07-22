@@ -170,7 +170,6 @@
     <None Include="..\..\..\..\AlphaOmega %28NoPwd%29.snk">
       <Link>AlphaOmega %28NoPwd%29.snk</Link>
     </None>
-    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Features.resx" />
