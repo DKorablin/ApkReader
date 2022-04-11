@@ -27,9 +27,13 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> result = base.Node.GetAttribute("resource");
-				return result == null
+				if(result == null)
+					return null;
+
+				Arsc.ResourceRow resource = base.GetResource(Convert.ToInt32(result[0]));
+				return resource == null
 					? null
-					: base.GetResource(Convert.ToInt32(result[0])).Value;
+					: resource.Value;
 			}
 		}
 

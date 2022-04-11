@@ -833,6 +833,9 @@ Not for use by third-party applications.</value>
 
 Protection level: normal</value>
   </data>
+  <data name="android.permission.USE_FINGERPRINT" xml:space="preserve">
+    <value>This constant was deprecated in API level 28. Applications should request USE_BIOMETRIC instead</value>
+  </data>
   <data name="android.permission.USE_CREDENTIALS" xml:space="preserve">
     <value>Allows the app to request authentication tokens.</value>
   </data>

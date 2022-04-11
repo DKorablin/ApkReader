@@ -19,7 +19,7 @@ namespace AlphaOmega.Debug.Manifest
 		public String Name { get { return base.Node.Attributes["name"][0]; } }
 
 		/// <summary>Описание возможного действия</summary>
-		public String Description { get { return Resources.Intent.GetString(this.Name); } }
+		public String Description { get { return Resources.GetIntent(this.Name); } }
 
 		internal ApkAction(ApkIntentFilter parentNode,XmlNode node)
 			: base(parentNode, node)

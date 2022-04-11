@@ -36,7 +36,7 @@ namespace AlphaOmega.Debug.Manifest
 		}
 
 		/// <summary>Описание системного разрешения</summary>
-		public String Description { get { return Resources.Permission.GetString(this.Name); } }
+		public String Description { get { return Resources.GetPermission(this.Name); } }
 
 		internal ApkUsesPermission(AndroidManifest parentNode, XmlNode usesPermissionNode)
 			: base(parentNode, usesPermissionNode)

@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyCompany("Danila Korablin")]
 [assembly: AssemblyProduct("ApkReader")]
-[assembly: AssemblyCopyright("Copyright © Danila Korablin 2016-2020")]
+[assembly: AssemblyCopyright("Copyright © Danila Korablin 2016-2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 #if DEBUG

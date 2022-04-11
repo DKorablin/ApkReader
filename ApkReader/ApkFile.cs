@@ -12,9 +12,11 @@ namespace AlphaOmega.Debug
 		private ZipFile _apk;
 		private AxmlFile _xml;
 		private ArscFile _res;
+		private MfFile _mf;
 		private AndroidManifest _androidManifest;
 		private Boolean _isXmlExists = true;
 		private Boolean _isArscExists = true;
+		private Boolean _isMfExists = true;
 
 		/// <summary>Raw AndroidManifest.xml</summary>
 		public AxmlFile XmlFile
@@ -31,6 +33,24 @@ namespace AlphaOmega.Debug
 						this._xml = new AxmlFile(StreamLoader.FromMemory(payload, FileName));
 				}
 				return this._xml;
+			}
+		}
+
+		/// <summary>META-INF/MANIFEST.MF file reader</summary>
+		public MfFile MfFile
+		{
+			get
+			{
+				if(this._mf == null && _isMfExists)
+				{
+					Byte[] payload = this.GetFile("META-INF/MANIFEST.MF");
+					if(payload == null)
+						_isMfExists = false;
+					else
+						this._mf = new MfFile(payload);
+				}
+				return this._mf;
+
 			}
 		}
 
@@ -193,28 +213,50 @@ namespace AlphaOmega.Debug
 		}
 
 		/// <summary>Получить файл в виде потока байт</summary>
-		/// <param name="filePath">Путь к файлу в архиве</param>
+		/// <param name="zipFilePath">Путь к файлу в архиве</param>
+		/// <param name="checkHash">Проверить корректность Hash из MANIFEST.MF</param>
 		/// <returns>Поток файла из архива</returns>
-		public Stream GetFileStream(String filePath)
+		public Stream GetFileStream(String zipFilePath, Boolean checkHash = false)
 		{
-			ZipEntry entry = this._apk.GetEntry(filePath);
+			ZipEntry entry = this._apk.GetEntry(zipFilePath);
 			if(entry == null)
 				return null;
 
-			return this._apk.GetInputStream(entry);
+			Stream result = this._apk.GetInputStream(entry);
+
+			if(checkHash)
+			{
+				if(this.MfFile == null)
+					return null;//MANIFEST.MF file missing
+				if(!this.MfFile.ValidateHash(zipFilePath, result, result.Length))
+					return null;//Hash validation failed
+				result.Position = 0;//Reset stream position
+			}
+			return result;
 		}
 
 		/// <summary>Получить файл в виде массива байт</summary>
-		/// <param name="fileName"></param>
-		/// <returns></returns>
-		public Byte[] GetFile(String fileName)
+		/// <param name="zipFilePath">Path to the file inside APK</param>
+		/// <param name="checkHash">Check file contents hash with MANIFEST.MF file</param>
+		/// <returns>File contents of null if file not found or hashCheck failed</returns>
+		public Byte[] GetFile(String zipFilePath, Boolean checkHash = false)
 		{
-			ZipEntry entry = this._apk.GetEntry(fileName);
+			ZipEntry entry = this._apk.GetEntry(zipFilePath);
 			if(entry == null)
 				return null;
 
+			Byte[] result;
 			using(BinaryReader reader = new BinaryReader(this._apk.GetInputStream(entry)))
-				return reader.ReadBytes((Int32)entry.Size);
+				result = reader.ReadBytes((Int32)entry.Size);
+
+			if(checkHash)
+			{
+				if(this.MfFile == null)
+					return null;//MANIFEST.MF file missing
+				if(!this.MfFile.ValidateHash(zipFilePath, result))
+					return null;//Hash validation failed
+			}
+			return result;
 		}
 
 		/// <summary>Clears base apk file</summary>

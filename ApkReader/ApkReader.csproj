@@ -158,6 +158,7 @@
     <Compile Include="Manifest\ApkUsesFeature.cs" />
     <Compile Include="Manifest\ApkUsesPermissionSdk23.cs" />
     <Compile Include="Manifest\IApkIntentedNode.cs" />
+    <Compile Include="MfFile.cs" />
     <Compile Include="XmlNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Dex\TableClass.cs" />

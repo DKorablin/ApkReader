@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
 using AlphaOmega.Debug;
 using AlphaOmega.Debug.Dex.Tables;
 using AlphaOmega.Debug.Manifest;
@@ -22,9 +24,13 @@ namespace Demo
 			//Program.ReadManifest(Program.ManifestFilePath);
 			//Program.ReadResource(Program.ResourcesFilePath);
 			//Program.ReadApkManifest(Program.ManifestFilePath, Program.ResourcesFilePath);
+			Program.ReadApk(@"C:\Visual Studio Projects\C#\Shared.Classes\AlphaOmega.Debug\FileReader\Samples\apk\com.aqupepgames.projectpepe.apk");
+			return;
+
 			foreach(String filePath in Directory.GetFiles(Path.GetDirectoryName(ApkFilePath), "*.apk"))
 				Program.ReadApk(filePath);
 			//Program.ReadAxml(Program.AxmlFilePath);
+			Console.WriteLine("FINISHED");
 			Console.ReadLine();
 		}
 
@@ -40,6 +46,86 @@ namespace Demo
 			}
 		}
 
+		public enum Type
+		{
+			/// <summary>Physical file path</summary>
+			Path,
+			/// <summary>Folder</summary>
+			Folder,
+			/// <summary>APK, XAPK file</summary>
+			Package,
+			/// <summary>DEX file</summary>
+			Dex,
+			/// <summary>ARSC file</summary>
+			Resource,
+			/// <summary>AndroidManifest.xml extended (+ARSC file)</summary>
+			ApkManifest,
+			/// <summary>TreeNode APK manifest</summary>
+			ApkManifestNode,
+			/// <summary>Android XML file</summary>
+			Axml,
+		}
+
+		public static Type GetFileTypeByExtension(String filePath)
+		{
+			switch(Path.GetExtension(filePath).ToLowerInvariant())
+			{
+			case ".apk":
+			case ".xapk":
+				return Type.Package;
+			case ".dex":
+				return Type.Dex;
+			case ".arsc":
+				return Type.Resource;
+			case ".xml":
+				return Path.GetFileName(filePath) == "AndroidManifest.xml"
+					? Type.ApkManifest
+					: Type.Axml;
+			case "":
+				Type result;
+				return Enum.TryParse<Type>(filePath, out result)
+					? result
+					: Type.Folder;
+			default:
+				throw new NotImplementedException();
+			}
+		}
+
+		private static TreeDto BuildTree(String[] paths, Char pathSeparator)
+		{
+			if(paths == null)
+				return null;
+
+			TreeDto rootNode = new TreeDto("0", "Dummy");
+			TreeDto currentNode;
+			foreach(String path in paths)
+			{
+				currentNode = rootNode;
+				String[] pathSplit = path.Split(pathSeparator);
+				foreach(String subPath in pathSplit)
+				{
+					Type zz = GetFileTypeByExtension(subPath);
+					TreeDto foundNode = currentNode.GetNode(subPath);
+					currentNode = foundNode == null
+						? currentNode.AddNode(new TreeDto("0", subPath))
+						: foundNode;
+				}
+			}
+
+			return rootNode;
+		}
+
+		private static String ConvertTreeToStringRec(TreeDto root, Int32 tabsCount)
+		{
+			String text = new String(Enumerable.Repeat('\t', tabsCount).ToArray()) + root.Text + "\r\n";
+			StringBuilder result = new StringBuilder(text);
+			if(root.Nodes != null)
+				foreach(TreeDto dto in root.Nodes)
+					result.Append(ConvertTreeToStringRec(dto, tabsCount + 1));
+
+			return result.ToString();
+		}
+
 		static void ReadApk(String filePath)
 		{
 			using(ApkFile apk = new ApkFile(filePath))
@@ -47,7 +133,38 @@ namespace Demo
 				Console.WriteLine("Package: {0}", apk.AndroidManifest.Package);
 				Console.WriteLine("Application name: {0} ({1})", apk.AndroidManifest.Application.Label, apk.AndroidManifest.VersionName);
 
+				if(apk.MfFile != null)
+				{
+					UInt32 totalFiles = 0;
+					UInt32 hashNotFound = 0;
+					UInt32 invalidHash = 0;
+					foreach(String apkFilePath in apk.GetFiles())
+					{
+						totalFiles++;
+						String sHash = apk.MfFile[apkFilePath];
+						if(sHash == null)
+						{
+							//Console.WriteLine("Hash not found for file: {0}", apkFilePath);
+							hashNotFound++;
+						} else if(!apk.MfFile.ValidateHash(apkFilePath, apk.GetFile(apkFilePath)))
+						{
+							//Console.WriteLine("InvalidHash: {0} ({1})", apkFilePath, sHash);
+							invalidHash++;
+						}
+					}
+
+					Console.WriteLine("Total files: {0:N0}", totalFiles);
+					if(hashNotFound > 0)
+						Console.WriteLine("Hash Not found: {0:N0}", hashNotFound);
+					if(invalidHash > 0)
+						Console.WriteLine("Invalid hash: {0:N0}", invalidHash);
+				}
+
+				TreeDto root = BuildTree(apk.GetHeaderFiles().ToArray(), '/');
+				String test = ConvertTreeToStringRec(root, 0);
+
 				foreach(String xmlFile in apk.GetHeaderFiles())
+				{
 					switch(Path.GetExtension(xmlFile).ToLowerInvariant())
 					{
 					case ".xml":
@@ -71,6 +188,7 @@ namespace Demo
 						}
 						break;
 					}
+				}
 
 				ReadApkManifestRecursive(apk.AndroidManifest);
 			}

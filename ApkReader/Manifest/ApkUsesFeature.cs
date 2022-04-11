@@ -59,7 +59,15 @@ namespace AlphaOmega.Debug.Manifest
 		}
 
 		/// <summary>Описание требуемой фичи</summary>
-		public String Description { get { return Resources.Features.GetString(this.Name); } }
+		public String Description
+		{
+			get
+			{
+				return this.Name == null
+					? null
+					: Resources.GetFeatures(this.Name);
+			}
+		}
 
 		internal ApkUsesFeature(AndroidManifest parentNode, XmlNode usesFeatureNode)
 			: base(parentNode, usesFeatureNode)
