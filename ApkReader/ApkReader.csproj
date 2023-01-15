@@ -26,7 +26,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -37,7 +37,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\..\..\..\AlphaOmega %28NoPwd%29.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\..\..\..\AlphaOmega %28NoPwd%29.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib">
@@ -168,19 +168,19 @@
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\..\AlphaOmega %28NoPwd%29.snk">
-      <Link>AlphaOmega %28NoPwd%29.snk</Link>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Features.resx" />
     <EmbeddedResource Include="Intent.resx" />
     <EmbeddedResource Include="Permission.resx" />
     <EmbeddedResource Include="PermissionGroup.resx" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\AlphaOmega %28NoPwd%29.snk">
+      <Link>AlphaOmega %28NoPwd%29.snk</Link>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>if $(ConfigurationName) == Release (
+    <PostBuildEvent>if $(ConfigurationName) == Relea_e (
 ..\..\..\..\..\..\ILMerge.exe  "/out:$(ProjectDir)..\..\bin\$(TargetFileName)" "$(TargetPath)" "$(TargetDir)ICSharpCode.SharpZipLib.dll"
 )</PostBuildEvent>
   </PropertyGroup>

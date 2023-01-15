@@ -9,16 +9,23 @@ namespace AlphaOmega.Debug
 	/// <summary>MANIFEST.MF file reader and validator</summary>
 	public class MfFile:IEnumerable<KeyValuePair<String, MfFile.HashWithType>>
 	{
+		/// <summary>Hash type description</summary>
 		public class HashWithType
 		{
+			/// <summary>Hash type</summary>
 			public HashType Type { get; set; }
+			/// <summary>Hash</summary>
 			public String Hash { get; set; }
 		}
 
+		/// <summary>Hash type</summary>
 		public enum HashType
 		{
+			/// <summary>Unknown hash type</summary>
 			Unknown,
+			/// <summary>SHA-256</summary>
 			Sha256,
+			/// <summary>SHA-1</summary>
 			Sha1,
 		}
 		private readonly String _version;
