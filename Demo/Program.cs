@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography;
 using System.Text;
 using AlphaOmega.Debug;
 using AlphaOmega.Debug.Dex.Tables;
@@ -141,12 +140,8 @@ namespace Demo
 					foreach(String apkFilePath in apk.GetFiles())
 					{
 						totalFiles++;
-						String sHash = apk.MfFile[apkFilePath];
-						if(sHash == null)
-						{
-							//Console.WriteLine("Hash not found for file: {0}", apkFilePath);
-							hashNotFound++;
-						} else if(!apk.MfFile.ValidateHash(apkFilePath, apk.GetFile(apkFilePath)))
+						MfFile.HashWithType tHash = apk.MfFile[apkFilePath];
+						if(!apk.MfFile.ValidateHash(apkFilePath, apk.GetFile(apkFilePath)))
 						{
 							//Console.WriteLine("InvalidHash: {0} ({1})", apkFilePath, sHash);
 							invalidHash++;

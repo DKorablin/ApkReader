@@ -7,7 +7,7 @@ using System.Text;
 namespace AlphaOmega.Debug
 {
 	/// <summary>MANIFEST.MF file reader and validator</summary>
-	public class MfFile:IEnumerable<KeyValuePair<String,String>>
+	public class MfFile:IEnumerable<KeyValuePair<String, MfFile.HashWithType>>
 	{
 		public class HashWithType
 		{
@@ -15,7 +15,7 @@ namespace AlphaOmega.Debug
 			public String Hash { get; set; }
 		}
 
-		private enum HashType
+		public enum HashType
 		{
 			Unknown,
 			Sha256,

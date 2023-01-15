@@ -46,40 +46,40 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\ImageData\IBaseRow.cs">
+    <Compile Include="..\FileReader.Shared\ImageData\IBaseRow.cs">
       <Link>Data\Interface\IBaseRow.cs</Link>
     </Compile>
-    <Compile Include="..\..\ImageData\ICell.cs">
+    <Compile Include="..\FileReader.Shared\ImageData\ICell.cs">
       <Link>Data\Interface\ICell.cs</Link>
     </Compile>
-    <Compile Include="..\..\ImageData\IColumn.cs">
+    <Compile Include="..\FileReader.Shared\ImageData\IColumn.cs">
       <Link>Data\Interface\IColumn.cs</Link>
     </Compile>
-    <Compile Include="..\..\ImageData\IRow.cs">
+    <Compile Include="..\FileReader.Shared\ImageData\IRow.cs">
       <Link>Data\Interface\IRow.cs</Link>
     </Compile>
-    <Compile Include="..\..\ImageData\IRowPointer.cs">
+    <Compile Include="..\FileReader.Shared\ImageData\IRowPointer.cs">
       <Link>Data\Interface\IRowPointer.cs</Link>
     </Compile>
-    <Compile Include="..\..\ImageData\ITable.cs">
+    <Compile Include="..\FileReader.Shared\ImageData\ITable.cs">
       <Link>Data\Interface\ITable.cs</Link>
     </Compile>
-    <Compile Include="..\..\ImageData\ITables.cs">
+    <Compile Include="..\FileReader.Shared\ImageData\ITables.cs">
       <Link>Data\Interface\ITables.cs</Link>
     </Compile>
-    <Compile Include="..\..\ImageLoader\BinaryEndianReader.cs">
+    <Compile Include="..\FileReader.Shared\ImageLoader\BinaryEndianReader.cs">
       <Link>ImageLoader\BinaryEndianReader.cs</Link>
     </Compile>
-    <Compile Include="..\..\ImageLoader\EndianHelper.cs">
+    <Compile Include="..\FileReader.Shared\ImageLoader\EndianHelper.cs">
       <Link>ImageLoader\EndianHelper.cs</Link>
     </Compile>
-    <Compile Include="..\..\ImageLoader\IImageLoader.cs">
+    <Compile Include="..\FileReader.Shared\ImageLoader\IImageLoader.cs">
       <Link>ImageLoader\IImageLoader.cs</Link>
     </Compile>
-    <Compile Include="..\..\ImageLoader\LookupLoader.cs">
+    <Compile Include="..\FileReader.Shared\ImageLoader\LookupLoader.cs">
       <Link>ImageLoader\LookupLoader.cs</Link>
     </Compile>
-    <Compile Include="..\..\ImageLoader\StreamLoader.cs">
+    <Compile Include="..\FileReader.Shared\ImageLoader\StreamLoader.cs">
       <Link>ImageLoader\StreamLoader.cs</Link>
     </Compile>
     <Compile Include="ArscApi.cs" />
