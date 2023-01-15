@@ -1,6 +1,6 @@
 ## Apk reader
 
-![Nuget](https://img.shields.io/nuget/v/AlphaOmega.ApkReader)
+[![Nuget](https://img.shields.io/nuget/v/AlphaOmega.ApkReader)](https://www.nuget.org/packages/AlphaOmega.ApkReader)
 
 Android package file reader assembly. Can read apk files, android xml files (AndroidManifes.xml, *.xml), Dalvik executable format (dex), android resource files (arsc).
 
