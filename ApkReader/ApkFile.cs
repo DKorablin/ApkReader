@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using AlphaOmega.Debug.Manifest;
+using AlphaOmega.Debug.Signature;
+
 using ICSharpCode.SharpZipLib.Zip;
 
 namespace AlphaOmega.Debug
@@ -9,6 +11,7 @@ namespace AlphaOmega.Debug
 	/// <summary>Android Package description</summary>
 	public class ApkFile : IDisposable
 	{
+		private Stream _apkStream;
 		private ZipFile _apk;
 		private AxmlFile _xml;
 		private ArscFile _res;
@@ -91,9 +94,7 @@ namespace AlphaOmega.Debug
 		{
 			get
 			{
-				return this._androidManifest == null
-					? this._androidManifest = AndroidManifest.Load(this.XmlFile, this.Resources)
-					: this._androidManifest;
+				return this._androidManifest ?? (this._androidManifest = AndroidManifest.Load(this.XmlFile, this.Resources));
 			}
 		}
 
@@ -155,23 +156,15 @@ namespace AlphaOmega.Debug
 		/// <summary>Create instance of android package description</summary>
 		/// <param name="filePath">Physical file path</param>
 		public ApkFile(String filePath)
+			: this(new FileStream(filePath, FileMode.Open, FileAccess.Read))
 		{
-			if(String.IsNullOrEmpty(filePath))
-				throw new ArgumentNullException("filePath");
-			if(!File.Exists(filePath))
-				throw new FileNotFoundException("File not found", filePath);
-
-			this._apk = new ZipFile(filePath);
 		}
 
 		/// <summary>Create instance of android package desctiption</summary>
 		/// <param name="buffer">Raw file bytes</param>
 		public ApkFile(Byte[] buffer)
+			: this(new MemoryStream(buffer))
 		{
-			if(buffer == null || buffer.Length == 0)
-				throw new ArgumentNullException("buffer");
-
-			this._apk = new ZipFile(new MemoryStream(buffer));
 		}
 
 		/// <summary>Create instance of android package desctiption</summary>
@@ -179,9 +172,16 @@ namespace AlphaOmega.Debug
 		public ApkFile(Stream stream)
 		{
 			if(stream == null)
-				throw new ArgumentNullException("stream");
+				throw new ArgumentNullException(nameof(stream));
 
-			this._apk = new ZipFile(stream);
+			this._apkStream = stream;
+			this._apk = new ZipFile(this._apkStream);
+		}
+
+		public IEnumerable<ApkSignatureInfo> GetApkSignatures()
+		{
+			ApkSignature signatures = new ApkSignature(this._apkStream);
+			return signatures.Blocks;
 		}
 
 		/// <summary>GetPackage contents</summary>

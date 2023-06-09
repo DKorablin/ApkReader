@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using AlphaOmega.Debug;
 using AlphaOmega.Debug.Dex.Tables;
@@ -15,7 +16,7 @@ namespace Demo
 		private const String ManifestFilePath = @"C:\Visual Studio Projects\C#\Shared.Classes\AlphaOmega.Debug\FileReader\Samples\apk\com.squareenix.dxm.AndroidManifest.xml";
 		private const String ResourcesFilePath = @"C:\Visual Studio Projects\C#\Shared.Classes\AlphaOmega.Debug\FileReader\Samples\apk\com.squareenix.dxm.resources.arsc";
 		private const String DexFilePath = @"C:\Visual Studio Projects\C#\Shared.Classes\AlphaOmega.Debug\FileReader\Samples\apk\com.askgps.personaltrackerround.classes2.dex";
-		private const String ApkFilePath = @"C:\Visual Studio Projects\C#\Shared.Classes\AlphaOmega.Debug\FileReader\Samples\apk\com.squareenix.dxm.apk";
+		private const String ApkFilePath = @"C:\Games\Jedi Knight 2 - Jedi Outcast & Jedi Academy\com.drbeef.jkxr-1.1.7-public.apk";
 
 		static void Main(String[] args)
 		{
@@ -23,7 +24,7 @@ namespace Demo
 			//Program.ReadManifest(Program.ManifestFilePath);
 			//Program.ReadResource(Program.ResourcesFilePath);
 			//Program.ReadApkManifest(Program.ManifestFilePath, Program.ResourcesFilePath);
-			Program.ReadApk(@"C:\Visual Studio Projects\C#\Shared.Classes\AlphaOmega.Debug\FileReader\Samples\apk\com.aqupepgames.projectpepe.apk");
+			Program.ReadApk(ApkFilePath);
 			return;
 
 			foreach(String filePath in Directory.GetFiles(Path.GetDirectoryName(ApkFilePath), "*.apk"))
@@ -131,6 +132,19 @@ namespace Demo
 			{
 				Console.WriteLine("Package: {0}", apk.AndroidManifest.Package);
 				Console.WriteLine("Application name: {0} ({1})", apk.AndroidManifest.Application.Label, apk.AndroidManifest.VersionName);
+ 
+				List<String> blockIDs = new List<String>();
+				foreach(var block in apk.GetApkSignatures())
+				{
+					switch(block.Id)
+					{
+					case AlphaOmega.Debug.Signature.ApkSignatureInfo.BlockId.APK_SIGNATURE_SCHEME_V2_BLOCK_ID:
+						//File.WriteAllBytes(@"C:\Games\Jedi Knight 2 - Jedi Outcast & Jedi Academy\JKHR.RSA", block.Data);
+						break;
+					}
+					blockIDs.Add(block.Id.ToString());
+				}
+				Console.WriteLine("Signature block IDs: ", String.Join(", ", blockIDs));
 
 				if(apk.MfFile != null)
 				{
@@ -141,7 +155,8 @@ namespace Demo
 					{
 						totalFiles++;
 						MfFile.HashWithType tHash = apk.MfFile[apkFilePath];
-						if(!apk.MfFile.ValidateHash(apkFilePath, apk.GetFile(apkFilePath)))
+						Byte[] payload = apk.GetFile(apkFilePath, true);
+						if(payload == null || !apk.MfFile.ValidateHash(apkFilePath, apk.GetFile(apkFilePath)))
 						{
 							//Console.WriteLine("InvalidHash: {0} ({1})", apkFilePath, sHash);
 							invalidHash++;
