@@ -36,7 +36,7 @@ namespace AlphaOmega.Debug.Dex
 					if(row.Index == rowIndex)
 						return row;
 
-				throw new ArgumentException(String.Format("Row with index {0} not found", rowIndex));*/
+				throw new ArgumentException($"Row with index {rowIndex} not found");*/
 			}
 		}
 

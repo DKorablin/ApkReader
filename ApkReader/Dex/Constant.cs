@@ -97,7 +97,7 @@ namespace AlphaOmega.Debug.Dex
 				columnNames = new String[] { "type_idx", "addr", };
 				break;
 			default:
-				throw new NotImplementedException(String.Format("Type {0} not implemented", type));
+				throw new NotImplementedException($"Type {type} not implemented");
 			}
 
 			if(columnTypes.Length != columnNames.Length)

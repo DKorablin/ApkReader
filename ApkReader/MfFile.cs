@@ -59,7 +59,7 @@ namespace AlphaOmega.Debug
 		public MfFile(Byte[] payload)
 		{
 			if(payload == null || payload.Length == 0)
-				throw new ArgumentNullException("payload");
+				throw new ArgumentNullException(nameof(payload));
 
 
 			String[] lines = Encoding.UTF8.GetString(payload).Split(new Char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);

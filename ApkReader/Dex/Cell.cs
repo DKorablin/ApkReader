@@ -39,9 +39,9 @@ namespace AlphaOmega.Debug.Dex
 		internal Cell(DexFile file, Column column, ref UInt32 offset)
 		{
 			if(file == null)
-				throw new ArgumentNullException("file");
+				throw new ArgumentNullException(nameof(file));
 			if(column == null)
-				throw new ArgumentNullException("column");
+				throw new ArgumentNullException(nameof(column));
 
 			this._column = column;
 
@@ -119,7 +119,7 @@ namespace AlphaOmega.Debug.Dex
 				this._value = type_idxs1;
 				break;
 			default:
-				throw new NotImplementedException(String.Format("Type {0} not implemented", column.ColumnType));
+				throw new NotImplementedException($"Type {column.ColumnType} not implemented");
 			}
 		}
 	}

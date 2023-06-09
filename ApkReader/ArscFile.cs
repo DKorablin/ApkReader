@@ -32,7 +32,7 @@ namespace AlphaOmega.Debug
 		public ArscFile(Stream stream)
 		{
 			if(stream == null)
-				throw new ArgumentNullException("stream");
+				throw new ArgumentNullException(nameof(stream));
 
 			using(BinaryReader reader = new BinaryReader(stream))
 				this.Initialize(reader);
@@ -43,7 +43,7 @@ namespace AlphaOmega.Debug
 		public ArscFile(Byte[] buffer)
 		{
 			if(buffer == null)
-				throw new ArgumentNullException("resourceBytes");
+				throw new ArgumentNullException(nameof(buffer));
 
 			using(MemoryStream stream = new MemoryStream(buffer))
 			using(BinaryReader reader = new BinaryReader(stream))
@@ -55,7 +55,7 @@ namespace AlphaOmega.Debug
 			this._header = Utils.PtrToStructure<ArscApi.ResTable_Header>(reader);
 
 			if(!this._header.IsValid)
-				throw new ArgumentException("No RES_TABLE_TYPE found!");
+				throw new ArgumentException("No RES_TABLE_TYPE found!",nameof(_header));
 			if(this._header.header.size != reader.BaseStream.Length)
 				throw new OverflowException("The buffer size not matches to the resource table size.");
 
@@ -88,7 +88,7 @@ namespace AlphaOmega.Debug
 			}
 
 			if(this._header.packageCount != this._package.Count)
-				throw new InvalidOperationException(String.Format("Expecting {0} packages. Collected {1} packages", this._header.packageCount, this._package.Count));
+				throw new InvalidOperationException($"Expecting {this._header.packageCount} packages. Collected {this._package.Count} packages");
 
 			//====
 			this.CreateResourceMap();

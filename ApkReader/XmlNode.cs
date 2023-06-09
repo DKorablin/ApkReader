@@ -42,11 +42,8 @@ namespace AlphaOmega.Debug
 
 		internal XmlNode(XmlNode parentNode, String nodeName)
 		{
-			if(String.IsNullOrEmpty(nodeName))
-				throw new ArgumentNullException();
-
 			this._parentNode = parentNode;
-			this._nodeName = nodeName;
+			this._nodeName = nodeName ?? throw new ArgumentNullException(nameof(nodeName));
 		}
 
 		internal void AddChildNode(XmlNode node)

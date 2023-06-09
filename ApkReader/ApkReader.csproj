@@ -159,6 +159,7 @@
     <Compile Include="Manifest\ApkUsesPermissionSdk23.cs" />
     <Compile Include="Manifest\IApkIntentedNode.cs" />
     <Compile Include="MfFile.cs" />
+    <Compile Include="Signature\ApkSignatureInfo.cs" />
     <Compile Include="XmlNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Dex\TableClass.cs" />
@@ -166,6 +167,7 @@
     <Compile Include="ApkFile.cs" />
     <Compile Include="Resources.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="ApkSignature.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Features.resx" />
@@ -178,6 +180,7 @@
       <Link>AlphaOmega %28NoPwd%29.snk</Link>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName) == Relea_e (

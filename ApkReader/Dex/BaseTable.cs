@@ -22,10 +22,7 @@ namespace AlphaOmega.Debug.Dex
 
 		internal BaseTable(DexFile file, TableType type)
 		{
-			if(file == null)
-				throw new ArgumentNullException("file");
-
-			this._file = file;
+			this._file = file ?? throw new ArgumentNullException(nameof(file));
 			this._table = this._file.GetSectionTable(type);
 		}
 

@@ -29,10 +29,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// <param name="resourceMap">resource.arsc reference</param>
 		protected ApkNode(XmlNode node, Dictionary<Int32, List<Arsc.ResourceRow>> resourceMap)
 		{
-			if(node == null)
-				throw new ArgumentNullException("node");
-
-			this._node = node;
+			this._node = node ?? throw new ArgumentNullException(nameof(node));
 			this._resourceMap = resourceMap;
 		}
 

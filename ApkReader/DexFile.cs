@@ -204,10 +204,7 @@ namespace AlphaOmega.Debug
 		/// <param name="loader">Loader type</param>
 		public DexFile(IImageLoader loader)
 		{
-			if(loader == null)
-				throw new ArgumentNullException("loader");
-
-			this._loader = loader;
+			this._loader = loader ?? throw new ArgumentNullException(nameof(loader));
 			this._loader.Endianness = EndianHelper.Endian.Little;
 
 			this._header = this.PtrToStructure<DexApi.header_item>(0);

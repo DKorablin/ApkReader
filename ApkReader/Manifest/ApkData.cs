@@ -81,7 +81,7 @@ namespace AlphaOmega.Debug.Manifest
 			if(this.Host == null)
 				return this.Scheme;
 
-			return String.Format("{0}://{1}:{2}{3}{4}{5}", this.Scheme, this.Host, this.Port, this.Path, this.PathPrefix, this.PathPattern);
+			return $"{this.Scheme}://{this.Host}:{this.Port}{this.Path}{this.PathPrefix}{this.PathPattern}";
 		}
 
 		private String GetAttributeValue(String attibuteName)

@@ -11,12 +11,7 @@ namespace AlphaOmega.Debug.Dex
 		internal Row Row
 		{
 			get { return this._row; }
-			set
-			{
-				if(value == null)
-					throw new ArgumentNullException("value");
-				this._row = value;
-			}
+			set { this._row = value ?? throw new ArgumentNullException(nameof(value)); }
 		}
 		IRow IBaseRow.Row { get { return this._row; } }
 
@@ -29,12 +24,7 @@ namespace AlphaOmega.Debug.Dex
 		internal DexFile File
 		{
 			get { return this._file; }
-			set
-			{
-				if(value == null)
-					throw new ArgumentNullException("value");
-				this._file = value;
-			}
+			set { this._file = value ?? throw new ArgumentNullException(nameof(value)); }
 		}
 
 		/// <summary>Get value from base generic table by columnIndex</summary>

@@ -70,10 +70,7 @@ namespace AlphaOmega.Debug
 		/// <param name="loader">Source loader</param>
 		public AxmlFile(IImageLoader loader)
 		{
-			if(loader == null)
-				throw new ArgumentNullException("loader");
-
-			this._loader = loader;
+			this._loader = loader?? throw new ArgumentNullException(nameof(loader));
 			this._loader.Endianness = EndianHelper.Endian.Little;
 
 			this._header = this.Loader.PtrToStructure<AxmlApi.AxmlHeader>(0);
@@ -107,7 +104,7 @@ namespace AlphaOmega.Debug
 					: Encoding.Unicode.GetString(this.Loader.ReadBytes(startOffset, (UInt32)stringSize * 2));
 
 				/*if(stringSize != this._strings[loop].Length)
-					throw new InvalidOperationException(String.Format("String size misbehave: Expected: {0} Collected: {1}", stringSize, this._strings[loop].Length));*/
+					throw new InvalidOperationException($"String size misbehave: Expected: {stringSize} Collected: {this._strings[loop].Length}");*/
 			}
 
 			/*for(Int32 loop = 0; loop < this._strings.Length; loop++)
@@ -171,7 +168,7 @@ namespace AlphaOmega.Debug
 					yield return new AxmlChunk(chunk, text);
 					break;
 				default:
-					throw new NotSupportedException(String.Format("Chunk type {0} not supported", chunk.TagType));
+					throw new NotSupportedException($"Chunk type {chunk.TagType} not supported");
 				}
 			}
 		}

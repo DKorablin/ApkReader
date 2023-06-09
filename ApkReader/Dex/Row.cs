@@ -53,12 +53,12 @@ namespace AlphaOmega.Debug.Dex
 			get
 			{
 				if(String.IsNullOrEmpty(columnName))
-					throw new ArgumentNullException("columnName");
+					throw new ArgumentNullException(nameof(columnName));
 
 				foreach(Cell cell in this._cells)
 					if(cell.Column.Name == columnName)
 						return cell;
-				throw new ArgumentException(String.Format("Column with name '{0}' not found", columnName));
+				throw new ArgumentException($"Column with name '{columnName}' not found");
 			}
 		}
 		ICell IRow.this[String columnName] { get { return this[columnName]; } }
