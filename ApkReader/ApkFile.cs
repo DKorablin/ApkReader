@@ -16,13 +16,19 @@ namespace AlphaOmega.Debug
 		private AxmlFile _xml;
 		private ArscFile _res;
 		private MfFile _mf;
+		private ApkSignature _signatures;
 		private AndroidManifest _androidManifest;
 		private Boolean _isXmlExists = true;
 		private Boolean _isArscExists = true;
 		private Boolean _isMfExists = true;
 
+		public ApkSignature Signatures
+		{
+			get { return _signatures ?? (_signatures = new ApkSignature(this._apkStream)); }
+		}
+
 		/// <summary>Raw AndroidManifest.xml</summary>
-		public AxmlFile XmlFile
+		public AxmlFile AndroidManifestXml
 		{
 			get
 			{
@@ -74,14 +80,15 @@ namespace AlphaOmega.Debug
 			}
 		}
 
-		/// <summary>Проверка на валидность Android Package</summary>
+		/// <summary>Check for overal Android Package vaidity</summary>
+		/// <remarks>This property will check only for specific files, but not for JAR or APK signatures</remarks>
 		public Boolean IsValid
 		{
 			get
 			{
-				if(this.XmlFile != null && this.Resources != null)
+				if(this.AndroidManifestXml != null && this.Resources != null)
 					return true;
-				foreach(String filePath in this.GetHeaderFiles())
+				foreach(String filePath in this.GetKnownFilesByExtension())//HACK:???
 					if(Path.GetExtension(filePath).ToLowerInvariant() == ".apk")
 						return true;
 
@@ -94,7 +101,7 @@ namespace AlphaOmega.Debug
 		{
 			get
 			{
-				return this._androidManifest ?? (this._androidManifest = AndroidManifest.Load(this.XmlFile, this.Resources));
+				return this._androidManifest ?? (this._androidManifest = AndroidManifest.Load(this.AndroidManifestXml, this.Resources));
 			}
 		}
 
@@ -178,12 +185,6 @@ namespace AlphaOmega.Debug
 			this._apk = new ZipFile(this._apkStream);
 		}
 
-		public IEnumerable<ApkSignatureInfo> GetApkSignatures()
-		{
-			ApkSignature signatures = new ApkSignature(this._apkStream);
-			return signatures.Blocks;
-		}
-
 		/// <summary>GetPackage contents</summary>
 		/// <returns></returns>
 		public IEnumerable<String> GetFiles()
@@ -195,7 +196,7 @@ namespace AlphaOmega.Debug
 
 		/// <summary>Get header files</summary>
 		/// <returns>Header APK files</returns>
-		public IEnumerable<String> GetHeaderFiles()
+		public IEnumerable<String> GetKnownFilesByExtension()
 		{
 			foreach(String filePath in this.GetFiles())
 				switch(Path.GetExtension(filePath).ToLowerInvariant())

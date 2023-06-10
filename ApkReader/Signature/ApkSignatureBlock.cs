@@ -8,8 +8,7 @@ namespace AlphaOmega.Debug.Signature
 	/// Application signing allows developers to identify the author of the application and to update their application without creating complicated interfaces and permissions.
 	/// Every application that is run on the Android platform must be signed by the developer.
 	/// </summary>
-	/// <remarks>https://source.android.com/docs/security/features/apksigning</remarks>
-	public class ApkSignatureInfo
+	public class ApkSignatureBlock
 	{
 		/// <summary>Known signature scheme block ID</summary>
 		public enum BlockId : UInt32
@@ -42,9 +41,9 @@ namespace AlphaOmega.Debug.Signature
 		/// <summary>Block data</summary>
 		public Byte[] Data { get; }
 
-		internal ApkSignatureInfo(UInt32 id, Byte[] data)
+		internal ApkSignatureBlock(ApkSignatureBlock.BlockId id, Byte[] data)
 		{
-			Id = (BlockId)id;
+			Id = id;
 			Data = data;
 		}
 	}

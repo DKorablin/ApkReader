@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices.ComTypes;
+using System.Runtime.Remoting.Messaging;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using AlphaOmega.Debug;
 using AlphaOmega.Debug.Dex.Tables;
 using AlphaOmega.Debug.Manifest;
+using AlphaOmega.Debug.Signature;
 
 namespace Demo
 {
@@ -20,6 +24,28 @@ namespace Demo
 
 		static void Main(String[] args)
 		{
+			/*using(FileStream stream = new FileStream(@"C:\Games\Jedi Knight 2 - Jedi Outcast & Jedi Academy\JKHR.RSA", FileMode.Open, FileAccess.Read, FileShare.Delete))
+			using(BinaryReader reader = new BinaryReader(stream))
+			{
+				Boolean isContinue = true;
+				Int32 position = 0;
+				Byte[] bytes = reader.ReadBytes((Int32)stream.Length);
+				while(isContinue)
+					try
+					{
+						X509Certificate cert = new X509Certificate(bytes);
+						isContinue = false;
+					} catch(CryptographicException exc)
+					{
+						if((UInt32)exc.HResult == (UInt32)0x80092009)
+						{
+							stream.Position = ++position;
+							bytes = reader.ReadBytes((Int32)stream.Length - position);
+						} else throw;
+					}
+			}
+			return;*/
+
 			//Program.ReadDex(Program.DexFilePath);
 			//Program.ReadManifest(Program.ManifestFilePath);
 			//Program.ReadResource(Program.ResourcesFilePath);
@@ -134,17 +160,12 @@ namespace Demo
 				Console.WriteLine("Application name: {0} ({1})", apk.AndroidManifest.Application.Label, apk.AndroidManifest.VersionName);
  
 				List<String> blockIDs = new List<String>();
-				foreach(var block in apk.GetApkSignatures())
-				{
-					switch(block.Id)
-					{
-					case AlphaOmega.Debug.Signature.ApkSignatureInfo.BlockId.APK_SIGNATURE_SCHEME_V2_BLOCK_ID:
-						//File.WriteAllBytes(@"C:\Games\Jedi Knight 2 - Jedi Outcast & Jedi Academy\JKHR.RSA", block.Data);
-						break;
-					}
+				foreach(var block in apk.Signatures)
 					blockIDs.Add(block.Id.ToString());
-				}
 				Console.WriteLine("Signature block IDs: ", String.Join(", ", blockIDs));
+				ApkSignatureV2Block blockV2 = apk.Signatures.GetBlockByType<ApkSignatureV2Block>();
+				using(X509Certificate cert = blockV2.GetSigningCertificate())
+					Console.WriteLine($"Certificate DN: {cert.Issuer} From: {cert.GetEffectiveDateString()} To: {cert.GetExpirationDateString()}");
 
 				if(apk.MfFile != null)
 				{
@@ -170,10 +191,10 @@ namespace Demo
 						Console.WriteLine("Invalid hash: {0:N0}", invalidHash);
 				}
 
-				TreeDto root = BuildTree(apk.GetHeaderFiles().ToArray(), '/');
+				TreeDto root = BuildTree(apk.GetKnownFilesByExtension().ToArray(), '/');
 				String test = ConvertTreeToStringRec(root, 0);
 
-				foreach(String xmlFile in apk.GetHeaderFiles())
+				foreach(String xmlFile in apk.GetKnownFilesByExtension())
 				{
 					switch(Path.GetExtension(xmlFile).ToLowerInvariant())
 					{

@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("Demo")]
@@ -7,7 +6,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("DEBUG")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Demo")]
-[assembly: AssemblyCopyright("Copyright © DKorablin 2016")]
+[assembly: AssemblyCopyright("Copyright © DKorablin")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
