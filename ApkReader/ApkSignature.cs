@@ -113,18 +113,8 @@ namespace AlphaOmega.Debug
 
 			using(BinaryReader br = new BinaryReader(stream))
 			{
-				//Trying to find EoCD. It's in always in the end of a zip archive
+				//APK Signature Scheme v2 verification: ZIP End of Central Directory is not followed by more data
 				br.BaseStream.Position = br.BaseStream.Length - Marshal.SizeOf(typeof(EndOfCentralDirectoryFileHeader));
-				while(true)
-				{
-					if(br.ReadInt32() == EndOfCentralDirectoryFileHeader.SignatureValue)
-					{
-						br.BaseStream.Seek(-sizeof(Int32), SeekOrigin.Current);
-						break;
-					} else//We need this block of EoCD ends with file comments. Normally, android package does't contains comments, but wee need to check
-						br.BaseStream.Seek(-(sizeof(Int32) + 1), SeekOrigin.Current);//BUG: If we will not find EoCD signture, then we can find damaged file
-				}
-
 				EndOfCentralDirectoryFileHeader eocd = Utils.PtrToStructure<EndOfCentralDirectoryFileHeader>(br);
 				if(eocd.IsValid == false)
 					return;
