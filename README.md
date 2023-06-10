@@ -22,11 +22,14 @@ Usage:
                 //...
             }
 
-            foreach(String filePath in apk.GetHeaderFiles())
+            foreach(String filePath in apk.GetFiles())
                 if(Path.GetExtension(filePath).ToLowerInvariant()==".dex")
-                    using(DexFile dex=new DexFile(new StreamLoader(apk.GetFileStream(filePath))))
-                    {//Davlik executables
-                        //...
+                    using(Stream stream=apk.GetFileStream(filePath, true)){
+                        if(stream!=null)
+                            using(DexFile dex=new DexFile(new StreamLoader(stream)))
+                            {//Davlik executables
+                                //...
+                            }
                     }
         }
     }
@@ -36,9 +39,14 @@ Supported structures:
   - _XmlFile_ &mdash; AndroidManifest.xml
   - _Resources_ &mdash; resources.arsc
   - _AndroidManifest_ &mdash; Stronly typled android manifest file
+- ApkSignature.cs (https://source.android.com/docs/security/features/apksigning)
+  - APK signature block reading
+  - Signature scheme V2 issuer certificate extracted (Need to test)
 - ArscFile.cs (resources.arsc)
   - _Header_ &mdash; Resource file header
   - _ResourceMap_ &mdash; Resource table (id,value(s))
+- MfFile.cs (https://docs.oracle.com/javase/tutorial/deployment/jar/signing.html)
+  - JAR files integrinty validation
 - AxmlFile.cs (https://developer.android.com/guide/topics/manifest/manifest-intro)
   - Strongly typed manifest sections mapped to resources.arsc file where needed
 - DexFile.cs (https://source.android.com/devices/tech/dalvik/dex-format)
