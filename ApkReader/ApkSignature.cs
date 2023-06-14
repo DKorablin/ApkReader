@@ -3,9 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-
 using AlphaOmega.Debug.Signature;
-
 using static AlphaOmega.Debug.ApkSignature.Api;
 
 namespace AlphaOmega.Debug
@@ -15,7 +13,7 @@ namespace AlphaOmega.Debug
 	/// Every application that is run on the Android platform must be signed by the developer.
 	/// </summary>
 	/// <remarks>https://source.android.com/docs/security/features/apksigning</remarks>
-	public class ApkSignature : IEnumerable<ApkSignatureBlock>
+	public class ApkSignature : IEnumerable<ApkSignatureVerifier>
 	{
 		internal sealed class Api
 		{
@@ -48,32 +46,63 @@ namespace AlphaOmega.Debug
 			[StructLayout(LayoutKind.Sequential, Pack = 2)]
 			public struct ApkSignatureSchemeHeader
 			{
+				private const Int64 APK_SIG_BLOCK_MAGIC_LO = 0x20676953204b5041L;
+				private const Int64 APK_SIG_BLOCK_MAGIC_HI = 0x3234206b636f6c42L;
 				/// <summary>Size of all signature schemes blocks</summary>
 				public UInt64 sizeOfScheme;
+
 				/// <summary>Validation value</summary>
 				[MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
 				public Byte[] magic;
+
 				/// <summary>Converted magic value to string</summary>
+				/// <remarks>This value must be equals to: "APK Sig Block 42" string</remarks>
 				public String MagicStr { get { return System.Text.Encoding.ASCII.GetString(magic); } }
+
 				/// <summary>Check header for validation</summary>
-				public Boolean IsValid { get { return MagicStr == "APK Sig Block 42"; } }
+				public Boolean IsValid
+				{
+					get
+					{
+						return BitConverter.ToInt64(magic, 0) == APK_SIG_BLOCK_MAGIC_LO
+							&& BitConverter.ToInt64(magic, sizeof(Int64)) == APK_SIG_BLOCK_MAGIC_HI;
+					}
+				}
 			}
 		}
 
-		private Dictionary<ApkSignatureBlock.BlockId, ApkSignatureBlock> _blocks = new Dictionary<ApkSignatureBlock.BlockId, ApkSignatureBlock>();
+		private readonly ApkFile _apk;
+		private V1SchemeBlock _v1Block;
+		private Dictionary<ApkSignatureVerifier.BlockId, ApkSignatureVerifier> _blocks = new Dictionary<ApkSignatureVerifier.BlockId, ApkSignatureVerifier>();
+
+		private Dictionary<ApkSignatureVerifier.BlockId, ApkSignatureVerifier> Blocks
+		{
+			get
+			{
+				return _blocks ?? (_blocks = ReadSignatures(this._apk.ApkStream));
+			}
+		}
 
 		/// <summary>Package contains signature blocks</summary>
-		public Boolean IsEmpty { get { return this._blocks.Count > 0; } }
+		public Boolean IsEmpty { get { return this.Blocks.Count > 0; } }
+
+		public V1SchemeBlock V1SchemeBlock
+		{
+			get
+			{
+				return _v1Block ?? (_v1Block = new V1SchemeBlock(_apk));
+			}
+		}
 
 		/// <summary>Get signature block by block ID or null if block is not found</summary>
 		/// <param name="id">Block identifier for required schema</param>
 		/// <returns>Strongly typed APK signature block</returns>
-		public ApkSignatureBlock this[ApkSignatureBlock.BlockId id]
+		public ApkSignatureVerifier this[ApkSignatureVerifier.BlockId id]
 		{
 			get
 			{
-				ApkSignatureBlock result = null;
-				return _blocks.TryGetValue(id, out result) ? result : (ApkSignatureBlock)null;
+				ApkSignatureVerifier result = null;
+				return this.Blocks.TryGetValue(id, out result) ? result : (ApkSignatureVerifier)null;
 			}
 		}
 
@@ -81,12 +110,12 @@ namespace AlphaOmega.Debug
 		/// <typeparam name="T">Strongly typed block wrapper type</typeparam>
 		/// <returns>Found strongly typed signature block</returns>
 		/// <exception cref="NotSupportedException">Only V2 signature block supported</exception>
-		public T GetBlockByType<T>() where T : ApkSignatureBlock
+		public T GetBlockByType<T>() where T : ApkSignatureVerifier
 		{
-			if(typeof(T) == typeof(ApkSignatureV2Block))
+			if(typeof(T) == typeof(ApkV2SignatureVerifier))
 			{
-				ApkSignatureBlock result;
-				return _blocks.TryGetValue(ApkSignatureBlock.BlockId.APK_SIGNATURE_SCHEME_V2_BLOCK_ID, out result)
+				ApkSignatureVerifier result;
+				return this.Blocks.TryGetValue(ApkSignatureVerifier.BlockId.APK_SIGNATURE_SCHEME_V2_BLOCK_ID, out result)
 					? (T)result : (T)null;
 			} else
 				throw new NotImplementedException();
@@ -94,9 +123,9 @@ namespace AlphaOmega.Debug
 
 		/// <summary>Get all found signature blocks</summary>
 		/// <returns>List of signature blocks</returns>
-		public IEnumerator<ApkSignatureBlock> GetEnumerator()
+		public IEnumerator<ApkSignatureVerifier> GetEnumerator()
 		{
-			return _blocks.Values.GetEnumerator();
+			return this.Blocks.Values.GetEnumerator();
 		}
 
 		IEnumerator IEnumerable.GetEnumerator()
@@ -104,51 +133,62 @@ namespace AlphaOmega.Debug
 			return this.GetEnumerator();
 		}
 
-		internal ApkSignature(Stream stream)
+		internal ApkSignature(ApkFile apk)
+		{
+			_apk = apk;
+		}
+
+		public static Dictionary<ApkSignatureVerifier.BlockId, ApkSignatureVerifier> ReadSignatures(Stream stream)
 		{
 			if(stream == null)
 				throw new ArgumentNullException(nameof(stream));
 			if(stream.CanSeek == false || stream.CanRead == false)
 				throw new ArgumentException("stream is readonly", nameof(stream));
 
-			using(BinaryReader br = new BinaryReader(stream))
+			Dictionary<ApkSignatureVerifier.BlockId, ApkSignatureVerifier> result = new Dictionary<ApkSignatureVerifier.BlockId, ApkSignatureVerifier>();
+
+			BinaryReader br = new BinaryReader(stream);//Using will close underlying stream, considering that we didn’t open it, it’s not up to us to close it
+
+			//APK Signature Scheme v2 verification: ZIP End of Central Directory is not followed by more data
+			br.BaseStream.Position = br.BaseStream.Length - Marshal.SizeOf(typeof(EndOfCentralDirectoryFileHeader));
+			EndOfCentralDirectoryFileHeader eocd = Utils.PtrToStructure<EndOfCentralDirectoryFileHeader>(br);
+			if(eocd.IsValid == false)
+				return result;
+
+			br.BaseStream.Position = eocd.offsetToCentralDirectory;
+
+			br.BaseStream.Seek(-Marshal.SizeOf(typeof(ApkSignatureSchemeHeader)), SeekOrigin.Current);
+			Int64 apkSignatureBlockEnd = br.BaseStream.Position;
+			ApkSignatureSchemeHeader signatureHeader = Utils.PtrToStructure<ApkSignatureSchemeHeader>(br);
+			if(signatureHeader.IsValid == false)
+				return result;
+
+			Int64 apkSignatureSchemeStart = (Int64)eocd.offsetToCentralDirectory - (Int64)signatureHeader.sizeOfScheme;
+
+			br.BaseStream.Position = apkSignatureSchemeStart;
+			while(br.BaseStream.Position < apkSignatureBlockEnd)
 			{
-				//APK Signature Scheme v2 verification: ZIP End of Central Directory is not followed by more data
-				br.BaseStream.Position = br.BaseStream.Length - Marshal.SizeOf(typeof(EndOfCentralDirectoryFileHeader));
-				EndOfCentralDirectoryFileHeader eocd = Utils.PtrToStructure<EndOfCentralDirectoryFileHeader>(br);
-				if(eocd.IsValid == false)
-					return;
+				Int64 sizeOfBlock2 = br.ReadInt64();
+				if(sizeOfBlock2 < sizeof(UInt32) || sizeOfBlock2 > apkSignatureBlockEnd)
+					return result;//"APK Signing Block entry #"+_blocks.Length+" size out of range: " + sizeOfBlock2
 
-				br.BaseStream.Position = eocd.offsetToCentralDirectory;
+				ApkSignatureVerifier.BlockId id = (ApkSignatureVerifier.BlockId)br.ReadUInt32();
+				Byte[] blockData = br.ReadBytes((Int32)(sizeOfBlock2 - sizeof(UInt32)));
 
-				br.BaseStream.Seek(-Marshal.SizeOf(typeof(ApkSignatureSchemeHeader)), SeekOrigin.Current);
-				Int64 apkSignatureBlockEnd = br.BaseStream.Position;
-				ApkSignatureSchemeHeader signatureHeader = Utils.PtrToStructure<ApkSignatureSchemeHeader>(br);
-				if(signatureHeader.IsValid == false)
-					return;
-
-				Int32 apkSignatureSchemeStart = eocd.offsetToCentralDirectory - (Int32)signatureHeader.sizeOfScheme;
-
-				br.BaseStream.Position = apkSignatureSchemeStart;
-				while(br.BaseStream.Position < apkSignatureBlockEnd)
+				ApkSignatureVerifier signature;
+				switch(id)
 				{
-					UInt64 sizeOfBlock2 = br.ReadUInt64();
-					ApkSignatureBlock.BlockId id = (ApkSignatureBlock.BlockId)br.ReadUInt32();
-					Byte[] blockData = br.ReadBytes((Int32)(sizeOfBlock2 - sizeof(UInt32)));
-
-					ApkSignatureBlock signature;
-					switch(id)
-					{
-					case ApkSignatureBlock.BlockId.APK_SIGNATURE_SCHEME_V2_BLOCK_ID:
-						signature = new ApkSignatureV2Block(blockData);
-						break;
-					default:
-						signature = new ApkSignatureBlock(id, blockData);
-						break;
-					}
-					_blocks.Add(id, signature);
+				case ApkSignatureVerifier.BlockId.APK_SIGNATURE_SCHEME_V2_BLOCK_ID:
+					signature = new ApkV2SignatureVerifier(blockData);
+					break;
+				default:
+					signature = new ApkSignatureVerifier(id, blockData);
+					break;
 				}
+				result.Add(id, signature);
 			}
+
+			return result;
 		}
 	}
 }

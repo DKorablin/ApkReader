@@ -62,5 +62,13 @@ namespace AlphaOmega.Debug
 		{
 			return (UInt32)((padding + 1) & ~1);
 		}
+
+		/// <summary>Remaining length in the reader</summary>
+		/// <param name="reader">Reader where we need to calculate remaining length</param>
+		/// <returns>Count of bytes stored in reader after current position</returns>
+		public static Int32 Remaining(BinaryReader reader)
+		{
+			return (Int32)reader.BaseStream.Length - (Int32)reader.BaseStream.Position;
+		}
 	}
 }

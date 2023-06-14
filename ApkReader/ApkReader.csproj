@@ -159,8 +159,10 @@
     <Compile Include="Manifest\ApkUsesPermissionSdk23.cs" />
     <Compile Include="Manifest\IApkIntentedNode.cs" />
     <Compile Include="MfFile.cs" />
-    <Compile Include="Signature\ApkSignatureBlock.cs" />
-    <Compile Include="Signature\ApkSignatureV2Block.cs" />
+    <Compile Include="Signature\ApkSignatureVerifier.cs" />
+    <Compile Include="Signature\ApkV2SignatureVerifier.cs" />
+    <Compile Include="Signature\V1SchemeBlock.cs" />
+    <Compile Include="Signature\V2SchemeBlock.cs" />
     <Compile Include="XmlNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Dex\TableClass.cs" />

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AlphaOmega.Debug.Signature
 {
@@ -8,7 +6,7 @@ namespace AlphaOmega.Debug.Signature
 	/// Application signing allows developers to identify the author of the application and to update their application without creating complicated interfaces and permissions.
 	/// Every application that is run on the Android platform must be signed by the developer.
 	/// </summary>
-	public class ApkSignatureBlock
+	public class ApkSignatureVerifier
 	{
 		/// <summary>Known signature scheme block ID</summary>
 		public enum BlockId : UInt32
@@ -41,7 +39,7 @@ namespace AlphaOmega.Debug.Signature
 		/// <summary>Block data</summary>
 		public Byte[] Data { get; }
 
-		internal ApkSignatureBlock(ApkSignatureBlock.BlockId id, Byte[] data)
+		internal ApkSignatureVerifier(ApkSignatureVerifier.BlockId id, Byte[] data)
 		{
 			Id = id;
 			Data = data;

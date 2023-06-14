@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices.ComTypes;
-using System.Runtime.Remoting.Messaging;
-using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using AlphaOmega.Debug;
 using AlphaOmega.Debug.Dex.Tables;
@@ -20,44 +16,20 @@ namespace Demo
 		private const String ManifestFilePath = @"C:\Visual Studio Projects\C#\Shared.Classes\AlphaOmega.Debug\FileReader\Samples\apk\com.squareenix.dxm.AndroidManifest.xml";
 		private const String ResourcesFilePath = @"C:\Visual Studio Projects\C#\Shared.Classes\AlphaOmega.Debug\FileReader\Samples\apk\com.squareenix.dxm.resources.arsc";
 		private const String DexFilePath = @"C:\Visual Studio Projects\C#\Shared.Classes\AlphaOmega.Debug\FileReader\Samples\apk\com.askgps.personaltrackerround.classes2.dex";
-		private const String ApkFilePath = @"C:\Games\Jedi Knight 2 - Jedi Outcast & Jedi Academy\com.drbeef.jkxr-1.1.7-public.apk";
+		private const String ApkFilePath = @"C:\Visual Studio Projects\C#\Shared.Classes\AlphaOmega.Debug\FileReader\Samples\apk";
 
 		static void Main(String[] args)
 		{
-			/*using(FileStream stream = new FileStream(@"C:\Games\Jedi Knight 2 - Jedi Outcast & Jedi Academy\JKHR.RSA", FileMode.Open, FileAccess.Read, FileShare.Delete))
-			using(BinaryReader reader = new BinaryReader(stream))
-			{
-				Boolean isContinue = true;
-				Int32 position = 0;
-				Byte[] bytes = reader.ReadBytes((Int32)stream.Length);
-				while(isContinue)
-					try
-					{
-						X509Certificate cert = new X509Certificate(bytes);
-						isContinue = false;
-					} catch(CryptographicException exc)
-					{
-						if((UInt32)exc.HResult == (UInt32)0x80092009)
-						{
-							stream.Position = ++position;
-							bytes = reader.ReadBytes((Int32)stream.Length - position);
-						} else throw;
-					}
-			}
-			return;*/
-
 			//Program.ReadDex(Program.DexFilePath);
 			//Program.ReadManifest(Program.ManifestFilePath);
 			//Program.ReadResource(Program.ResourcesFilePath);
 			//Program.ReadApkManifest(Program.ManifestFilePath, Program.ResourcesFilePath);
-			Program.ReadApk(ApkFilePath);
-			return;
 
-			foreach(String filePath in Directory.GetFiles(Path.GetDirectoryName(ApkFilePath), "*.apk"))
+			foreach(String filePath in Directory.GetFiles(ApkFilePath, "*.apk"))
 				Program.ReadApk(filePath);
 			//Program.ReadAxml(Program.AxmlFilePath);
 			Console.WriteLine("FINISHED");
-			Console.ReadLine();
+			Console.ReadKey();
 		}
 
 		static void ReadAxml(String filePath)
@@ -130,7 +102,7 @@ namespace Demo
 				String[] pathSplit = path.Split(pathSeparator);
 				foreach(String subPath in pathSplit)
 				{
-					Type zz = GetFileTypeByExtension(subPath);
+					Type fileType = GetFileTypeByExtension(subPath);
 					TreeDto foundNode = currentNode.GetNode(subPath);
 					currentNode = foundNode == null
 						? currentNode.AddNode(new TreeDto("0", subPath))
@@ -162,12 +134,19 @@ namespace Demo
 				List<String> blockIDs = new List<String>();
 				foreach(var block in apk.Signatures)
 					blockIDs.Add(block.Id.ToString());
-				Console.WriteLine("Signature block IDs: ", String.Join(", ", blockIDs));
-				ApkSignatureV2Block blockV2 = apk.Signatures.GetBlockByType<ApkSignatureV2Block>();
-				using(X509Certificate cert = blockV2.GetSigningCertificate())
-					Console.WriteLine($"Certificate DN: {cert.Issuer} From: {cert.GetEffectiveDateString()} To: {cert.GetExpirationDateString()}");
+				Console.WriteLine("Signature block IDs: {0}", String.Join(", ", blockIDs));
+				ApkV2SignatureVerifier blockV2 = apk.Signatures.GetBlockByType<ApkV2SignatureVerifier>();
+				if(blockV2 == null)
+					Console.WriteLine("APK Signature Scheme v2: NOT FOUND. Jump back to JAR signature validation");
+				else
+				{
+					V2SchemeBlock v2 = blockV2.GetSigningCertificate();
+					Console.WriteLine($"Certificate DN: {v2.Certificate.Issuer} From: {v2.Certificate.GetEffectiveDateString()} To: {v2.Certificate.GetExpirationDateString()}");
+					v2.Certificate.Dispose();
+				}
 
-				if(apk.MfFile != null)
+				var mfFile = apk.Signatures.V1SchemeBlock.Manifest;
+				if(mfFile != null)
 				{
 					UInt32 totalFiles = 0;
 					UInt32 hashNotFound = 0;
@@ -175,9 +154,9 @@ namespace Demo
 					foreach(String apkFilePath in apk.GetFiles())
 					{
 						totalFiles++;
-						MfFile.HashWithType tHash = apk.MfFile[apkFilePath];
+						MfFile.HashWithType tHash = mfFile[apkFilePath];
 						Byte[] payload = apk.GetFile(apkFilePath, true);
-						if(payload == null || !apk.MfFile.ValidateHash(apkFilePath, apk.GetFile(apkFilePath)))
+						if(payload == null || !mfFile.ValidateHash(apkFilePath, apk.GetFile(apkFilePath)))
 						{
 							//Console.WriteLine("InvalidHash: {0} ({1})", apkFilePath, sHash);
 							invalidHash++;

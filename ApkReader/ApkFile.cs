@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using AlphaOmega.Debug.Manifest;
-using AlphaOmega.Debug.Signature;
-
 using ICSharpCode.SharpZipLib.Zip;
 
 namespace AlphaOmega.Debug
@@ -15,16 +13,16 @@ namespace AlphaOmega.Debug
 		private ZipFile _apk;
 		private AxmlFile _xml;
 		private ArscFile _res;
-		private MfFile _mf;
 		private ApkSignature _signatures;
 		private AndroidManifest _androidManifest;
 		private Boolean _isXmlExists = true;
 		private Boolean _isArscExists = true;
-		private Boolean _isMfExists = true;
+
+		internal Stream ApkStream { get { return _apkStream; } }
 
 		public ApkSignature Signatures
 		{
-			get { return _signatures ?? (_signatures = new ApkSignature(this._apkStream)); }
+			get { return _signatures ?? (_signatures = new ApkSignature(this)); }
 		}
 
 		/// <summary>Raw AndroidManifest.xml</summary>
@@ -42,24 +40,6 @@ namespace AlphaOmega.Debug
 						this._xml = new AxmlFile(StreamLoader.FromMemory(payload, FileName));
 				}
 				return this._xml;
-			}
-		}
-
-		/// <summary>META-INF/MANIFEST.MF file reader</summary>
-		public MfFile MfFile
-		{
-			get
-			{
-				if(this._mf == null && _isMfExists)
-				{
-					Byte[] payload = this.GetFile("META-INF/MANIFEST.MF");
-					if(payload == null)
-						_isMfExists = false;
-					else
-						this._mf = new MfFile(payload);
-				}
-				return this._mf;
-
 			}
 		}
 
@@ -213,34 +193,11 @@ namespace AlphaOmega.Debug
 				}
 		}
 
-		/// <summary>Получить файл в виде потока байт</summary>
-		/// <param name="zipFilePath">Путь к файлу в архиве</param>
-		/// <param name="checkHash">Проверить корректность Hash из MANIFEST.MF</param>
-		/// <returns>Поток файла из архива</returns>
-		public Stream GetFileStream(String zipFilePath, Boolean checkHash = false)
-		{
-			ZipEntry entry = this._apk.GetEntry(zipFilePath);
-			if(entry == null)
-				return null;
-
-			Stream result = this._apk.GetInputStream(entry);
-
-			if(checkHash)
-			{
-				if(this.MfFile == null)
-					return null;//MANIFEST.MF file missing
-				if(!this.MfFile.ValidateHash(zipFilePath, result, result.Length))
-					return null;//Hash validation failed
-				result.Position = 0;//Reset stream position
-			}
-			return result;
-		}
-
 		/// <summary>Получить файл в виде массива байт</summary>
 		/// <param name="zipFilePath">Path to the file inside APK</param>
-		/// <param name="checkHash">Check file contents hash with MANIFEST.MF file</param>
+		/// <param name="checkSignature">Check file contents hash with APK Signature</param>
 		/// <returns>File contents of null if file not found or hashCheck failed</returns>
-		public Byte[] GetFile(String zipFilePath, Boolean checkHash = false)
+		public Byte[] GetFile(String zipFilePath, Boolean checkSignature = false)
 		{
 			ZipEntry entry = this._apk.GetEntry(zipFilePath);
 			if(entry == null)
@@ -250,11 +207,11 @@ namespace AlphaOmega.Debug
 			using(BinaryReader reader = new BinaryReader(this._apk.GetInputStream(entry)))
 				result = reader.ReadBytes((Int32)entry.Size);
 
-			if(checkHash)
+			if(checkSignature)
 			{
-				if(this.MfFile == null)
+				if(this.Signatures.V1SchemeBlock.Manifest == null)
 					return null;//MANIFEST.MF file missing
-				if(!this.MfFile.ValidateHash(zipFilePath, result))
+				if(!this.Signatures.V1SchemeBlock.Manifest.ValidateHash(zipFilePath, result))
 					return null;//Hash validation failed
 			}
 			return result;
