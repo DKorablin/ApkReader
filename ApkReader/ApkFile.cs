@@ -167,7 +167,7 @@ namespace AlphaOmega.Debug
 
 		/// <summary>GetPackage contents</summary>
 		/// <returns></returns>
-		public IEnumerable<String> GetFiles()
+		public IEnumerable<String> EnumerateFiles()
 		{
 			foreach(ZipEntry entry in this._apk)
 				if(entry.IsFile)
@@ -178,7 +178,7 @@ namespace AlphaOmega.Debug
 		/// <returns>Header APK files</returns>
 		public IEnumerable<String> GetKnownFilesByExtension()
 		{
-			foreach(String filePath in this.GetFiles())
+			foreach(String filePath in this.EnumerateFiles())
 				switch(Path.GetExtension(filePath).ToLowerInvariant())
 				{
 				case ".apk":

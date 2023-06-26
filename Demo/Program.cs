@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using AlphaOmega.Debug;
 using AlphaOmega.Debug.Dex.Tables;
@@ -151,7 +152,7 @@ namespace Demo
 					UInt32 totalFiles = 0;
 					UInt32 hashNotFound = 0;
 					UInt32 invalidHash = 0;
-					foreach(String apkFilePath in apk.GetFiles())
+					foreach(String apkFilePath in apk.EnumerateFiles())
 					{
 						totalFiles++;
 						MfFile.HashWithType tHash = mfFile[apkFilePath];
