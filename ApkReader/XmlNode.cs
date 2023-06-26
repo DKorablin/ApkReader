@@ -79,8 +79,6 @@ namespace AlphaOmega.Debug
 				: null;
 		}
 
-		private const Char IntentChar = '\t';
-
 		/// <summary>Convert oop XML to string XML</summary>
 		/// <returns>String xml representation</returns>
 		public String ConvertToString()
@@ -93,11 +91,13 @@ namespace AlphaOmega.Debug
 		/// <returns>String xml representation</returns>
 		private String ConvertToString(Int32 intendCount)
 		{
+			const Char IntentChar = '\t';
+
 			StringBuilder attributes = new StringBuilder();
 			foreach(var item in this.Attributes)
 				attributes.Append(" " + item.Key + "=\"" + String.Join(",", item.Value.ToArray()) + "\"");
 
-			String intent = new String(Array.ConvertAll(new Char[intendCount], delegate(Char n) { return IntentChar; }));
+			String intent = new String(Array.ConvertAll(new Char[intendCount], delegate (Char n) { return IntentChar; }));
 			StringBuilder result = new StringBuilder();
 			result.AppendLine(intent + "<" + this.NodeName + attributes.ToString() + ">");
 			foreach(var nodes in this.ChildNodes)

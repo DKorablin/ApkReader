@@ -17,9 +17,7 @@ namespace AlphaOmega.Debug
 		{
 			get
 			{
-				return _permission==null
-					? _permission = new ResourceManager("AlphaOmega.Debug.Permission", typeof(Resources).Assembly)
-					: _permission;
+				return _permission ?? (_permission = new ResourceManager("AlphaOmega.Debug.Permission", typeof(Resources).Assembly));
 			}
 		}
 
@@ -27,9 +25,7 @@ namespace AlphaOmega.Debug
 		{
 			get
 			{
-				return _features == null
-					? _features = new ResourceManager("AlphaOmega.Debug.Features", typeof(Resources).Assembly)
-					: _features;
+				return _features ?? (_features = new ResourceManager("AlphaOmega.Debug.Features", typeof(Resources).Assembly));
 			}
 		}
 
@@ -37,9 +33,7 @@ namespace AlphaOmega.Debug
 		{
 			get
 			{
-				return _intent == null
-					? _intent = new ResourceManager("AlphaOmega.Debug.Intent", typeof(Resources).Assembly)
-					: _intent;
+				return _intent ?? (_intent = new ResourceManager("AlphaOmega.Debug.Intent", typeof(Resources).Assembly));
 			}
 		}
 

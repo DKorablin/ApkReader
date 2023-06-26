@@ -28,19 +28,17 @@ namespace AlphaOmega.Debug
 			/// <summary>SHA-1</summary>
 			Sha1,
 		}
-		private readonly String _version;
-		private readonly String _builtBy;
-		private readonly String _createdBy;
+
 		private readonly Dictionary<String, HashWithType> _fileHash;
 
 		/// <summary>Manifest-Version</summary>
-		public String Version { get { return this._version; } }
+		public String Version { get; }
 
 		/// <summary>Built-By</summary>
-		public String BuiltBy { get { return this._builtBy; } }
+		public String BuiltBy { get; }
 
 		/// <summary>Created-By</summary>
-		public String CreatedBy { get { return this._createdBy; } }
+		public String CreatedBy { get ; }
 
 		/// <summary>Gets original file hash</summary>
 		/// <param name="zipFilePath">Path to file in the apk</param>
@@ -74,18 +72,18 @@ namespace AlphaOmega.Debug
 				switch(key)
 				{
 				case "Manifest-Version":
-					this._version = value;
+					this.Version = value;
 					break;
 				case "Built-By":
-					this._builtBy = value;
+					this.BuiltBy = value;
 					break;
 				case "Created-By":
-					this._createdBy = value;
+					this.CreatedBy = value;
 					break;
 				case "Name":
 					loop++;
 					String key1, value1;
-					Boolean isSplitted=MfFile.SplitToKeyValue(lines[loop], out key1, out value1);
+					Boolean isSplitted = MfFile.SplitToKeyValue(lines[loop], out key1, out value1);
 					if(!isSplitted)
 					{
 						if(lines[loop - 1].Length == 70)

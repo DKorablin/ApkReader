@@ -10,7 +10,6 @@ namespace AlphaOmega.Debug
 	public class AxmlFile : IDisposable
 	{
 		private IImageLoader _loader;
-		private readonly AxmlApi.AxmlHeader _header;
 		private UInt32[] _stringsOffset;
 		private String[] _strings;
 		private XmlNode _rootNode;
@@ -19,18 +18,10 @@ namespace AlphaOmega.Debug
 		private IImageLoader Loader { get { return this._loader; } }
 
 		/// <summary>AXML header</summary>
-		public AxmlApi.AxmlHeader Header { get { return this._header; } }
+		public AxmlApi.AxmlHeader Header { get; }
 
 		/// <summary>Decoded XML root node</summary>
-		public XmlNode RootNode
-		{
-			get
-			{
-				return this._rootNode == null
-					? this._rootNode = this.ReadXmlNode()
-					: this._rootNode;
-			}
-		}
+		public XmlNode RootNode { get { return this._rootNode ?? (this._rootNode = this.ReadXmlNode()); } }
 
 		/// <summary>String table</summary>
 		public String[] Strings
@@ -70,10 +61,10 @@ namespace AlphaOmega.Debug
 		/// <param name="loader">Source loader</param>
 		public AxmlFile(IImageLoader loader)
 		{
-			this._loader = loader?? throw new ArgumentNullException(nameof(loader));
+			this._loader = loader ?? throw new ArgumentNullException(nameof(loader));
 			this._loader.Endianness = EndianHelper.Endian.Little;
 
-			this._header = this.Loader.PtrToStructure<AxmlApi.AxmlHeader>(0);
+			this.Header = this.Loader.PtrToStructure<AxmlApi.AxmlHeader>(0);
 		}
 
 		/// <summary>Read strings table</summary>
@@ -123,7 +114,7 @@ namespace AlphaOmega.Debug
 
 			UInt32 offset = (UInt32)this.Header.xmlOffset;
 			while(offset < this.Header.FileSize)
-			{//HACK: Тут лежит неизвестные данные, которые надо пропустить. Но есть шанс попасть в данные и не найти XML...
+			{//HACK: Here some unknown data that we need to skip. But also there is a change that we can get into payload and not find XML...
 				Int32 startTag = this.Loader.PtrToStructure<Int32>(offset);
 				if(startTag == (Int32)AxmlApi.ChunkType.StartTag)
 					break;

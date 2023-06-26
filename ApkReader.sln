@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApkReader", "ApkReader\ApkReader.csproj", "{A8E7CD9B-ABDE-4F5A-880F-29D06414FF3D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApkReader", "ApkReader\ApkReader.csproj", "{A8E7CD9B-ABDE-4F5A-880F-29D06414FF3D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo", "Demo\Demo.csproj", "{32ACE1FE-9080-4948-B89D-82F9972ECFBA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo", "Demo\Demo.csproj", "{32ACE1FE-9080-4948-B89D-82F9972ECFBA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{44218A52-6223-4453-8073-ACDC8DDEBD1E}"
 	ProjectSection(SolutionItems) = preProject
@@ -35,17 +35,20 @@ Global
 		{A8E7CD9B-ABDE-4F5A-880F-29D06414FF3D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{A8E7CD9B-ABDE-4F5A-880F-29D06414FF3D}.Release|x86.ActiveCfg = Release|Any CPU
 		{32ACE1FE-9080-4948-B89D-82F9972ECFBA}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{32ACE1FE-9080-4948-B89D-82F9972ECFBA}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{32ACE1FE-9080-4948-B89D-82F9972ECFBA}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{32ACE1FE-9080-4948-B89D-82F9972ECFBA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{32ACE1FE-9080-4948-B89D-82F9972ECFBA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{32ACE1FE-9080-4948-B89D-82F9972ECFBA}.Debug|x86.ActiveCfg = Debug|x86
 		{32ACE1FE-9080-4948-B89D-82F9972ECFBA}.Debug|x86.Build.0 = Debug|x86
 		{32ACE1FE-9080-4948-B89D-82F9972ECFBA}.Release|Any CPU.ActiveCfg = Release|x86
-		{32ACE1FE-9080-4948-B89D-82F9972ECFBA}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{32ACE1FE-9080-4948-B89D-82F9972ECFBA}.Release|Mixed Platforms.Build.0 = Release|x86
+		{32ACE1FE-9080-4948-B89D-82F9972ECFBA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{32ACE1FE-9080-4948-B89D-82F9972ECFBA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{32ACE1FE-9080-4948-B89D-82F9972ECFBA}.Release|x86.ActiveCfg = Release|x86
 		{32ACE1FE-9080-4948-B89D-82F9972ECFBA}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1683561C-C9B5-4F27-9184-D4C1A8E3645A}
 	EndGlobalSection
 EndGlobal

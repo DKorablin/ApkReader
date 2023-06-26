@@ -9,7 +9,6 @@ namespace AlphaOmega.Debug
 	public class DexFile : IDisposable
 	{
 		private IImageLoader _loader;
-		private readonly DexApi.header_item _header;
 		private DexApi.map_item[] _map_list;
 		private readonly Dictionary<TableType, Table> _sections = new Dictionary<TableType, Table>();
 
@@ -17,7 +16,7 @@ namespace AlphaOmega.Debug
 		public IImageLoader Loader { get { return this._loader; } }
 
 		/// <summary>Header identifier and description</summary>
-		public DexApi.header_item header { get { return this._header; } }
+		public DexApi.header_item Header { get ; }
 
 		private Dictionary<TableType, Table> Sections { get { return this._sections; } }
 
@@ -207,18 +206,18 @@ namespace AlphaOmega.Debug
 			this._loader = loader ?? throw new ArgumentNullException(nameof(loader));
 			this._loader.Endianness = EndianHelper.Endian.Little;
 
-			this._header = this.PtrToStructure<DexApi.header_item>(0);
-			if(!this._header.IsValid)
+			this.Header = this.PtrToStructure<DexApi.header_item>(0);
+			if(!this.Header.IsValid)
 				throw new InvalidOperationException("Invalid DEX header");
 
-			switch(this.header.endian_tag)
+			switch(this.Header.endian_tag)
 			{
 			case DexApi.ENDIAN.ENDIAN:
 				this._loader.Endianness = EndianHelper.Endian.Little;
 				break;
 			case DexApi.ENDIAN.REVERSE_ENDIAN:
 				this._loader.Endianness = EndianHelper.Endian.Big;
-				this._header = this.PtrToStructure<DexApi.header_item>(0);//TODO: Check it
+				this.Header = this.PtrToStructure<DexApi.header_item>(0);//TODO: Check it
 				break;
 			}
 		}
@@ -392,13 +391,13 @@ namespace AlphaOmega.Debug
 
 		private DexApi.map_item[] ReadMapList()
 		{
-			if(!this.header.IsValid)
+			if(!this.Header.IsValid)
 				throw new InvalidOperationException("Invalid header");
 
 			UInt32 sizeOfStruct = (UInt32)Marshal.SizeOf(typeof(DexApi.map_item));
 
-			UInt32 offset = this.header.map_off;
-			UInt32 size = this.PtrToStructure<UInt32>(this.header.map_off);
+			UInt32 offset = this.Header.map_off;
+			UInt32 size = this.PtrToStructure<UInt32>(offset);
 			offset += sizeof(UInt32);
 
 			DexApi.map_item[] result = new DexApi.map_item[size];
