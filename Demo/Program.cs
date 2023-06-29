@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using AlphaOmega.Debug;
 using AlphaOmega.Debug.Dex.Tables;
@@ -30,7 +29,6 @@ namespace Demo
 				Program.ReadApk(filePath);
 			//Program.ReadAxml(Program.AxmlFilePath);
 			Console.WriteLine("FINISHED");
-			Console.ReadKey();
 		}
 
 		static void ReadAxml(String filePath)
@@ -263,7 +261,7 @@ namespace Demo
 					Utils.ConsoleWriteMembers(row);
 
 
-				Utils.ConsoleWriteMembers(info.header);
+				Utils.ConsoleWriteMembers(info.Header);
 
 				foreach(DexApi.map_item mapItem in info.map_list)
 					Utils.ConsoleWriteMembers(mapItem);
