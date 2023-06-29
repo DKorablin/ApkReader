@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <RootNamespace>AlphaOmega.Debug</RootNamespace>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyTitle>Android Package Reader</AssemblyTitle>
+    <Company>Danila Korablin</Company>
+    <Product>ApkReader</Product>
+    <Copyright>Copyright © Danila Korablin 2016-2021</Copyright>
+    <Configuration>Debug</Configuration>
+    <AssemblyVersion>1.0.*</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>..\..\bin\</OutputPath>
+    <DocumentationFile>..\..\bin\ApkReader.xml</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\FileReader.Shared\ImageData\IBaseRow.cs">
+      <Link>Data\Interface\IBaseRow.cs</Link>
+    </Compile>
+    <Compile Include="..\FileReader.Shared\ImageData\ICell.cs">
+      <Link>Data\Interface\ICell.cs</Link>
+    </Compile>
+    <Compile Include="..\FileReader.Shared\ImageData\IColumn.cs">
+      <Link>Data\Interface\IColumn.cs</Link>
+    </Compile>
+    <Compile Include="..\FileReader.Shared\ImageData\IRow.cs">
+      <Link>Data\Interface\IRow.cs</Link>
+    </Compile>
+    <Compile Include="..\FileReader.Shared\ImageData\IRowPointer.cs">
+      <Link>Data\Interface\IRowPointer.cs</Link>
+    </Compile>
+    <Compile Include="..\FileReader.Shared\ImageData\ITable.cs">
+      <Link>Data\Interface\ITable.cs</Link>
+    </Compile>
+    <Compile Include="..\FileReader.Shared\ImageData\ITables.cs">
+      <Link>Data\Interface\ITables.cs</Link>
+    </Compile>
+    <Compile Include="..\FileReader.Shared\ImageLoader\BinaryEndianReader.cs">
+      <Link>ImageLoader\BinaryEndianReader.cs</Link>
+    </Compile>
+    <Compile Include="..\FileReader.Shared\ImageLoader\EndianHelper.cs">
+      <Link>ImageLoader\EndianHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\FileReader.Shared\ImageLoader\IImageLoader.cs">
+      <Link>ImageLoader\IImageLoader.cs</Link>
+    </Compile>
+    <Compile Include="..\FileReader.Shared\ImageLoader\LookupLoader.cs">
+      <Link>ImageLoader\LookupLoader.cs</Link>
+    </Compile>
+    <Compile Include="..\FileReader.Shared\ImageLoader\StreamLoader.cs">
+      <Link>ImageLoader\StreamLoader.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="SharpZipLib" Version="1.4.2" />
+  </ItemGroup>
+</Project>
