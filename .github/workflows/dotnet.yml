@@ -37,7 +37,7 @@ jobs:
     - name: Test
       run: dotnet test ApkReader.sln --no-build --verbosity normal
     - name: Zip artifact for deployment
-      run: zip release.zip *.* -r
+      run: zip release.zip * -r
       working-directory: ${{github.workspace}}/../bin/netstandard2.0
     - name: Deploy GitHub release
       uses: ncipollo/release-action@v1
