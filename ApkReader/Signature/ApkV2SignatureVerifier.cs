@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-
-using static AlphaOmega.Debug.Signature.ApkV2SignatureVerifier;
 
 namespace AlphaOmega.Debug.Signature
 {
@@ -55,13 +50,6 @@ namespace AlphaOmega.Debug.Signature
 		{
 			/// <summary>ID of this signature scheme as used in X-Android-APK-Signed header used in JAR signing</summary>
 			SF_ATTRIBUTE_ANDROID_APK_SIGNED_ID = 2,
-		}
-
-		public class SignatureAlgorithm
-		{
-			public SignatureAlgorithmType Algorithm;
-			public Byte[] Digest;
-
 		}
 
 		internal ApkV2SignatureVerifier(Byte[] data)
