@@ -15,17 +15,31 @@ namespace AlphaOmega.Debug.Signature
 	/// </summary>
 	public class ApkV2SignatureVerifier : ApkSignatureVerifier
 	{
+		/// <summary>Type of V2 signature algorithm is used for verification</summary>
 		public enum SignatureAlgorithmType : UInt32
 		{
+			/// <summary>RSASSA-PSS with SHA2-256 digest, SHA2-256 MGF1, 32 bytes of salt, trailer: 0xbc, content digested using SHA2-256 in 1 MB chunks</summary>
 			RSA_PSS_WITH_SHA256 = 0x0101,
+			/// <summary>RSASSA-PSS with SHA2-512 digest, SHA2-512 MGF1, 64 bytes of salt, trailer: 0xbc, content digested using SHA2-512 in 1 MB chunks</summary>
 			RSA_PSS_WITH_SHA512 = 0x0102,
+			/// <summary>RSASSA-PKCS1-v1_5 with SHA2-256 digest, content digested using SHA2-256 in 1 MB chunks</summary>
 			RSA_PKCS1_V1_5_WITH_SHA256 = 0x0103,
+			/// <summary>RSASSA-PKCS1-v1_5 with SHA2-512 digest, content digested using SHA2-512 in 1 MB chunks</summary>
 			RSA_PKCS1_V1_5_WITH_SHA512 = 0x0104,
+			/// <summary>ECDSA with SHA2-256 digest, content digested using SHA2-256 in 1 MB chunks</summary>
 			ECDSA_WITH_SHA256 = 0x0201,
+			/// <summary>ECDSA with SHA2-512 digest, content digested using SHA2-512 in 1 MB chunks</summary>
 			ECDSA_WITH_SHA512 = 0x0202,
+			/// <summary>DSA with SHA2-256 digest, content digested using SHA2-256 in 1 MB chunks</summary>
 			DSA_WITH_SHA256 = 0x0301,
+			/// <summary>RSASSA-PKCS1-v1_5 with SHA2-256 digest, content digested using SHA2-256 in 4 KB chunks, in the same way fsverity operates</summary>
+			/// <remarks>This digest and the content length (before digestion, 8 bytes in little endian) construct the final digest</remarks>
 			VERITY_RSA_PKCS1_V1_5_WITH_SHA256 = 0x0421,
+			/// <summary>ECDSA with SHA2-256 digest, content digested using SHA2-256 in 4 KB chunks, in the same way fsverity operates</summary>
+			/// <remarks>This digest and the content length (before digestion, 8 bytes in little endian) construct the final digest</remarks>
 			VERITY_ECDSA_WITH_SHA256 = 0x0423,
+			/// <summary>DSA with SHA2-256 digest, content digested using SHA2-256 in 4 KB chunks, in the same way fsverity operates</summary>
+			/// <remarks>This digest and the content length (before digestion, 8 bytes in little endian) construct the final digest</remarks>
 			VERITY_DSA_WITH_SHA256 = 0x0425,
 		}
 

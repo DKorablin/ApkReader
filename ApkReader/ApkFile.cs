@@ -20,6 +20,7 @@ namespace AlphaOmega.Debug
 
 		internal Stream ApkStream { get { return _apkStream; } }
 
+		/// <summary>APK Signatures extraction and validation</summary>
 		public ApkSignature Signatures
 		{
 			get { return _signatures ?? (_signatures = new ApkSignature(this)); }

@@ -86,6 +86,7 @@ namespace AlphaOmega.Debug
 		/// <summary>Package contains signature blocks</summary>
 		public Boolean IsEmpty { get { return this.Blocks.Count > 0; } }
 
+		/// <summary>JAR signature</summary>
 		public V1SchemeBlock V1SchemeBlock
 		{
 			get
@@ -138,6 +139,12 @@ namespace AlphaOmega.Debug
 			_apk = apk;
 		}
 
+		/// <summary>Read all signature blocks from APK file</summary>
+		/// <remarks>This method will not validate package for integrity but only read apropriate structures from binary file</remarks>
+		/// <param name="stream">Stream to APK file</param>
+		/// <returns>Stream of signature block IDs and known singature verifier object</returns>
+		/// <exception cref="ArgumentNullException">Stream is null</exception>
+		/// <exception cref="ArgumentException">Stream is read only</exception>
 		public static Dictionary<ApkSignatureVerifier.BlockId, ApkSignatureVerifier> ReadSignatures(Stream stream)
 		{
 			if(stream == null)
