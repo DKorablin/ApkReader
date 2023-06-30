@@ -24,9 +24,6 @@
     <SignAssembly>False</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\..\..\..\AlphaOmega (NoPwd).snk</AssemblyOriginatorKeyFile>
 </PropertyGroup>
-<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-  <DebugType>none</DebugType>
-</PropertyGroup>
   <ItemGroup>
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
   </ItemGroup>
