@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+[assembly: AssemblyMetadata("RepositoryUrl", "https://github.com/DKorablin/ApkReader")]
 
 [assembly: ComVisible(false)]
 

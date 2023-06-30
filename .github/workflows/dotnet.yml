@@ -1,4 +1,4 @@
-name: Buid, Test & Deploy
+name: Buid, Test & GitDeploy
 
 on:
   push:
@@ -21,7 +21,7 @@ jobs:
         dotnet-version: 6.0.x
     - name: Restore dependencies
       run: dotnet restore ApkReader.sln
-    - name: Bump version and push tag
+    - name: Update version number
       id: tag_version
       uses: mathieudutour/github-tag-action@v6.1
       with:
@@ -33,16 +33,15 @@ jobs:
         fileName: 'Signature.snk'
         encodedString: ${{ secrets.SIGN_KEY }}
     - name: Build
-      run: dotnet build ApkReader.sln --configuration Release --no-restore /p:Configuration=Release /p:AssemblyVersion=${{ steps.tag_version.outputs.new_version }} /p:SignAssembly=true /p:AssemblyOriginatorKeyFile="${{ steps.sign_key_file.outputs.filePath }}"
+      run: dotnet build ApkReader.sln --configuration Release --no-restore /p:Configuration=Release /p:DebugType=none /p:AssemblyVersion=${{ steps.tag_version.outputs.new_version }} /p:SignAssembly=true /p:AssemblyOriginatorKeyFile="${{ steps.sign_key_file.outputs.filePath }}"
     - name: Test
       run: dotnet test ApkReader.sln --no-build --verbosity normal
-    - name: Zip artifact for deployment
+    - name: Zip artifact
       run: zip -qq -r release.zip *.*
       working-directory: ${{github.workspace}}/../bin/netstandard2.0
-    - name: Deploy GitHub release
+    - name: Deploy GitHub
       uses: ncipollo/release-action@v1
       with:
-#        artifacts: ${{github.workspace}}/../bin/netstandard2.0/*.dll
         artifacts: ${{github.workspace}}/../bin/netstandard2.0/release.zip
         tag: ${{ steps.tag_version.outputs.new_tag }}
         name: Auto ${{ steps.tag_version.outputs.new_tag }}
