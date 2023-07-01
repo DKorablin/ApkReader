@@ -1,12 +1,12 @@
 ## Apk reader
-
+[![Auto build](https://github.com/DKorablin/ApkReader/actions/workflows/dotnet.yml/badge.svg)](https://github.com/DKorablin/ApkReader/actions)
 [![Nuget](https://img.shields.io/nuget/v/AlphaOmega.ApkReader)](https://www.nuget.org/packages/AlphaOmega.ApkReader)
 
 Android package file reader assembly. Can read apk files, android xml files (AndroidManifes.xml, *.xml), Dalvik executable format (dex), android resource files (arsc).
 
 Usage:
 
-    using(ApkFile apk = new ApkFile(filePath))
+    using(ApkFile apk = new ApkFile(apkFilePath))
     {
         if(apk.IsValid)
         {
@@ -22,15 +22,18 @@ Usage:
                 //...
             }
 
-            foreach(String filePath in apk.GetFiles())
-                if(Path.GetExtension(filePath).ToLowerInvariant()==".dex")
-                    using(Stream stream=apk.GetFileStream(filePath, true)){
+            foreach(String filePathInApk in apk.GetFiles())
+                switch(Path.GetExtension(filePathInApk).ToLowerInvariant()){
+                case ".dex":
+                    using(Stream stream=apk.GetFileStream(filePathInApk, true)){
                         if(stream!=null)
                             using(DexFile dex=new DexFile(new StreamLoader(stream)))
                             {//Davlik executables
                                 //...
                             }
                     }
+                break;
+                }
         }
     }
 
