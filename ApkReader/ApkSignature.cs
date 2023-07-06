@@ -73,15 +73,19 @@ namespace AlphaOmega.Debug
 
 		private readonly ApkFile _apk;
 		private V1SchemeBlock _v1Block;
-		private Dictionary<ApkSignatureVerifier.BlockId, ApkSignatureVerifier> _blocks = new Dictionary<ApkSignatureVerifier.BlockId, ApkSignatureVerifier>();
+		private Boolean _isValid;
+		private Dictionary<ApkSignatureVerifier.BlockId, ApkSignatureVerifier> _blocks;
 
 		private Dictionary<ApkSignatureVerifier.BlockId, ApkSignatureVerifier> Blocks
 		{
 			get
 			{
-				return _blocks ?? (_blocks = ReadSignatures(this._apk.ApkStream));
+				return _blocks ?? (_blocks = ReadSignatures(this._apk.ApkStream, out _isValid));
 			}
 		}
+
+		/// <summary>File is valid zip file</summary>
+		public Boolean IsValid { get { return _isValid; } }
 
 		/// <summary>Package contains signature blocks</summary>
 		public Boolean IsEmpty { get { return this.Blocks.Count > 0; } }
@@ -142,10 +146,11 @@ namespace AlphaOmega.Debug
 		/// <summary>Read all signature blocks from APK file</summary>
 		/// <remarks>This method will not validate package for integrity but only read apropriate structures from binary file</remarks>
 		/// <param name="stream">Stream to APK file</param>
+		/// <param name="isValid">Returns true if stream is valid ZIP archive (But it can return 0 blocks)</param>
 		/// <returns>Stream of signature block IDs and known singature verifier object</returns>
 		/// <exception cref="ArgumentNullException">Stream is null</exception>
 		/// <exception cref="ArgumentException">Stream is read only</exception>
-		public static Dictionary<ApkSignatureVerifier.BlockId, ApkSignatureVerifier> ReadSignatures(Stream stream)
+		public static Dictionary<ApkSignatureVerifier.BlockId, ApkSignatureVerifier> ReadSignatures(Stream stream, out Boolean isValid)
 		{
 			if(stream == null)
 				throw new ArgumentNullException(nameof(stream));
@@ -159,7 +164,7 @@ namespace AlphaOmega.Debug
 			//APK Signature Scheme v2 verification: ZIP End of Central Directory is not followed by more data
 			br.BaseStream.Position = br.BaseStream.Length - Marshal.SizeOf(typeof(EndOfCentralDirectoryFileHeader));
 			EndOfCentralDirectoryFileHeader eocd = Utils.PtrToStructure<EndOfCentralDirectoryFileHeader>(br);
-			if(eocd.IsValid == false)
+			if((isValid = eocd.IsValid) == false)
 				return result;
 
 			br.BaseStream.Position = eocd.offsetToCentralDirectory;

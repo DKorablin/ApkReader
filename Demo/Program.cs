@@ -80,8 +80,8 @@ namespace Demo
 					: Type.Axml;
 			case "":
 				Type result;
-				return Enum.TryParse<Type>(filePath, out result)
-					? result
+				return Enum.IsDefined(typeof(Type),filePath)
+					? (Type)Enum.Parse(typeof(Type),filePath)
 					: Type.Folder;
 			default:
 				throw new NotImplementedException();
@@ -133,15 +133,17 @@ namespace Demo
 				List<String> blockIDs = new List<String>();
 				foreach(var block in apk.Signatures)
 					blockIDs.Add(block.Id.ToString());
-				Console.WriteLine("Signature block IDs: {0}", String.Join(", ", blockIDs));
+				Console.WriteLine("Signature block IDs: {0}", String.Join(", ", blockIDs.ToArray()));
 				ApkV2SignatureVerifier blockV2 = apk.Signatures.GetBlockByType<ApkV2SignatureVerifier>();
-				if(blockV2 == null)
+				if(apk.Signatures.IsValid == false)
+					Console.WriteLine("APK Signature Scheme: Invalid ZIP file");
+				else if(blockV2 == null)
 					Console.WriteLine("APK Signature Scheme v2: NOT FOUND. Jump back to JAR signature validation");
 				else
 				{
 					V2SchemeBlock v2 = blockV2.GetSigningCertificate();
 					Console.WriteLine($"Certificate DN: {v2.Certificate.Issuer} From: {v2.Certificate.GetEffectiveDateString()} To: {v2.Certificate.GetExpirationDateString()}");
-					v2.Certificate.Dispose();
+					//v2.Certificate.Dispose();
 				}
 
 				var mfFile = apk.Signatures.V1SchemeBlock.Manifest;
@@ -221,12 +223,12 @@ namespace Demo
 			Console.WriteLine("Label: " + apk.Application.Label);
 			Console.WriteLine("Package: " + apk.Package);
 			Console.WriteLine("Icon: " + apk.Application.Icon);
-			Console.WriteLine("Permissions: " + String.Join(", ", apk.UsesPermission.Select(p => p.Name)));
-			Console.WriteLine("Services: " + String.Join(", ", apk.Application.Service));
-			Console.WriteLine("Activities: " + String.Join(", ", apk.Application.Activity));
-			Console.WriteLine("Reciever: " + String.Join(", ", apk.Application.Reciever));
-			Console.WriteLine("Features: " + String.Join(", ", apk.UsesFeature));
-			Console.WriteLine("Uses Libraries: " + String.Join(", ", apk.Application.UsesLibrary.Select(p => p.Name)));
+			Console.WriteLine("Permissions: " + String.Join(", ", apk.UsesPermission.Select(p => p.Name).ToArray()));
+			Console.WriteLine("Services: " + String.Join(", ", apk.Application.Service.Select(a=>a.Name).ToArray()));
+			Console.WriteLine("Activities: " + String.Join(", ", apk.Application.Activity.Select(a=>a.Name).ToArray()));
+			Console.WriteLine("Reciever: " + String.Join(", ", apk.Application.Reciever.Select(a=>a.Name).ToArray()));
+			Console.WriteLine("Features: " + String.Join(", ", apk.UsesFeature.Select(f=>f.Name).ToArray()));
+			Console.WriteLine("Uses Libraries: " + String.Join(", ", apk.Application.UsesLibrary.Select(p => p.Name).ToArray()));
 		}
 
 		static void ReadResource(String filePath)
