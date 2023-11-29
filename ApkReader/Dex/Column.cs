@@ -4,23 +4,17 @@ using System.Diagnostics;
 namespace AlphaOmega.Debug.Dex
 {
 	/// <summary>Generic colum for dynamic structures</summary>
-	[DebuggerDisplay("{Name} ({ColumnType})")]
+	[DebuggerDisplay("{Name} ({" + nameof(ColumnType) + "})")]
 	public class Column : IColumn
 	{
-		#region Fields
-		private readonly UInt16 _index;
-		private readonly String _name;
-		private readonly ColumnType _columnType;
-		#endregion Fields
-
 		/// <summary>Zero based index from the beggining of structure</summary>
-		public UInt16 Index { get { return this._index; } }
+		public UInt16 Index { get; }
 
 		/// <summary>Name of the column</summary>
-		public String Name { get { return this._name; } }
+		public String Name { get; }
 
 		/// <summary>Type of data in the current column</summary>
-		public ColumnType ColumnType { get { return this._columnType; } }
+		public ColumnType ColumnType { get; }
 
 		/// <summary>Create instance of the column</summary>
 		/// <param name="index">Index of a column in the generic table</param>
@@ -28,9 +22,9 @@ namespace AlphaOmega.Debug.Dex
 		/// <param name="columnType">ype of data in the current column</param>
 		internal Column(UInt16 index, String name, ColumnType columnType)
 		{
-			this._index = index;
-			this._name = name;
-			this._columnType = columnType;
+			this.Index = index;
+			this.Name = name;
+			this.ColumnType = columnType;
 		}
 	}
 }

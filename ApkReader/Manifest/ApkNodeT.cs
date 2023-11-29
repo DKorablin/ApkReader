@@ -5,18 +5,14 @@ namespace AlphaOmega.Debug.Manifest
 	/// <typeparam name="T">XML node</typeparam>
 	public class ApkNodeT<T> : ApkNode where T : ApkNode
 	{
-		private readonly T _parentNode;
-
 		/// <summary>Parent generic XML node</summary>
-		public T ParentNode { get { return this._parentNode; } }
+		public T ParentNode { get; }
 
 		/// <summary>.ctor generic XML node</summary>
 		/// <param name="parentNode">Parent generic XML node</param>
 		/// <param name="node">XML node</param>
 		public ApkNodeT(T parentNode,XmlNode node)
 			: base(parentNode, node)
-		{
-			this._parentNode = parentNode;
-		}
+			=> this.ParentNode = parentNode;
 	}
 }

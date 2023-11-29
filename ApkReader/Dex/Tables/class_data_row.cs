@@ -18,18 +18,18 @@ namespace AlphaOmega.Debug.Dex.Tables
 		}
 
 		/// <summary>The number of static fields defined in this item</summary>
-		public Int32 static_fields_size { get { return base.GetValue<Int32>((UInt16)columns.static_fields_size); } }
+		public Int32 static_fields_size => base.GetValue<Int32>((UInt16)columns.static_fields_size);
 
 		/// <summary>The number of instance fields defined in this item</summary>
-		public Int32 instance_fields_size { get { return base.GetValue<Int32>((UInt16)columns.instance_fields_size); } }
+		public Int32 instance_fields_size => base.GetValue<Int32>((UInt16)columns.instance_fields_size);
 
 		/// <summary>The number of direct methods defined in this item</summary>
-		public Int32 direct_methods_size { get { return base.GetValue<Int32>((UInt16)columns.direct_methods_size); } }
+		public Int32 direct_methods_size => base.GetValue<Int32>((UInt16)columns.direct_methods_size);
 
 		/// <summary>The number of virtual methods defined in this item</summary>
-		public Int32 virtual_methods_size { get { return base.GetValue<Int32>((UInt16)columns.virtual_methods_size); } }
+		public Int32 virtual_methods_size => base.GetValue<Int32>((UInt16)columns.virtual_methods_size);
 
-		private UInt32[] static_fieldsI { get { return base.GetValue<UInt32[]>((UInt16)columns.static_fields); } }
+		private UInt32[] static_fieldsI => base.GetValue<UInt32[]>((UInt16)columns.static_fields);
 
 		/// <summary>The defined static fields, represented as a sequence of encoded elements.</summary>
 		/// <remarks>The fields must be sorted by field_idx in increasing order.</remarks>
@@ -42,7 +42,7 @@ namespace AlphaOmega.Debug.Dex.Tables
 			}
 		}
 
-		private UInt32[] instance_fieldsI { get { return base.GetValue<UInt32[]>((UInt16)columns.instance_fields); } }
+		private UInt32[] instance_fieldsI => base.GetValue<UInt32[]>((UInt16)columns.instance_fields);
 
 		/// <summary>The defined instance fields, represented as a sequence of encoded elements.</summary>
 		/// <remarks>The fields must be sorted by field_idx in increasing order.</remarks>
@@ -55,7 +55,7 @@ namespace AlphaOmega.Debug.Dex.Tables
 			}
 		}
 
-		private UInt32[] direct_methodsI { get { return base.GetValue<UInt32[]>((UInt16)columns.direct_methods); } }
+		private UInt32[] direct_methodsI => base.GetValue<UInt32[]>((UInt16)columns.direct_methods);
 
 		/// <summary>The defined direct (any of static, private, or constructor) methods, represented as a sequence of encoded elements.</summary>
 		/// <remarks>The methods must be sorted by method_idx in increasing order.</remarks>
@@ -68,7 +68,7 @@ namespace AlphaOmega.Debug.Dex.Tables
 			}
 		}
 
-		private UInt32[] virtual_methodsI { get { return base.GetValue<UInt32[]>((UInt16)columns.virtual_methods); } }
+		private UInt32[] virtual_methodsI => base.GetValue<UInt32[]>((UInt16)columns.virtual_methods);
 
 		/// <summary>
 		/// The defined virtual (none of static, private, or constructor) methods, represented as a sequence of encoded elements.

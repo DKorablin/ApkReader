@@ -40,7 +40,7 @@ namespace AlphaOmega.Debug
 				public Int16 commentsLength;
 
 				/// <summary>Check header for validation</summary>
-				public Boolean IsValid { get { return signature == SignatureValue; } }
+				public Boolean IsValid => signature == SignatureValue;
 			}
 
 			[StructLayout(LayoutKind.Sequential, Pack = 2)]
@@ -57,17 +57,12 @@ namespace AlphaOmega.Debug
 
 				/// <summary>Converted magic value to string</summary>
 				/// <remarks>This value must be equals to: "APK Sig Block 42" string</remarks>
-				public String MagicStr { get { return System.Text.Encoding.ASCII.GetString(magic); } }
+				public String MagicStr => System.Text.Encoding.ASCII.GetString(magic);
 
 				/// <summary>Check header for validation</summary>
 				public Boolean IsValid
-				{
-					get
-					{
-						return BitConverter.ToInt64(magic, 0) == APK_SIG_BLOCK_MAGIC_LO
-							&& BitConverter.ToInt64(magic, sizeof(Int64)) == APK_SIG_BLOCK_MAGIC_HI;
-					}
-				}
+					=> BitConverter.ToInt64(magic, 0) == APK_SIG_BLOCK_MAGIC_LO
+						&& BitConverter.ToInt64(magic, sizeof(Int64)) == APK_SIG_BLOCK_MAGIC_HI;
 			}
 		}
 
@@ -77,39 +72,23 @@ namespace AlphaOmega.Debug
 		private Dictionary<ApkSignatureVerifier.BlockId, ApkSignatureVerifier> _blocks;
 
 		private Dictionary<ApkSignatureVerifier.BlockId, ApkSignatureVerifier> Blocks
-		{
-			get
-			{
-				return _blocks ?? (_blocks = ReadSignatures(this._apk.ApkStream, out _isValid));
-			}
-		}
+			=> _blocks ?? (_blocks = ReadSignatures(this._apk.ApkStream, out _isValid));
 
 		/// <summary>File is valid zip file</summary>
-		public Boolean IsValid { get { return _isValid; } }
+		public Boolean IsValid => _isValid;
 
 		/// <summary>Package contains signature blocks</summary>
-		public Boolean IsEmpty { get { return this.Blocks.Count > 0; } }
+		public Boolean IsEmpty => this.Blocks.Count > 0;
 
 		/// <summary>JAR signature</summary>
 		public V1SchemeBlock V1SchemeBlock
-		{
-			get
-			{
-				return _v1Block ?? (_v1Block = new V1SchemeBlock(_apk));
-			}
-		}
+			=> _v1Block ?? (_v1Block = new V1SchemeBlock(_apk));
 
 		/// <summary>Get signature block by block ID or null if block is not found</summary>
 		/// <param name="id">Block identifier for required schema</param>
 		/// <returns>Strongly typed APK signature block</returns>
 		public ApkSignatureVerifier this[ApkSignatureVerifier.BlockId id]
-		{
-			get
-			{
-				ApkSignatureVerifier result = null;
-				return this.Blocks.TryGetValue(id, out result) ? result : (ApkSignatureVerifier)null;
-			}
-		}
+			=> this.Blocks.TryGetValue(id, out ApkSignatureVerifier result) ? result : (ApkSignatureVerifier)null;
 
 		/// <summary>Try to get signature block by strongly typed block wrapper</summary>
 		/// <typeparam name="T">Strongly typed block wrapper type</typeparam>
@@ -119,9 +98,9 @@ namespace AlphaOmega.Debug
 		{
 			if(typeof(T) == typeof(ApkV2SignatureVerifier))
 			{
-				ApkSignatureVerifier result;
-				return this.Blocks.TryGetValue(ApkSignatureVerifier.BlockId.APK_SIGNATURE_SCHEME_V2_BLOCK_ID, out result)
-					? (T)result : (T)null;
+				return this.Blocks.TryGetValue(ApkSignatureVerifier.BlockId.APK_SIGNATURE_SCHEME_V2_BLOCK_ID, out ApkSignatureVerifier result)
+					? (T)result
+					: (T)null;
 			} else
 				throw new NotImplementedException();
 		}
@@ -129,19 +108,13 @@ namespace AlphaOmega.Debug
 		/// <summary>Get all found signature blocks</summary>
 		/// <returns>List of signature blocks</returns>
 		public IEnumerator<ApkSignatureVerifier> GetEnumerator()
-		{
-			return this.Blocks.Values.GetEnumerator();
-		}
+			=> this.Blocks.Values.GetEnumerator();
 
 		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return this.GetEnumerator();
-		}
+			=> this.GetEnumerator();
 
 		internal ApkSignature(ApkFile apk)
-		{
-			_apk = apk;
-		}
+			=> this._apk = apk;
 
 		/// <summary>Read all signature blocks from APK file</summary>
 		/// <remarks>This method will not validate package for integrity but only read apropriate structures from binary file</remarks>
@@ -152,8 +125,7 @@ namespace AlphaOmega.Debug
 		/// <exception cref="ArgumentException">Stream is read only</exception>
 		public static Dictionary<ApkSignatureVerifier.BlockId, ApkSignatureVerifier> ReadSignatures(Stream stream, out Boolean isValid)
 		{
-			if(stream == null)
-				throw new ArgumentNullException(nameof(stream));
+			_ = stream ?? throw new ArgumentNullException(nameof(stream));
 			if(stream.CanSeek == false || stream.CanRead == false)
 				throw new ArgumentException("stream is readonly", nameof(stream));
 

@@ -35,8 +35,6 @@ namespace AlphaOmega.Debug.Signature
 		}
 
 		internal V1SchemeBlock(ApkFile apkFile)
-		{
-			_apkFile = apkFile;
-		}
+			=> this._apkFile = apkFile;
 	}
 }

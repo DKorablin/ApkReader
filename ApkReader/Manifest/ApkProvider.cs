@@ -14,13 +14,11 @@ namespace AlphaOmega.Debug.Manifest
 	{
 		/// <summary>A list of one or more URI authorities that identify data offered by the content provider.</summary>
 		/// <remarks>
-		///  To avoid conflicts, authority names should use a Java-style naming convention (such as com.example.provider.cartoonprovider).
-		///  Typically, it's the name of the ContentProvider subclass that implements the provider.
+		/// To avoid conflicts, authority names should use a Java-style naming convention (such as com.example.provider.cartoonprovider).
+		/// Typically, it's the name of the ContentProvider subclass that implements the provider.
 		/// </remarks>
 		public String[] Authorities
-		{
-			get { return base.Node.Attributes["authorities"][0].Split(';'); }
-		}
+			=> base.Node.Attributes["authorities"][0].Split(';');
 
 		/// <summary>Whether or not the content provider can be instantiated by the system — "true" if it can be, and "false" if not</summary>
 		/// <remarks>
@@ -29,18 +27,12 @@ namespace AlphaOmega.Debug.Manifest
 		/// If either is "false", the provider is disabled; it cannot be instantiated.
 		/// </remarks>
 		[DefaultValue(true)]
-		public Boolean Enabled
-		{
-			get { return base.GetBooleanAttribute("enabled").GetValueOrDefault(true); }
-		}
+		public Boolean Enabled => base.GetBooleanAttribute("enabled") ?? true;
 
 		/// <summary>Whether or not the content provider is direct-boot aware; that is, whether or not it can run before the user unlocks the device.</summary>
 		/// <remarks>During Direct Boot, a content provider in your application can only access the data that is stored in device protected storage.</remarks>
 		[DefaultValue(false)]
-		public Boolean DirectBootAware
-		{
-			get { return base.GetBooleanAttribute("directBootAware").GetValueOrDefault(false); }
-		}
+		public Boolean DirectBootAware => base.GetBooleanAttribute("directBootAware") ?? false;
 
 		/// <summary>
 		/// Whether the content provider is available for other applications to use: 
@@ -49,10 +41,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// 
 		/// Only applications that have the same user ID (UID) as the provider, or applications that have been temporarily granted access to the provider through the android:grantUriPermissions element, have access to it.
 		/// </summary>
-		public Boolean? Exported
-		{
-			get { return base.GetBooleanAttribute("exported"); }
-		}
+		public Boolean? Exported => base.GetBooleanAttribute("exported");
 
 		/// <summary>
 		/// Whether or not those who ordinarily would not have permission to access the content provider's data can be granted permission to do so, temporarily overcoming the restriction imposed by the readPermission, writePermission, permission, and exported attributes — "true" if permission can be granted, and "false" if not.
@@ -64,10 +53,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// For example, when an e-mail message contains an attachment, the mail application may call upon the appropriate viewer to open it, even though the viewer doesn't have general permission to look at all the content provider's data.
 		/// </remarks>
 		[DefaultValue(false)]
-		public Boolean GrantUriPermissions
-		{
-			get { return base.GetBooleanAttribute("grantUriPermissions").GetValueOrDefault(false); }
-		}
+		public Boolean GrantUriPermissions => base.GetBooleanAttribute("grantUriPermissions") ?? false;
 
 		/// <summary>An icon representing the content provider</summary>
 		public String Icon
@@ -105,8 +91,7 @@ namespace AlphaOmega.Debug.Manifest
 				if(result == null)
 					return base.ParentNode.Label;
 
-				Int32 resourceId;
-				if(Int32.TryParse(result[0], out resourceId))
+				if(Int32.TryParse(result[0], out Int32 resourceId))
 				{
 					ResourceRow resource = base.GetResource(resourceId);
 					if(resource != null)
@@ -123,10 +108,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// </summary>
 		/// <remarks>Setting this flag to true may improve performance by reducing the overhead of interprocess communication, but it also increases the memory footprint of each process.</remarks>
 		[DefaultValue(false)]
-		public Boolean Multiprocess
-		{
-			get { return base.GetBooleanAttribute("multiprocess").GetValueOrDefault(false); }
-		}
+		public Boolean Multiprocess => base.GetBooleanAttribute("multiprocess") ?? false;
 
 		/// <summary>The name of the class that implements the content provider, a subclass of ContentProvider</summary>
 		public String Name
@@ -149,9 +131,7 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> result = base.Node.GetAttribute("permission");
-				return result == null
-					? null
-					: result[0];
+				return result?[0];
 			}
 		}
 
@@ -182,17 +162,12 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> result = base.Node.GetAttribute("readPermission");
-				return result == null
-					? null
-					: result[0];
+				return result?[0];
 			}
 		}
 
 		/// <summary>Whether or not the data under the content provider's control is to be synchronized with data on a server — "true" if it is to be synchronized, and "false" if not.</summary>
-		public Boolean? Syncable
-		{
-			get { return base.GetBooleanAttribute("syncable"); }
-		}
+		public Boolean? Syncable => base.GetBooleanAttribute("syncable");
 
 		/// <summary>A permission that clients must have to make changes to the data controlled by the content provider.</summary>
 		/// <remarks>If the provider sets android:grantUriPermissions to true, or if a given client satisfies the conditions of a <see cref="ApkGrantUriPermission"/> subelement, the client can gain temporary write access to modify the content provider's data.</remarks>
@@ -201,9 +176,7 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> result = base.Node.GetAttribute("writePermission");
-				return result == null
-					? null
-					: result[0];
+				return result?[0];
 			}
 		}
 
@@ -254,7 +227,6 @@ namespace AlphaOmega.Debug.Manifest
 
 		internal ApkProvider(ApkApplication parentNode,XmlNode node)
 			: base(parentNode, node)
-		{
-		}
+		{ }
 	}
 }

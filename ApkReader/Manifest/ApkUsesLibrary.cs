@@ -13,10 +13,7 @@ namespace AlphaOmega.Debug.Manifest
 	{
 		/// <summary>The name of the library.</summary>
 		/// <remarks>The name is provided by the documentation for the package you are using. An example of this is "android.test.runner", a package that contains Android test classes.</remarks>
-		public String Name
-		{
-			get { return base.Node.Attributes["name"][0]; }
-		}
+		public String Name => base.Node.Attributes["name"][0];
 
 		/// <summary>Boolean value that indicates whether the application requires the library specified by android:name</summary>
 		/// <remarks>
@@ -24,15 +21,10 @@ namespace AlphaOmega.Debug.Manifest
 		/// "false": The application can use the library if present, but is designed to function without it if necessary. The system will allow the application to be installed, even if the library is not present. If you use "false", you are responsible for checking at runtime that the library is available.
 		/// </remarks>
 		[DefaultValue(true)]
-		public Boolean Required
-		{
-			get { return base.GetBooleanAttribute("required").GetValueOrDefault(true); }
-		}
+		public Boolean Required => base.GetBooleanAttribute("required").GetValueOrDefault(true);
 
 		internal ApkUsesLibrary(ApkApplication parentNode, XmlNode usesLibraryNode)
 			: base(parentNode, usesLibraryNode)
-		{
-
-		}
+		{ }
 	}
 }

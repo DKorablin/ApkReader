@@ -17,11 +17,9 @@
     <OutputPath>..\..\bin\</OutputPath>
     <DocumentationFile>..\..\bin\ApkReader.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <CopyLocalLockFileAssemblies>True</CopyLocalLockFileAssemblies>
-  </PropertyGroup>
-  <PropertyGroup>
     <SignAssembly>False</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\..\..\..\AlphaOmega (NoPwd).snk</AssemblyOriginatorKeyFile>
+    <CopyLocalLockFileAssemblies>True</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="SharpZipLib" Version="1.4.2" />

@@ -14,36 +14,19 @@ namespace AlphaOmega.Debug
 		private static ResourceManager _intent;
 
 		private static ResourceManager Permission
-		{
-			get
-			{
-				return _permission ?? (_permission = new ResourceManager("AlphaOmega.Debug.Permission", typeof(Resources).Assembly));
-			}
-		}
+			=> _permission ?? (_permission = new ResourceManager("AlphaOmega.Debug.Permission", typeof(Resources).Assembly));
 
 		private static ResourceManager Features
-		{
-			get
-			{
-				return _features ?? (_features = new ResourceManager("AlphaOmega.Debug.Features", typeof(Resources).Assembly));
-			}
-		}
+			=> _features ?? (_features = new ResourceManager("AlphaOmega.Debug.Features", typeof(Resources).Assembly));
 
 		private static ResourceManager Intent
-		{
-			get
-			{
-				return _intent ?? (_intent = new ResourceManager("AlphaOmega.Debug.Intent", typeof(Resources).Assembly));
-			}
-		}
+			=> _intent ?? (_intent = new ResourceManager("AlphaOmega.Debug.Intent", typeof(Resources).Assembly));
 
 		/// <summary>Gets Android permission description</summary>
 		/// <param name="name">Permission name</param>
 		/// <returns>Android permission description or null</returns>
 		public static String GetPermission(String name)
-		{
-			return Resources.Permission.GetString(name);
-		}
+			=> Resources.Permission.GetString(name);
 
 		/// <summary>Gets all described permissions</summary>
 		/// <returns>Android permissions</returns>
@@ -58,9 +41,7 @@ namespace AlphaOmega.Debug
 		/// <param name="name">Feature name</param>
 		/// <returns>Android feature description or null</returns>
 		public static String GetFeatures(String name)
-		{
-			return Resources.Features.GetString(name);
-		}
+			=> Resources.Features.GetString(name);
 
 		/// <summary>Gets all described features</summary>
 		/// <returns>Android features</returns>
@@ -75,9 +56,7 @@ namespace AlphaOmega.Debug
 		/// <param name="name">Intent name</param>
 		/// <returns>Android intent description or null</returns>
 		public static String GetIntent(String name)
-		{
-			return Resources.Intent.GetString(name);
-		}
+			=> Resources.Intent.GetString(name);
 
 		/// <summary>Gets all described intents</summary>
 		/// <returns>Android intents</returns>

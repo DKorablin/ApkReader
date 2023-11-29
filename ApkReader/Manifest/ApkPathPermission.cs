@@ -18,9 +18,7 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> result = base.Node.GetAttribute("path");
-				return result == null
-					? null
-					: result[0];
+				return result?[0];
 			}
 		}
 
@@ -31,9 +29,7 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> result = base.Node.GetAttribute("pathPrefix");
-				return result == null
-					? null
-					: result[0];
+				return result?[0];
 			}
 		}
 
@@ -52,9 +48,7 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> result = base.Node.GetAttribute("pathPattern");
-				return result == null
-					? null
-					: result[0];
+				return result?[0];
 			}
 		}
 
@@ -70,9 +64,7 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> result = base.Node.GetAttribute("permission");
-				return result == null
-					? null
-					: result[0];
+				return result?[0];
 			}
 		}
 
@@ -82,9 +74,7 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> result = base.Node.GetAttribute("readPermission");
-				return result == null
-					? null
-					: result[0];
+				return result?[0];
 			}
 		}
 
@@ -94,16 +84,12 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> result = base.Node.GetAttribute("writePermission");
-				return result == null
-					? null
-					: result[0];
+				return result?[0];
 			}
 		}
 
 		internal ApkPathPermission(ApkProvider parentNode,XmlNode node)
 			: base(parentNode, node)
-		{
-
-		}
+		{ }
 	}
 }

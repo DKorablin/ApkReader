@@ -8,7 +8,7 @@ namespace AlphaOmega.Debug.Dex.Tables
 	/// These are identifiers for all the strings used by this file, either for internal naming (e.g., type descriptors) or as constant objects referred to by code.
 	/// </summary>
 	/// <remarks>This list must be sorted by string contents, using UTF-16 code point values (not in a locale-sensitive manner), and it must not contain any duplicate entries.</remarks>
-	[DebuggerDisplay("string_data_off={string_data_off}")]
+	[DebuggerDisplay("string_data_off={" + nameof(string_data_off) + "}")]
 	public class string_id_row : BaseRow
 	{
 		/// <summary>
@@ -16,6 +16,6 @@ namespace AlphaOmega.Debug.Dex.Tables
 		/// The offset should be to a location in the data section, and the data should be in the format specified by "string_data_item" below.
 		/// </summary>
 		/// <remarks>There is no alignment requirement for the offset.</remarks>
-		public UInt32 string_data_off { get { return base.GetValue<UInt32>(0); } }
+		public UInt32 string_data_off => base.GetValue<UInt32>(0);
 	}
 }

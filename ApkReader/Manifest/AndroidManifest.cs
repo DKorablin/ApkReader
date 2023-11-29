@@ -47,7 +47,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// This name is also the default name for your app process (see the <see cref="ApkApplication"/> element's process attribute).
 		/// And it's the default task affinity for your activities (see the <see cref="ApkActivity"/> element's taskAffinity attribute).
 		/// </remarks>
-		public String Package { get { return base.Node.Attributes["package"][0]; } }
+		public String Package => base.Node.Attributes["package"][0];
 
 		/// <summary>The name of a Linux user ID that will be shared with other apps</summary>
 		/// <remarks>
@@ -61,9 +61,7 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> sharedUserId = base.Node.GetAttribute("sharedUserId");
-				return sharedUserId == null
-					? null
-					: sharedUserId[0];
+				return sharedUserId?[0];
 			}
 		}
 
@@ -115,9 +113,7 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> versionCode = base.Node.GetAttribute("versionCode");
-				return versionCode == null
-					? null
-					: versionCode[0];
+				return versionCode?[0];
 			}
 		}
 
@@ -135,13 +131,10 @@ namespace AlphaOmega.Debug.Manifest
 				if(result == null)
 					return null;
 
-				Int32 resourceId;
-				if(Int32.TryParse(result[0], out resourceId))
+				if(Int32.TryParse(result[0], out Int32 resourceId))
 				{
 					ResourceRow resource = base.GetResource(resourceId);
-					return resource == null
-						? null
-						: resource.Value;
+					return resource?.Value;
 				} else
 					return result[0];
 			}
@@ -173,7 +166,7 @@ namespace AlphaOmega.Debug.Manifest
 		}
 
 		/// <summary>The declaration of the application</summary>
-		public ApkApplication Application { get { return new ApkApplication(this); } }
+		public ApkApplication Application => new ApkApplication(this);
 
 		/// <summary>Specifies a system permission that the user must grant in order for the app to operate correctly</summary>
 		/// <remarks>
@@ -314,8 +307,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// <param name="resource">resource.arsc object</param>
 		private AndroidManifest(XmlNode node, ArscFile resource)
 			: base(node, resource.ResourceMap)
-		{
-		}
+		{ }
 
 		/// <summary>Create instance AndroidManifest.xml</summary>
 		/// <param name="axml">AXML file decoder</param>
@@ -326,10 +318,9 @@ namespace AlphaOmega.Debug.Manifest
 			if(axml == null || resources == null)
 				return null;
 
-			if(!axml.Header.IsValid || !resources.Header.IsValid)
-				return null;
-
-			return new AndroidManifest(axml.RootNode, resources);
+			return axml.Header.IsValid && resources.Header.IsValid
+				? new AndroidManifest(axml.RootNode, resources)
+				: null;
 		}
 	}
 }

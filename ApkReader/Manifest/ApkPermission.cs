@@ -72,8 +72,7 @@ namespace AlphaOmega.Debug.Manifest
 					return null;
 				else
 				{
-					Int32 resourceId;
-					if(Int32.TryParse(result[0], out resourceId))
+					if(Int32.TryParse(result[0], out Int32 resourceId))
 					{
 						ResourceRow resource = base.GetResource(resourceId);
 						if(resource != null)
@@ -86,25 +85,20 @@ namespace AlphaOmega.Debug.Manifest
 
 		/// <summary>The name of the permission</summary>
 		/// <remarks>
-		///  This is the name that will be used in code to refer to the permission — for example, in a <see cref="ApkUsesPermission"/> element and the permission attributes of application components
+		/// This is the name that will be used in code to refer to the permission — for example, in a <see cref="ApkUsesPermission"/> element and the permission attributes of application components
 		/// </remarks>
-		public String Name
-		{
-			get { return base.Node.Attributes["name"][0]; }
-		}
+		public String Name => base.Node.Attributes["name"][0];
 
 		/// <summary>Assigns this permission to a group</summary>
 		/// <remarks>
-		///  The value of this attribute is the name of the group, which must be declared with the <see cref="ApkPermissionGroup"/> element in this or another application.
+		/// The value of this attribute is the name of the group, which must be declared with the <see cref="ApkPermissionGroup"/> element in this or another application.
 		/// </remarks>
 		public String PermissionGroup
 		{
 			get
 			{
 				List<String> result = base.Node.GetAttribute("permissionGroup");
-				return result == null
-					? null
-					: result[0];
+				return result?[0];
 			}
 		}
 
@@ -123,8 +117,6 @@ namespace AlphaOmega.Debug.Manifest
 
 		internal ApkPermission(AndroidManifest parentNode, XmlNode node)
 			: base(parentNode, node)
-		{
-
-		}
+		{ }
 	}
 }

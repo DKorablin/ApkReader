@@ -17,11 +17,11 @@ namespace AlphaOmega.Debug
 			public Int32 packageCount;
 
 			/// <summary>Resource table header is valid</summary>
-			public Boolean IsValid { get { return this.header.type == (Int32)ResourceTableType.ResTableType; } }
+			public Boolean IsValid => this.header.type == (Int32)ResourceTableType.ResTableType;
 		}
 
 		/// <summary>Resource file type</summary>
-		public enum ResourceTableType : short
+		public enum ResourceTableType : Int16
 		{
 			/// <summary>Resource table ID</summary>
 			ResTableType = 0x0002,
@@ -75,11 +75,11 @@ namespace AlphaOmega.Debug
 
 			/// <summary>Package name string</summary>
 			/// <example>com.google.android</example>
-			public String nameStr { get { return System.Text.Encoding.Unicode.GetString(this.name); } }
+			public String nameStr => System.Text.Encoding.Unicode.GetString(this.name);
 
 			/// <summary>Check header structure for validation</summary>
 			/// <remarks>TypeStrings must immediately follow the package structure header.</remarks>
-			public Boolean IsValid { get { return this.typeStrings_addr == this.header.headerSize; } }
+			public Boolean IsValid => this.typeStrings_addr == this.header.headerSize;
 		}
 
 		/// <summary>Structure that houses a group of strings</summary>
@@ -105,7 +105,7 @@ namespace AlphaOmega.Debug
 			public Int32 stylesStart;
 
 			/// <summary>String pool is encoded in UTF-8.</summary>
-			public Boolean IsUTF8 { get { return (this.flags & 256) != 0; } }
+			public Boolean IsUTF8 => (this.flags & 256) != 0;
 
 			// <summary>If set, the string index is sorted by the string values (based on strcmp16()).</summary>
 			//public Boolean IsSorted { get { return (this.flags << 0); } }
@@ -153,7 +153,7 @@ namespace AlphaOmega.Debug
 			public ResTable_Config config;
 
 			/// <summary>Check for valid header</summary>
-			public Boolean IsValid { get { return this.header.headerSize + this.entryCount * 4 == this.entriesStart; } }
+			public Boolean IsValid => this.header.headerSize + this.entryCount * 4 == this.entriesStart;
 		}
 
 		/// <summary>Res table config</summary>
@@ -280,10 +280,10 @@ namespace AlphaOmega.Debug
 			public ResStringPool_ref key;
 
 			/// <summary>If set, this is a complex entry, holding a set of name/value mappings.</summary>
-			public Boolean IsComplex { get { return (this.flags & FLAG_COMPLEX) != 0; } }
+			public Boolean IsComplex => (this.flags & FLAG_COMPLEX) != 0;
 
 			/// <summary>If set, this resource has been declared public, so libraries are allowed to reference it.</summary>
-			public Boolean IsPublic { get { return (this.flags & FLAG_PUBLIC) == 1; } }
+			public Boolean IsPublic => (this.flags & FLAG_PUBLIC) == 1;
 		}
 
 		/// <summary>String pool descriptor</summary>
@@ -332,11 +332,11 @@ namespace AlphaOmega.Debug
 			public Int32 entryCount;
 
 			/// <summary>Structure integrity check</summary>
-			public Boolean IsValid { get { return this.res0 == 0 && this.res1 == 0; } }
+			public Boolean IsValid => this.res0 == 0 && this.res1 == 0;
 		}
 
 		/// <summary>Type of data stored in resources</summary>
-		public enum DATA_TYPE : byte
+		public enum DATA_TYPE : Byte
 		{
 			/// <summary>Contains no data</summary>
 			NULL = 0x00,
@@ -499,12 +499,10 @@ namespace AlphaOmega.Debug
 			/// <param name="complex">A complex data value.</param>
 			/// <returns>A floating point value corresponding to the complex data.</returns>
 			private static Single complexToFloat(Int32 complex)
-			{
-				return (complex & (Res_value.COMPLEX_MANTISSA_MASK
-						<< Res_value.COMPLEX_MANTISSA_SHIFT))
-						* RADIX_MULTS[(complex >> Res_value.COMPLEX_RADIX_SHIFT)
-						& Res_value.COMPLEX_RADIX_MASK];
-			}
+				=> (complex & (Res_value.COMPLEX_MANTISSA_MASK
+					<< Res_value.COMPLEX_MANTISSA_SHIFT))
+					* RADIX_MULTS[(complex >> Res_value.COMPLEX_RADIX_SHIFT)
+					& Res_value.COMPLEX_RADIX_MASK];
 		}
 
 		/// <summary>

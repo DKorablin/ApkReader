@@ -6,7 +6,7 @@ namespace AlphaOmega.Debug.Dex.Tables
 	/// <summary>banana banana banana</summary>
 	public class annotation_set_ref_row : BaseRow
 	{
-		private UInt32[] annotations_offI { get { return base.GetValue<UInt32[]>(0); } }
+		private UInt32[] annotations_offI => base.GetValue<UInt32[]>(0);
 
 		/// <summary>Offset from the start of the file to the referenced annotation set or 0 if there are no annotations for this element.</summary>
 		/// <remarks>

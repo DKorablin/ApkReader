@@ -7,8 +7,8 @@ namespace AlphaOmega.Debug.Manifest
 {
 	/// <summary>Specifies the types of intents that an activity, service, or broadcast receiver can respond to</summary>
 	/// <remarks>
-	///  An intent filter declares the capabilities of its parent component — what an activity or service can do and what types of broadcasts a receiver can handle.
-	///  It opens the component to receiving intents of the advertised type, while filtering out those that are not meaningful for the component.
+	/// An intent filter declares the capabilities of its parent component — what an activity or service can do and what types of broadcasts a receiver can handle.
+	/// It opens the component to receiving intents of the advertised type, while filtering out those that are not meaningful for the component.
 	/// </remarks>
 	public class ApkIntentFilter : ApkNode
 	{
@@ -37,8 +37,7 @@ namespace AlphaOmega.Debug.Manifest
 					return this._parentNode.Label;
 				else
 				{
-					Int32 resourceId;
-					if(Int32.TryParse(result[0], out resourceId))
+					if(Int32.TryParse(result[0], out Int32 resourceId))
 					{
 						ResourceRow resource = base.GetResource(resourceId);
 						if(resource != null)
@@ -133,8 +132,6 @@ namespace AlphaOmega.Debug.Manifest
 
 		internal ApkIntentFilter(IApkIntentedNode parentNode, XmlNode node)
 			: base((ApkNode)parentNode, node)
-		{
-			this._parentNode = parentNode;
-		}
+			=> this._parentNode = parentNode;
 	}
 }

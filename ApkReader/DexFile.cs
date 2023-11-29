@@ -8,17 +8,14 @@ namespace AlphaOmega.Debug
 	/// <summary>Dalvik image reader</summary>
 	public class DexFile : IDisposable
 	{
-		private IImageLoader _loader;
 		private DexApi.map_item[] _map_list;
 		private readonly Dictionary<TableType, Table> _sections = new Dictionary<TableType, Table>();
 
 		/// <summary>Image loader interface</summary>
-		public IImageLoader Loader { get { return this._loader; } }
+		public IImageLoader Loader { get; private set; }
 
 		/// <summary>Header identifier and description</summary>
 		public DexApi.header_item Header { get ; }
-
-		private Dictionary<TableType, Table> Sections { get { return this._sections; } }
 
 		/// <summary>
 		/// This is a list of the entire contents of a file, in order.
@@ -27,14 +24,7 @@ namespace AlphaOmega.Debug
 		/// Additionally, the map entries must be ordered by initial offset and must not overlap.
 		/// </summary>
 		public DexApi.map_item[] map_list
-		{
-			get
-			{
-				return this._map_list == null
-					? this._map_list = this.ReadMapList()
-					: this._map_list;
-			}
-		}
+			=> this._map_list ?? (this._map_list = this.ReadMapList());
 
 		/// <summary>
 		/// String identifiers list.
@@ -42,9 +32,7 @@ namespace AlphaOmega.Debug
 		/// </summary>
 		/// <remarks>This list must be sorted by string contents, using UTF-16 code point values (not in a locale-sensitive manner), and it must not contain any duplicate entries.</remarks>
 		public BaseTable<Dex.Tables.string_id_row> STRING_ID_ITEM
-		{
-			get { return new BaseTable<Dex.Tables.string_id_row>(this, TableType.STRING_ID_ITEM); }
-		}
+			=> new BaseTable<Dex.Tables.string_id_row>(this, TableType.STRING_ID_ITEM);
 
 		/// <summary>
 		/// String identifiers list.
@@ -52,15 +40,11 @@ namespace AlphaOmega.Debug
 		/// </summary>
 		/// <remarks>This list must be sorted by string contents, using UTF-16 code point values (not in a locale-sensitive manner), and it must not contain any duplicate entries.</remarks>
 		public BaseTable<Dex.Tables.string_data_row> STRING_DATA_ITEM
-		{
-			get { return new BaseTable<Dex.Tables.string_data_row>(this, TableType.STRING_DATA_ITEM); }
-		}
+			=> new BaseTable<Dex.Tables.string_data_row>(this, TableType.STRING_DATA_ITEM);
 
 		/// <summary>Source bytecode payload</summary>
 		public BaseTable<Dex.Tables.code_row> CODE_ITEM
-		{
-			get { return new BaseTable<Dex.Tables.code_row>(this, TableType.CODE_ITEM); }
-		}
+			=> new BaseTable<Dex.Tables.code_row>(this, TableType.CODE_ITEM);
 
 		/// <summary>
 		/// Type identifiers list.
@@ -68,15 +52,11 @@ namespace AlphaOmega.Debug
 		/// </summary>
 		/// <remarks>This list must be sorted by string_id index, and it must not contain any duplicate entries.</remarks>
 		public BaseTable<Dex.Tables.type_id_row> TYPE_ID_ITEM
-		{
-			get { return new BaseTable<Dex.Tables.type_id_row>(this, TableType.TYPE_ID_ITEM); }
-		}
+			=> new BaseTable<Dex.Tables.type_id_row>(this, TableType.TYPE_ID_ITEM);
 
 		/// <summary>Referenced from <see cref="Dex.Tables.class_def_row"/> and <see cref="Dex.Tables.proto_id_row"/></summary>
 		public BaseTable<Dex.Tables.type_list_row> TYPE_LIST
-		{
-			get { return new BaseTable<Dex.Tables.type_list_row>(this, TableType.TYPE_LIST); }
-		}
+			=> new BaseTable<Dex.Tables.type_list_row>(this, TableType.TYPE_LIST);
 
 		/// <summary>
 		/// Method prototype identifiers list.
@@ -87,9 +67,7 @@ namespace AlphaOmega.Debug
 		/// The list must not contain any duplicate entries.
 		/// </remarks>
 		public BaseTable<Dex.Tables.proto_id_row> PROTO_ID_ITEM
-		{
-			get { return new BaseTable<Dex.Tables.proto_id_row>(this, TableType.PROTO_ID_ITEM); }
-		}
+			=> new BaseTable<Dex.Tables.proto_id_row>(this, TableType.PROTO_ID_ITEM);
 
 		/// <summary>
 		/// Field identifiers list.
@@ -100,9 +78,7 @@ namespace AlphaOmega.Debug
 		/// The list must not contain any duplicate entries.
 		/// </remarks>
 		public BaseTable<Dex.Tables.field_id_row> FIELD_ID_ITEM
-		{
-			get { return new BaseTable<Dex.Tables.field_id_row>(this, TableType.FIELD_ID_ITEM); }
-		}
+			=> new BaseTable<Dex.Tables.field_id_row>(this, TableType.FIELD_ID_ITEM);
 
 		/// <summary>
 		/// Method identifiers list.
@@ -113,27 +89,19 @@ namespace AlphaOmega.Debug
 		/// The list must not contain any duplicate entries.
 		/// </remarks>
 		public BaseTable<Dex.Tables.method_id_row> METHOD_ID_ITEM
-		{
-			get { return new BaseTable<Dex.Tables.method_id_row>(this, TableType.METHOD_ID_ITEM); }
-		}
+			=> new BaseTable<Dex.Tables.method_id_row>(this, TableType.METHOD_ID_ITEM);
 
 		/// <summary>Class structure list</summary>
 		public BaseTable<Dex.Tables.class_data_row> CLASS_DATA_ITEM
-		{
-			get { return new BaseTable<Dex.Tables.class_data_row>(this, TableType.CLASS_DATA_ITEM); }
-		}
+			=> new BaseTable<Dex.Tables.class_data_row>(this, TableType.CLASS_DATA_ITEM);
 
 		/// <summary>Static and instance fields from the class_data_item</summary>
 		public BaseTable<Dex.Tables.encoded_field_row> encoded_field
-		{
-			get { return new BaseTable<Dex.Tables.encoded_field_row>(this, TableType.encoded_field); }
-		}
+			=> new BaseTable<Dex.Tables.encoded_field_row>(this, TableType.encoded_field);
 
 		/// <summary>Class method definition list</summary>
 		public BaseTable<Dex.Tables.encoded_method_row> encoded_method
-		{
-			get { return new BaseTable<Dex.Tables.encoded_method_row>(this, TableType.encoded_method); }
-		}
+			=> new BaseTable<Dex.Tables.encoded_method_row>(this, TableType.encoded_method);
 
 		/// <summary>Class definitions list.</summary>
 		/// <remarks>
@@ -141,70 +109,50 @@ namespace AlphaOmega.Debug
 		/// Furthermore, it is invalid for a definition for the same-named class to appear more than once in the list.
 		/// </remarks>
 		public BaseTable<Dex.Tables.class_def_row> CLASS_DEF_ITEM
-		{
-			get { return new BaseTable<Dex.Tables.class_def_row>(this, TableType.CLASS_DEF_ITEM); }
-		}
+			=> new BaseTable<Dex.Tables.class_def_row>(this, TableType.CLASS_DEF_ITEM);
 
 		/// <summary>Where in the code exceptions are caught and how to handle them.</summary>
 		public BaseTable<Dex.Tables.try_item_row> try_item
-		{
-			get { return new BaseTable<Dex.Tables.try_item_row>(this, TableType.try_item); }
-		}
+			=> new BaseTable<Dex.Tables.try_item_row>(this, TableType.try_item);
 
 		/// <summary>Catch handler lists</summary>
 		public BaseTable<Dex.Tables.encoded_catch_handler_row> encoded_catch_handler_list
-		{
-			get { return new BaseTable<Dex.Tables.encoded_catch_handler_row>(this, TableType.encoded_catch_handler_list); }
-		}
+			=> new BaseTable<Dex.Tables.encoded_catch_handler_row>(this, TableType.encoded_catch_handler_list);
 
 		/// <summary>One for each caught type, in the order that the types should be tested.</summary>
 		public BaseTable<Dex.Tables.encoded_type_addr_pair_row> encoded_type_addr_pair
-		{
-			get { return new BaseTable<Dex.Tables.encoded_type_addr_pair_row>(this, TableType.encoded_type_addr_pair); }
-		}
+			=> new BaseTable<Dex.Tables.encoded_type_addr_pair_row>(this, TableType.encoded_type_addr_pair);
 
 		/// <summary>banana banana banana</summary>
 		public BaseTable<Dex.Tables.annotation_directory_row> ANNOTATIONS_DIRECTORY_ITEM
-		{
-			get { return new BaseTable<Dex.Tables.annotation_directory_row>(this, TableType.ANNOTATIONS_DIRECTORY_ITEM); }
-		}
+			=> new BaseTable<Dex.Tables.annotation_directory_row>(this, TableType.ANNOTATIONS_DIRECTORY_ITEM);
 
 		/// <summary>banana banana banana</summary>
 		public BaseTable<Dex.Tables.field_annotation_row> field_annotation
-		{
-			get { return new BaseTable<Dex.Tables.field_annotation_row>(this, TableType.field_annotation); }
-		}
+			=> new BaseTable<Dex.Tables.field_annotation_row>(this, TableType.field_annotation);
 
 		/// <summary>banana banana banana</summary>
 		public BaseTable<Dex.Tables.method_annotation_row> method_annotation
-		{
-			get { return new BaseTable<Dex.Tables.method_annotation_row>(this, TableType.method_annotation); }
-		}
+			=> new BaseTable<Dex.Tables.method_annotation_row>(this, TableType.method_annotation);
 
 		/// <summary>banana banana banana</summary>
 		public BaseTable<Dex.Tables.parameter_annotation_row> parameter_annotation
-		{
-			get { return new BaseTable<Dex.Tables.parameter_annotation_row>(this, TableType.parameter_annotation); }
-		}
+			=> new BaseTable<Dex.Tables.parameter_annotation_row>(this, TableType.parameter_annotation);
 
 		/// <summary>banana banana banana</summary>
 		public BaseTable<Dex.Tables.annotation_set_ref_row> ANNOTATION_SET_REF_LIST
-		{
-			get { return new BaseTable<Dex.Tables.annotation_set_ref_row>(this, TableType.ANNOTATION_SET_REF_LIST); }
-		}
+			=> new BaseTable<Dex.Tables.annotation_set_ref_row>(this, TableType.ANNOTATION_SET_REF_LIST);
 
 		/// <summary>banana banana banana</summary>
 		public BaseTable<Dex.Tables.annotation_set_row> ANNOTATION_SET_ITEM
-		{
-			get { return new BaseTable<Dex.Tables.annotation_set_row>(this, TableType.ANNOTATION_SET_ITEM); }
-		}
+			=> new BaseTable<Dex.Tables.annotation_set_row>(this, TableType.ANNOTATION_SET_ITEM);
 
 		/// <summary>Create instance of the DEX</summary>
 		/// <param name="loader">Loader type</param>
 		public DexFile(IImageLoader loader)
 		{
-			this._loader = loader ?? throw new ArgumentNullException(nameof(loader));
-			this._loader.Endianness = EndianHelper.Endian.Little;
+			this.Loader = loader ?? throw new ArgumentNullException(nameof(loader));
+			this.Loader.Endianness = EndianHelper.Endian.Little;
 
 			this.Header = this.PtrToStructure<DexApi.header_item>(0);
 			if(!this.Header.IsValid)
@@ -213,10 +161,10 @@ namespace AlphaOmega.Debug
 			switch(this.Header.endian_tag)
 			{
 			case DexApi.ENDIAN.ENDIAN:
-				this._loader.Endianness = EndianHelper.Endian.Little;
+				this.Loader.Endianness = EndianHelper.Endian.Little;
 				break;
 			case DexApi.ENDIAN.REVERSE_ENDIAN:
-				this._loader.Endianness = EndianHelper.Endian.Big;
+				this.Loader.Endianness = EndianHelper.Endian.Big;
 				this.Header = this.PtrToStructure<DexApi.header_item>(0);//TODO: Check it
 				break;
 			}
@@ -227,17 +175,13 @@ namespace AlphaOmega.Debug
 		/// <param name="offset">RVA to the beggining of structure</param>
 		/// <returns>Mapped structure</returns>
 		public T PtrToStructure<T>(UInt32 offset) where T : struct
-		{
-			return this.Loader.PtrToStructure<T>(offset);
-		}
+			=> this.Loader.PtrToStructure<T>(offset);
 
 		/// <summary>Get string from specific RVA</summary>
 		/// <param name="offset">RVA to the beggining of string</param>
 		/// <returns>Mapped string</returns>
 		public String PtrToStringAnsi(UInt32 offset)
-		{
-			return this.Loader.PtrToStringAnsi(offset);
-		}
+			=> this.Loader.PtrToStringAnsi(offset);
 
 		/// <summary>Read signed integer from image</summary>
 		/// <param name="offset">Offset from the beggining of the stream</param>
@@ -334,12 +278,11 @@ namespace AlphaOmega.Debug
 		/// <returns>Loaded section table from cache or DEX file</returns>
 		public Table GetSectionTable(TableType type)
 		{
-			Table result;
-			if(!this.Sections.TryGetValue(type, out result))
+			if(!this._sections.TryGetValue(type, out Table result))
 			{
 				result = this.ReadSectionTable(type);
 
-				this.Sections.Add(type, result);
+				this._sections.Add(type, result);
 			}
 			return result;
 		}
@@ -421,10 +364,10 @@ namespace AlphaOmega.Debug
 		/// <param name="disposing">Dispose managed objects</param>
 		protected virtual void Dispose(Boolean disposing)
 		{
-			if(disposing && this._loader != null)
+			if(disposing && this.Loader != null)
 			{
-				this._loader.Dispose();
-				this._loader = null;
+				this.Loader.Dispose();
+				this.Loader = null;
 			}
 		}
 	}

@@ -54,9 +54,7 @@ namespace AlphaOmega.Debug.Signature
 
 		internal ApkV2SignatureVerifier(Byte[] data)
 			: base(ApkSignatureVerifier.BlockId.APK_SIGNATURE_SCHEME_V2_BLOCK_ID, data)
-		{
-
-		}
+		{ }
 
 		/// <summary>Gets signing certificate that is stored inside APK Signature V2 Block</summary>
 		/// <returns>x509 certificate</returns>

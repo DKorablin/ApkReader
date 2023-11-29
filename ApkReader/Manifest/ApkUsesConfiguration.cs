@@ -58,16 +58,10 @@ namespace AlphaOmega.Debug.Manifest
 		/// A five-way control is one that can move the selection up, down, right, or left, and also provides a way of invoking the current selection.
 		/// It could be a D-pad (directional pad), trackball, or other device.
 		/// </remarks>
-		public Boolean? ReqFiveWayNav
-		{
-			get { return base.GetBooleanAttribute("reqFiveWayNav"); }
-		}
+		public Boolean? ReqFiveWayNav => base.GetBooleanAttribute("reqFiveWayNav");
 
 		/// <summary>Whether or not the application requires a hardware keyboard — "true" if it does, and "false" if not.</summary>
-		public Boolean? ReqHardKeyboard
-		{
-			get { return base.GetBooleanAttribute("reqHardKeyboard"); }
-		}
+		public Boolean? ReqHardKeyboard => base.GetBooleanAttribute("reqHardKeyboard");
 
 		/// <summary>The type of keyboard the application requires, if any at all</summary>
 		/// <remarks>
@@ -116,8 +110,6 @@ namespace AlphaOmega.Debug.Manifest
 
 		internal ApkUsesConfiguration(AndroidManifest parentNode, XmlNode node)
 			: base(parentNode, node)
-		{
-
-		}
+		{ }
 	}
 }

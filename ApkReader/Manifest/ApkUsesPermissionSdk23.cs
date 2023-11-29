@@ -16,9 +16,9 @@ namespace AlphaOmega.Debug.Manifest
 	{
 		/// <summary>The name of the permission</summary>
 		/// <remarks>
-		/// This permission can be defined by the app with the <see cref="ApkPermission"/>  element, it can be a permission defined by another app, or it can be one of the standard system permissions, such as "android.permission.CAMERA" or "android.permission.READ_CONTACTS".
+		/// This permission can be defined by the app with the <see cref="ApkPermission"/> element, it can be a permission defined by another app, or it can be one of the standard system permissions, such as "android.permission.CAMERA" or "android.permission.READ_CONTACTS".
 		/// </remarks>
-		public String Name { get { return base.Node.Attributes["name"][0]; } }
+		public String Name => base.Node.Attributes["name"][0];
 
 		/// <summary>The highest API level at which this permission should be granted to your app</summary>
 		/// <remarks>If the app is installed on a device with a later API level, the app is not granted the permission and cannot use any related functionality.</remarks>
@@ -34,11 +34,10 @@ namespace AlphaOmega.Debug.Manifest
 		}
 
 		/// <summary>Описание системного разрешения</summary>
-		public String Description { get { return Resources.GetPermission(this.Name); } }
+		public String Description => Resources.GetPermission(this.Name);
 
 		internal ApkUsesPermissionSdk23(AndroidManifest parentNode, XmlNode node)
 			: base(parentNode,node)
-		{
-		}
+		{ }
 	}
 }

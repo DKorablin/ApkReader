@@ -6,16 +6,6 @@ namespace Demo
 {
 	public struct Utils
 	{
-		public static void ConsoleWriteMembers(Object obj)
-		{
-			Utils.ConsoleWriteMembers(null, obj);
-		}
-		public static void ConsoleWriteMembers(String title, Object obj)
-		{
-			if(!String.IsNullOrEmpty(title))
-				Console.Write(title + ": ");
-			Console.WriteLine(Utils.GetReflectedMembers(obj));
-		}
 		public static String GetReflectedMembers(Object obj)
 		{
 			if(obj == null)

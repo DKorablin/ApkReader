@@ -23,9 +23,7 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> result = base.Node.GetAttribute("name");
-				return result == null
-					? null
-					: result[0];
+				return result?[0];
 			}
 		}
 
@@ -35,10 +33,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// When you declare android:required="false" for a feature, it means that the application prefers to use the feature if present on the device, but that it is designed to function without the specified feature, if necessary.
 		/// </remarks>
 		[DefaultValue(true)]
-		public Boolean required
-		{
-			get { return base.GetBooleanAttribute("required").GetValueOrDefault(true); }
-		}
+		public Boolean required	=> base.GetBooleanAttribute("required").GetValueOrDefault(true);
 
 		/// <summary>The OpenGL ES version required by the application</summary>
 		/// <remarks>
@@ -71,7 +66,6 @@ namespace AlphaOmega.Debug.Manifest
 
 		internal ApkUsesFeature(AndroidManifest parentNode, XmlNode usesFeatureNode)
 			: base(parentNode, usesFeatureNode)
-		{
-		}
+		{ }
 	}
 }

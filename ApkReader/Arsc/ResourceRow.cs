@@ -9,10 +9,10 @@ namespace AlphaOmega.Debug.Arsc
 		private readonly String _stringValue;
 
 		/// <summary>Data type</summary>
-		public ArscApi.DATA_TYPE DataType { get { return this._descriptor.dataType; } }
+		public ArscApi.DATA_TYPE DataType => this._descriptor.dataType;
 
 		/// <summary>Raw resource value</summary>
-		public Int32 Raw { get { return this._descriptor.data; } }
+		public Int32 Raw => this._descriptor.data;
 
 		/// <summary>String representation</summary>
 		public String Value

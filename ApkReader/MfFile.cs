@@ -44,13 +44,7 @@ namespace AlphaOmega.Debug
 		/// <param name="zipFilePath">Path to file in the apk</param>
 		/// <returns>Previosly calculated hash or null if file not found</returns>
 		public HashWithType this[String zipFilePath]
-		{
-			get
-			{
-				HashWithType result;
-				return this._fileHash.TryGetValue(zipFilePath, out result) ? result : null;
-			}
-		}
+			=> this._fileHash.TryGetValue(zipFilePath, out HashWithType result) ? result : null;
 
 		/// <summary>Create instance of MANIFEST.MF file reader</summary>
 		/// <param name="payload">MANIFEST.MF file contents</param>
@@ -168,13 +162,9 @@ namespace AlphaOmega.Debug
 		/// <summary>Gets all file and hashes</summary>
 		/// <returns>All files with hashes</returns>
 		public IEnumerator<KeyValuePair<String, HashWithType>> GetEnumerator()
-		{
-			return this._fileHash.GetEnumerator();
-		}
+			=> this._fileHash.GetEnumerator();
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-		{
-			return this.GetEnumerator();
-		}
+			=> this.GetEnumerator();
 	}
 }

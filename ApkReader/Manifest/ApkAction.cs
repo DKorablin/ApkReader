@@ -12,18 +12,17 @@ namespace AlphaOmega.Debug.Manifest
 	{
 		/// <summary>The name of the action</summary>
 		/// <remarks>
-		///  Some standard actions are defined in the Intent class as ACTION_string constants.
-		///  To assign one of these actions to this attribute, prepend "android.intent.action." to the string that follows ACTION_.
-		///  For example, for ACTION_MAIN, use "android.intent.action.MAIN" and for ACTION_WEB_SEARCH, use "android.intent.action.WEB_SEARCH".
+		/// Some standard actions are defined in the Intent class as ACTION_string constants.
+		/// To assign one of these actions to this attribute, prepend "android.intent.action." to the string that follows ACTION_.
+		/// For example, for ACTION_MAIN, use "android.intent.action.MAIN" and for ACTION_WEB_SEARCH, use "android.intent.action.WEB_SEARCH".
 		/// </remarks>
-		public String Name { get { return base.Node.Attributes["name"][0]; } }
+		public String Name => base.Node.Attributes["name"][0];
 
 		/// <summary>Описание возможного действия</summary>
-		public String Description { get { return Resources.GetIntent(this.Name); } }
+		public String Description => Resources.GetIntent(this.Name);
 
 		internal ApkAction(ApkIntentFilter parentNode,XmlNode node)
 			: base(parentNode, node)
-		{
-		}
+		{ }
 	}
 }

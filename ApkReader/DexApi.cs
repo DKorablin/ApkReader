@@ -17,7 +17,7 @@ namespace AlphaOmega.Debug
 		/// Although the standart .dex format is little-endian, implementations may chooseto perform byte-swapping.
 		/// Should an implementation come across a header whose endian_tag is REVERSE_ENDIAN_CONSTANT instead of ENDIAN_CONSTANT, it would know that the file has been byte-swapping from the expected form.
 		/// </remarks>
-		public enum ENDIAN : uint
+		public enum ENDIAN : UInt32
 		{
 			/// <summary>Little-endian</summary>
 			ENDIAN = 0x12345678,
@@ -134,20 +134,15 @@ namespace AlphaOmega.Debug
 			public UInt32 data_off;
 
 			/// <summary>String representation for magic field</summary>
-			public String MagicStr { get { return Encoding.ASCII.GetString(this.magic).Replace("\n", "\\n").Replace("\x0", "\\0"); } }
+			public String MagicStr => Encoding.ASCII.GetString(this.magic).Replace("\n", "\\n").Replace("\x0", "\\0");
 
 			/// <summary>Validating DEX header magic</summary>
 			public Boolean IsValid
-			{
-				get
-				{
-					return this.magic[0] == 0x64 && this.magic[1] == 0x65 && this.magic[2] == 0x78 && this.magic[3] == 0x0a;
-				}
-			}
+				=> this.magic[0] == 0x64 && this.magic[1] == 0x65 && this.magic[2] == 0x78 && this.magic[3] == 0x0a;
 		}
 
 		/// <summary>Type of the map items</summary>
-		public enum TYPE : ushort
+		public enum TYPE : UInt16
 		{
 			/// <summary>Dex header pointer</summary>
 			HEADER_ITEM = 0x0000,
@@ -214,104 +209,104 @@ namespace AlphaOmega.Debug
 
 		/// <summary>Bitfields of these flags are used to indicate the accessibility and overall properties of classes and class members.</summary>
 		[Flags]
-		public enum ACC : uint
+		public enum ACC : UInt32
 		{
 			/// <summary>
 			/// Class: public: visible everywhere
 			/// Method: public: visible everywhere
 			/// Field: public: visible everywhere
 			/// </summary>
-			PUBLIC=0x1,
+			PUBLIC = 0x1,
 			/// <summary>
 			/// Class: private: only visible to defining class
 			/// Method: private: only visible to defining class
 			/// Field: private: only visible to defining class
 			/// </summary>
-			PRIVATE=0x2,
+			PRIVATE = 0x2,
 			/// <summary>
 			/// Class: protected: visible to package and subclasses 
 			/// Method: protected: visible to package and subclasses
 			/// Field: protected: visible to package and subclasses
 			/// </summary>
-			PROTECTED=0x4,
+			PROTECTED = 0x4,
 			/// <summary>
 			/// Class: static: is not constructed with an outer this reference
 			/// Method: static: does not take a this argument
 			/// Field: static: global to defining class
 			/// </summary>
-			STATIC=0x8,
+			STATIC = 0x8,
 			/// <summary>
 			/// Class: final: not subclassable
 			/// Method: final: not overridable
 			/// Field: final: immutable after construction
 			/// </summary>
-			FINAL=0x10,
+			FINAL = 0x10,
 			/// <summary>
 			/// Class: none
 			/// Method: synchronized: associated lock automatically acquired around call to this method. (This is only valid to set when ACC_NATIVE is also set.)
 			/// Field: none
 			/// </summary>
-			SYNCHRONIZED=0x20,
+			SYNCHRONIZED = 0x20,
 			/// <summary>
 			/// Class: none
 			/// Method: bridge method, added automatically by compiler as a type-safe bridge
 			/// Field: volatile: special access rules to help with thread safety
 			/// </summary>
-			VOLATILE_BRIDGE=0x40,
+			VOLATILE_BRIDGE = 0x40,
 			/// <summary>
 			/// Class: none
 			/// Method: last argument should be treated as a "rest" argument by compiler
 			/// Field: transient: not to be saved by default serialization
 			/// </summary>
-			TRANSIENT_VARARGS=0x80,
+			TRANSIENT_VARARGS = 0x80,
 			/// <summary>
 			/// Class: none
 			/// Method: native: implemented in native code
 			/// Field: none
 			/// </summary>
-			NATIVE=0x100,
+			NATIVE = 0x100,
 			/// <summary>
 			/// Class: interface: multiply-implementable abstract class
 			/// Method: none
 			/// Field: none
 			/// </summary>
-			INTERFACE=0x200,
+			INTERFACE = 0x200,
 			/// <summary>
 			/// Class: abstract: not directly instantiable
 			/// Method: abstract: unimplemented by this class
 			/// Field: none
 			/// </summary>
-			ABSTRACT=0x400,
+			ABSTRACT = 0x400,
 			/// <summary>
 			/// Class: none
 			/// Method: strictfp: strict rules for floating-point arithmetic
 			/// Field: none
 			/// </summary>
-			STRICT=0x800,
+			STRICT = 0x800,
 			/// <summary>
 			/// Class: not directly defined in source code
 			/// Method: not directly defined in source code
 			/// Field: not directly defined in source code
 			/// </summary>
-			SYNTHETIC=0x1000,
+			SYNTHETIC = 0x1000,
 			/// <summary>
 			/// Class: declared as an annotation class
 			/// Method: none
 			/// Field: none
 			/// </summary>
-			ANNOTATION=0x2000,
+			ANNOTATION = 0x2000,
 			/// <summary>
 			/// Class: declared as an enumerated type
 			/// Method: none
 			/// Field: declared as an enumerated value
 			/// </summary>
-			ENUM=0x4000,
+			ENUM = 0x4000,
 			/// <summary>
 			/// Class: none
 			/// Method: Constructor method (class or instance initializer)
 			/// Field: none
 			/// </summary>
-			CONSTRUCTOR=0x10000,
+			CONSTRUCTOR = 0x10000,
 			/// <summary>
 			/// Class: none
 			/// Method: declared synchronized.

@@ -13,14 +13,10 @@ namespace AlphaOmega.Debug.Manifest
 		/// For example, the string value for CATEGORY_LAUNCHER is "android.intent.category.LAUNCHER".
 		/// </remarks>
 		public String Name
-		{
-			get { return base.Node.Attributes["name"][0]; }
-		}
+			=> base.Node.Attributes["name"][0];
 
 		internal ApkCategory(ApkIntentFilter parentNode, XmlNode node)
 			: base(parentNode, node)
-		{
-
-		}
+		{ }
 	}
 }

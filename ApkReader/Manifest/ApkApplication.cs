@@ -38,33 +38,25 @@ namespace AlphaOmega.Debug.Manifest
 		/// </remarks>
 		[DefaultValue(false)]
 		public Boolean AllowTaskReparenting
-		{
-			get { return base.GetBooleanAttribute("allowTaskReparenting").GetValueOrDefault(false); }
-		}
+			=> base.GetBooleanAttribute("allowTaskReparenting").GetValueOrDefault(false);
 
 		/// <summary>Whether to allow the application to participate in the backup and restore infrastructure.</summary>
 		/// <remarks>If this attribute is set to false, no backup or restore of the application will ever be performed, even by a full-system backup that would otherwise cause all application data to be saved via adb.</remarks>
 		[DefaultValue(true)]
 		public Boolean AllowBackup
-		{
-			get { return base.GetBooleanAttribute("allowBackup").GetValueOrDefault(true); }
-		}
+			=> base.GetBooleanAttribute("allowBackup").GetValueOrDefault(true);
 
 		/// <summary>Whether to allow the application to reset user data</summary>
 		/// <remarks>This data includes flags—such as whether the user has seen introductory tooltips—as well as user-customizable settings and preferences.</remarks>
 		[DefaultValue(true)]
 		public Boolean AllowClearUserData
-		{
-			get { return base.GetBooleanAttribute("allowClearUserData").GetValueOrDefault(true); }
-		}
+			=> base.GetBooleanAttribute("allowClearUserData").GetValueOrDefault(true);
 
 		/// <summary>Whether to allow the application to reset user data</summary>
 		/// <remarks>This data includes flags—such as whether the user has seen introductory tooltips—as well as user-customizable settings and preferences.</remarks>
 		[DefaultValue(true)]
 		public Boolean AllowNativeHeapPointerTagging
-		{
-			get { return base.GetBooleanAttribute("allowNativeHeapPointerTagging").GetValueOrDefault(true); }
-		}
+			=> base.GetBooleanAttribute("allowNativeHeapPointerTagging").GetValueOrDefault(true);
 
 		/// <summary>The name of the class that implements the application's backup agent, a subclass of BackupAgent</summary>
 		/// <remarks>
@@ -89,9 +81,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// <remarks>The system shuts down an app during auto backup operation, so use this attribute with caution. Setting this flag to true can impact app behavior while the app is active</remarks>
 		[DefaultValue(false)]
 		public Boolean BackupInForeground
-		{
-			get { return base.GetBooleanAttribute("backupInForeground").GetValueOrDefault(false); }
-		}
+			=> base.GetBooleanAttribute("backupInForeground").GetValueOrDefault(false);
 
 		/// <summary>
 		/// A drawable resource providing an extended graphical banner for its associated item.
@@ -115,9 +105,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// <summary>Whether or not the application can be debugged, even when running on a device in user mode — "true" if it can be, and "false" if not.</summary>
 		[DefaultValue(false)]
 		public Boolean Debuggable
-		{
-			get { return base.GetBooleanAttribute("debuggable").GetValueOrDefault(false); }
-		}
+			=> base.GetBooleanAttribute("debuggable").GetValueOrDefault(false);
 
 		/// <summary>User-readable text about the application, longer and more descriptive than the application label</summary>
 		/// <remarks>The value must be set as a reference to a string resource. Unlike the label, it cannot be a raw string</remarks>
@@ -136,9 +124,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// <remarks>If you're using a custom subclass of Application, and if any component inside your application is direct-boot aware, then your entire custom application is considered to be direct-boot aware.</remarks>
 		[DefaultValue(false)]
 		public Boolean DirectBootAware
-		{
-			get { return base.GetBooleanAttribute("directBootAware").GetValueOrDefault(false); }
-		}
+			=> base.GetBooleanAttribute("directBootAware").GetValueOrDefault(false);
 
 		/// <summary>
 		/// Whether or not the Android system can instantiate components of the application — "true" if it can, and "false" if not.
@@ -147,9 +133,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// </summary>
 		[DefaultValue(true)]
 		public Boolean Enabled
-		{
-			get { return base.GetBooleanAttribute("enabled").GetValueOrDefault(true); }
-		}
+			=> base.GetBooleanAttribute("enabled").GetValueOrDefault(true);
 
 		/// <summary>
 		/// Whether or not the package installer extracts native libraries from the APK to the filesystem.
@@ -162,9 +146,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// </remarks>
 		[DefaultValue(true)]
 		public Boolean ExtractNativeLibs
-		{
-			get { return base.GetBooleanAttribute("extractNativeLibs").GetValueOrDefault(true); }
-		}
+			=> base.GetBooleanAttribute("extractNativeLibs").GetValueOrDefault(true);
 
 		/// <summary>
 		/// This attribute points to an XML file that contains full backup rules for Auto Backup.
@@ -179,9 +161,7 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> result = base.Node.GetAttribute("fullBackupContent");
-				return result == null
-					? null
-					: result[0];
+				return result?[0];
 			}
 		}
 
@@ -192,9 +172,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// </remarks>
 		[DefaultValue(false)]
 		public Boolean FullBackupOnly
-		{
-			get { return base.GetBooleanAttribute("fullBackupOnly").GetValueOrDefault(false); }
-		}
+			=> base.GetBooleanAttribute("fullBackupOnly").GetValueOrDefault(false);
 
 		/// <summary>
 		/// Whether or not the application contains any code — "true" if it does, and "false" if not.
@@ -205,16 +183,12 @@ namespace AlphaOmega.Debug.Manifest
 		/// </remarks>
 		[DefaultValue(true)]
 		public Boolean HasCode
-		{
-			get { return base.GetBooleanAttribute("hasCode").GetValueOrDefault(true); }
-		}
+			=> base.GetBooleanAttribute("hasCode").GetValueOrDefault(true);
 
 		/// <summary>When the user uninstalls an app, whether or not to show the user a prompt to keep the app's data</summary>
 		[DefaultValue(false)]
 		public Boolean HasFragileUserData
-		{
-			get { return base.GetBooleanAttribute("hasFragileUserData").GetValueOrDefault(false); }
-		}
+			=> base.GetBooleanAttribute("hasFragileUserData").GetValueOrDefault(false);
 
 		/// <summary>Whether or not hardware-accelerated rendering should be enabled for all activities and views in this application — "true" if it should be enabled, and "false" if not.</summary>
 		/// <remarks>
@@ -224,9 +198,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// </remarks>
 		[DefaultValue(true)]
 		public Boolean HardwareAccelerated
-		{
-			get { return base.GetBooleanAttribute("hardwareAccelerated").GetValueOrDefault(true); }
-		}
+			=> base.GetBooleanAttribute("hardwareAccelerated").GetValueOrDefault(true);
 
 		/// <summary>An icon for the application as whole, and the default icon for each of the application's components</summary>
 		/// <remarks>
@@ -248,9 +220,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// <remarks>The system may group together applications classifed as games or display them separately from other applications</remarks>
 		[DefaultValue(false)]
 		public Boolean IsGame
-		{
-			get { return base.GetBooleanAttribute("isGame").GetValueOrDefault(false); }
-		}
+			=> base.GetBooleanAttribute("isGame").GetValueOrDefault(false);
 
 		/// <summary>Whether the application in question should be terminated after its settings have been restored during a full-system restore operation</summary>
 		/// <remarks>
@@ -260,9 +230,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// </remarks>
 		[DefaultValue(true)]
 		public Boolean KillAfterRestore
-		{
-			get { return base.GetBooleanAttribute("killAfterRestore").GetValueOrDefault(true); }
-		}
+			=> base.GetBooleanAttribute("killAfterRestore").GetValueOrDefault(true);
 
 		/// <summary>Whether your application's processes should be created with a large Dalvik heap.</summary>
 		/// <remarks>
@@ -274,9 +242,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// Enabling this also does not guarantee a fixed increase in available memory, because some devices are constrained by their total available memory.
 		/// </remarks>
 		public Boolean? LargeHeap
-		{
-			get { return base.GetBooleanAttribute("largeHeap"); }
-		}
+			=> base.GetBooleanAttribute("largeHeap");
 
 		/// <summary>A user-readable label for the application as a whole, and a default label for each of the application's components.</summary>
 		/// <remarks>
@@ -292,8 +258,7 @@ namespace AlphaOmega.Debug.Manifest
 				if(result == null)
 					return null;
 
-				Int32 resourceId;
-				if(Int32.TryParse(result[0], out resourceId))
+				if(Int32.TryParse(result[0], out Int32 resourceId))
 				{
 					ResourceRow resource = base.GetResource(resourceId);
 					return resource == null
@@ -324,9 +289,7 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> result = base.Node.GetAttribute("manageSpaceActivity");
-				return result == null
-					? null
-					: result[0];
+				return result?[0];
 			}
 		}
 
@@ -337,9 +300,7 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> result = base.Node.GetAttribute("name");
-				return result == null
-					? null
-					: result[0];
+				return result?[0];
 			}
 		}
 
@@ -366,9 +327,7 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> result = base.Node.GetAttribute("permission");
-				return result == null
-					? null
-					: result[0];
+				return result?[0];
 			}
 		}
 
@@ -376,9 +335,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// <remarks>Applications should not normally set this flag; persistence mode is intended only for certain system applications.</remarks>
 		[DefaultValue(false)]
 		public Boolean Persistent
-		{
-			get { return base.GetBooleanAttribute("persistent").GetValueOrDefault(false); }
-		}
+			=> base.GetBooleanAttribute("persistent").GetValueOrDefault(false);
 
 		/// <summary>The name of a process where all components of the application should run. Each component can override this default by setting its own process attribute.</summary>
 		/// <remarks>
@@ -391,9 +348,7 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> result = base.Node.GetAttribute("process");
-				return result == null
-					? null
-					: result[0];
+				return result?[0];
 			}
 		}
 
@@ -401,15 +356,11 @@ namespace AlphaOmega.Debug.Manifest
 		/// <remarks>Setting this attribute to true will permit the Backup Manager to attempt restore even when a version mismatch suggests that the data are incompatible. Use with caution!</remarks>
 		[DefaultValue(false)]
 		public Boolean RestoreAnyVersion
-		{
-			get { return base.GetBooleanAttribute("restoreAnyVersion").GetValueOrDefault(false); }
-		}
+			=> base.GetBooleanAttribute("restoreAnyVersion").GetValueOrDefault(false);
 
 		/// <summary>Whether or not the application wants to opt out of scoped storage</summary>
 		public Boolean? RequestLegacyExternalStorage
-		{
-			get { return base.GetBooleanAttribute("requestLegacyExternalStorage"); }
-		}
+			=> base.GetBooleanAttribute("requestLegacyExternalStorage");
 
 		/// <summary>
 		/// Specifies the account type required by the application in order to function.
@@ -421,9 +372,7 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> result = base.Node.GetAttribute("requiredAccountType");
-				return result == null
-					? null
-					: result[0];
+				return result?[0];
 			}
 		}
 
@@ -435,9 +384,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// </remarks>
 		[DefaultValue(true)]
 		public Boolean ResizeableActivity
-		{
-			get { return base.GetBooleanAttribute("resizeableActivity").GetValueOrDefault(true); }
-		}
+			=> base.GetBooleanAttribute("resizeableActivity").GetValueOrDefault(true);
 
 		/// <summary>Specifies the account type required by this application and indicates that restricted profiles are allowed to access such accounts that belong to the owner user</summary>
 		/// <remarks>If your app requires an Account and restricted profiles are allowed to access the primary user's accounts, the value for this attribute must correspond to the account authenticator type used by your app (as defined by AuthenticatorDescription), such as "com.google".</remarks>
@@ -446,9 +393,7 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> result = base.Node.GetAttribute("restrictedAccountType");
-				return result == null
-					? null
-					: result[0];
+				return result?[0];
 			}
 		}
 
@@ -459,9 +404,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// </remarks>
 		[DefaultValue(false)]
 		public Boolean SupportsRtl
-		{
-			get { return base.GetBooleanAttribute("supportsRtl").GetValueOrDefault(false); }
-		}
+			=> base.GetBooleanAttribute("supportsRtl").GetValueOrDefault(false);
 
 		/// <summary>
 		/// An affinity name that applies to all activities within the application, except for those that set a different affinity with their own taskAffinity attributes.
@@ -476,9 +419,7 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> result = base.Node.GetAttribute("taskAffinity");
-				return result == null
-					? null
-					: result[0];
+				return result?[0];
 			}
 		}
 
@@ -489,9 +430,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// </summary>
 		/// <remarks>Android Studio automatically adds this attribute when you click Run.</remarks>
 		public Boolean? TestOnly
-		{
-			get { return base.GetBooleanAttribute("testOnly"); }
-		}
+			=> base.GetBooleanAttribute("testOnly");
 
 		/// <summary>A reference to a style resource defining a default theme for all activities in the application</summary>
 		/// <remarks>Individual activities can override the default by setting their own theme attributes</remarks>
@@ -504,10 +443,9 @@ namespace AlphaOmega.Debug.Manifest
 					return null;
 
 				Arsc.ResourceRow resourceRow = base.GetResource(Convert.ToInt32(result[0]));
-				if(resourceRow != null)
-					return resourceRow.Value;
-				else
-					return result[0];
+				return resourceRow == null
+					? result[0]
+					: resourceRow.Value;
 			}
 		}
 
@@ -534,9 +472,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// The key reason for avoiding cleartext traffic is the lack of confidentiality, authenticity, and protections against tampering; a network attacker can eavesdrop on transmitted data and also modify it without being detected.
 		/// </remarks>
 		public Boolean? UsesCleartextTraffic
-		{
-			get { return base.GetBooleanAttribute("usesCleartextTraffic"); }
-		}
+			=> base.GetBooleanAttribute("usesCleartextTraffic");
 
 		/// <summary>Indicates whether the app would like the virtual machine (VM) to operate in safe mode</summary>
 		/// <remarks>
@@ -545,9 +481,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// </remarks>
 		[DefaultValue(false)]
 		public Boolean VmSafeMode
-		{
-			get { return base.GetBooleanAttribute("vmSafeMode").GetValueOrDefault(false); }
-		}
+			=> base.GetBooleanAttribute("vmSafeMode").GetValueOrDefault(false);
 
 		/// <summary>
 		/// Specifies a shared library that the application must be linked against.
@@ -663,7 +597,6 @@ namespace AlphaOmega.Debug.Manifest
 
 		internal ApkApplication(AndroidManifest manifest)
 			: base(manifest, manifest.Node.ChildNodes["application"][0])
-		{
-		}
+		{ }
 	}
 }

@@ -16,7 +16,7 @@ namespace AlphaOmega.Debug.Dex.Tables
 			parameter_annotations = 6,
 		}
 
-		private UInt32 class_annotations_offI { get { return base.GetValue<UInt32>((UInt16)columns.class_annotations_off); } }
+		private UInt32 class_annotations_offI => base.GetValue<UInt32>((UInt16)columns.class_annotations_off);
 
 		/// <summary>
 		/// Offset from the start of the file to the annotations made directly on the class, or 0 if the class has no direct annotations.
@@ -24,25 +24,20 @@ namespace AlphaOmega.Debug.Dex.Tables
 		/// </summary>
 		/// <remarks>The format of the data is specified by "annotation_set_item" below.</remarks>
 		public annotation_set_row class_annotations_off
-		{
-			get
-			{
-				return this.class_annotations_offI == 0
-					? null
-					: base.File.ANNOTATION_SET_ITEM.GetRowByOffset(this.class_annotations_offI);
-			}
-		}
+			=> this.class_annotations_offI == 0
+				? null
+				: base.File.ANNOTATION_SET_ITEM.GetRowByOffset(this.class_annotations_offI);
 
 		/// <summary>Count of fields annotated by this item</summary>
-		public UInt32 fields_size { get { return base.GetValue<UInt32>((UInt16)columns.fields_size); } }
+		public UInt32 fields_size => base.GetValue<UInt32>((UInt16)columns.fields_size);
 
 		/// <summary>Count of methods annotated by this item</summary>
-		public UInt32 annotated_methods_size { get { return base.GetValue<UInt32>((UInt16)columns.annotated_methods_size); } }
+		public UInt32 annotated_methods_size => base.GetValue<UInt32>((UInt16)columns.annotated_methods_size);
 
 		/// <summary>Count of method parameter lists annotated by this item</summary>
-		public UInt32 annotated_parameters_size { get { return base.GetValue<UInt32>((UInt16)columns.annotated_parameters_size); } }
+		public UInt32 annotated_parameters_size => base.GetValue<UInt32>((UInt16)columns.annotated_parameters_size);
 
-		private UInt32[] field_annotationsI { get { return base.GetValue<UInt32[]>((UInt16)columns.field_annotations); } }
+		private UInt32[] field_annotationsI => base.GetValue<UInt32[]>((UInt16)columns.field_annotations);
 
 		/// <summary>List of associated field annotations.</summary>
 		/// <remarks>The elements of the list must be sorted in increasing order, by field_idx.</remarks>
@@ -55,7 +50,7 @@ namespace AlphaOmega.Debug.Dex.Tables
 			}
 		}
 
-		private UInt32[] method_annotationsI { get { return base.GetValue<UInt32[]>((UInt16)columns.method_annotations); } }
+		private UInt32[] method_annotationsI => base.GetValue<UInt32[]>((UInt16)columns.method_annotations);
 
 		/// <summary>List of associated method annotations.</summary>
 		/// <remarks>The elements of the list must be sorted in increasing order, by method_idx.</remarks>
@@ -68,7 +63,7 @@ namespace AlphaOmega.Debug.Dex.Tables
 			}
 		}
 
-		private UInt32[] parameter_annotationsI { get { return base.GetValue<UInt32[]>((UInt16)columns.parameter_annotations); } }
+		private UInt32[] parameter_annotationsI => base.GetValue<UInt32[]>((UInt16)columns.parameter_annotations);
 
 		/// <summary>List of associated method parameter annotations.</summary>
 		/// <remarks>The elements of the list must be sorted in increasing order, by method_idx.</remarks>

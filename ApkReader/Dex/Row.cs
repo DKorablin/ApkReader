@@ -7,41 +7,29 @@ namespace AlphaOmega.Debug.Dex
 	/// <summary>Generic row for variable structure collection</summary>
 	public class Row : IRow
 	{
-		#region Fields
-		private readonly Table _table;
-		private readonly UInt32 _rowIndex;
-		private readonly UInt32 _offset;
-		private readonly Cell[] _cells;
-		#endregion Fields
-
 		/// <summary>Row index</summary>
-		public UInt32 Index { get { return this._rowIndex; } }
+		public UInt32 Index { get; }
 
 		/// <summary>Offset from the beggining of the current file</summary>
-		public UInt32 Offset { get { return this._offset; } }
+		public UInt32 Offset { get; }
 
 		/// <summary>Row cells</summary>
-		public Cell[] Cells { get { return this._cells; } }
-		ICell[] IRow.Cells { get { return this._cells; } }
+		public Cell[] Cells { get; }
+		ICell[] IRow.Cells => this.Cells;
 
 		/// <summary>Row owner table</summary>
-		public Table Table { get { return this._table; } }
-		ITable IRow.Table { get { return this._table; } }
+		public Table Table { get; }
+		ITable IRow.Table => this.Table;
 
 		/// <summary>Get cell by column index</summary>
 		/// <param name="columnIndex">Index of column from current table</param>
 		/// <returns>Cell from current row by column index</returns>
 		public Cell this[UInt16 columnIndex]
-		{
-			get
-			{
-				if(columnIndex < this._cells.Length)
-					return this._cells[columnIndex];
-				else
-					throw new ArgumentOutOfRangeException("columnIndex is to big");
-			}
-		}
-		ICell IRow.this[UInt16 columnIndex] { get { return this[columnIndex]; } }
+			=> columnIndex < this.Cells.Length
+				? this.Cells[columnIndex]
+				: throw new ArgumentOutOfRangeException("columnIndex is to big");
+
+		ICell IRow.this[UInt16 columnIndex] => this[columnIndex];
 
 		/// <summary>Get the cell by column name</summary>
 		/// <param name="columnName">Column name</param>
@@ -55,21 +43,21 @@ namespace AlphaOmega.Debug.Dex
 				if(String.IsNullOrEmpty(columnName))
 					throw new ArgumentNullException(nameof(columnName));
 
-				foreach(Cell cell in this._cells)
+				foreach(Cell cell in this.Cells)
 					if(cell.Column.Name == columnName)
 						return cell;
 				throw new ArgumentException($"Column with name '{columnName}' not found");
 			}
 		}
-		ICell IRow.this[String columnName] { get { return this[columnName]; } }
-		ICell IRow.this[IColumn column] { get { return this[column.Index]; } }
+		ICell IRow.this[String columnName] => this[columnName];
+		ICell IRow.this[IColumn column] => this[column.Index];
 
 		internal Row(Table table, UInt32 rowIndex, UInt32 offset, Cell[] cells)
 		{
-			this._table = table;
-			this._rowIndex = rowIndex;
-			this._offset = offset;
-			this._cells = cells;
+			this.Table = table;
+			this.Index = rowIndex;
+			this.Offset = offset;
+			this.Cells = cells;
 		}
 
 		/// <summary>Get all cells from current fow</summary>
@@ -85,8 +73,6 @@ namespace AlphaOmega.Debug.Dex
 				yield return cell;
 		}
 		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return this.GetEnumerator();
-		}
+			=> this.GetEnumerator();
 	}
 }

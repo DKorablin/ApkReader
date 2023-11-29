@@ -15,10 +15,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// </remarks>
 		[DefaultValue(true)]
 		[Obsolete("It was introduced to help applications transition from Android 1.5 to 1.6, when support for multiple screens was first introduced. You should not use it.", false)]
-		public Boolean Resizeable
-		{
-			get { return base.GetBooleanAttribute("resizeable").GetValueOrDefault(true); }
-		}
+		public Boolean Resizeable => base.GetBooleanAttribute("resizeable").GetValueOrDefault(true);
 
 		/// <summary>Indicates whether the application supports smaller screen form-factors</summary>
 		/// <remarks>
@@ -26,42 +23,27 @@ namespace AlphaOmega.Debug.Manifest
 		/// An application that does not support small screens will not be available for small screen devices from external services (such as Google Play), because there is little the platform can do to make such an application work on a smaller screen.
 		/// </remarks>
 		[DefaultValue(true)]
-		public Boolean SmallScreens
-		{
-			get { return base.GetBooleanAttribute("smallScreens").GetValueOrDefault(true); }
-		}
+		public Boolean SmallScreens => base.GetBooleanAttribute("smallScreens").GetValueOrDefault(true);
 
 		/// <summary>Indicates whether an application supports the "normal" screen form-factors</summary>
 		/// <remarks> Traditionally this is an HVGA medium density screen, but WQVGA low density and WVGA high density are also considered to be normal</remarks>
 		[DefaultValue(true)]
-		public Boolean NormalScreens
-		{
-			get { return base.GetBooleanAttribute("normalScreens").GetValueOrDefault(true); }
-		}
+		public Boolean NormalScreens => base.GetBooleanAttribute("normalScreens").GetValueOrDefault(true);
 
 		/// <summary>Indicates whether the application supports larger screen form-factors</summary>
 		/// <remarks>
-		///  A large screen is defined as a screen that is significantly larger than a "normal" handset screen, and thus might require some special care on the application's part to make good use of it, though it may rely on resizing by the system to fill the screen.
+		/// A large screen is defined as a screen that is significantly larger than a "normal" handset screen, and thus might require some special care on the application's part to make good use of it, though it may rely on resizing by the system to fill the screen.
 		/// </remarks>
-		public Boolean? LargeScreens
-		{
-			get { return base.GetBooleanAttribute("largeScreens"); }
-		}
+		public Boolean? LargeScreens => base.GetBooleanAttribute("largeScreens");
 
 		/// <summary>Indicates whether the application supports extra large screen form-factors</summary>
 		/// <remarks>
 		/// An xlarge screen is defined as a screen that is significantly larger than a "large" screen, such as a tablet (or something larger) and may require special care on the application's part to make good use of it, though it may rely on resizing by the system to fill the screen.
 		/// </remarks>
-		public Boolean? XLargeScreens
-		{
-			get { return base.GetBooleanAttribute("xlargeScreens"); }
-		}
+		public Boolean? XLargeScreens => base.GetBooleanAttribute("xlargeScreens");
 
 		/// <summary>Indicates whether the application includes resources to accommodate any screen density</summary>
-		public Boolean? AnyDensity
-		{
-			get { return base.GetBooleanAttribute("anyDensity"); }
-		}
+		public Boolean? AnyDensity => base.GetBooleanAttribute("anyDensity");
 
 		/// <summary>Specifies the minimum smallestWidth required</summary>
 		/// <remarks>
@@ -113,8 +95,6 @@ namespace AlphaOmega.Debug.Manifest
 
 		internal ApkSupportsScreen(AndroidManifest parentNode, XmlNode node)
 			: base(parentNode,node)
-		{
-
-		}
+		{ }
 	}
 }

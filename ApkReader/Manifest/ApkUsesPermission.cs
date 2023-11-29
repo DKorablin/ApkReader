@@ -15,7 +15,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// or one of the standard system permissions (such as "android.permission.CAMERA" or "android.permission.READ_CONTACTS").
 		/// As these examples show, a permission name typically includes the package name as a prefix.
 		/// </remarks>
-		public String Name { get { return base.Node.Attributes["name"][0]; } }
+		public String Name => base.Node.Attributes["name"][0];
 
 		/// <summary>The highest API level at which this permission should be granted to your app</summary>
 		/// <remarks>
@@ -36,11 +36,10 @@ namespace AlphaOmega.Debug.Manifest
 		}
 
 		/// <summary>Описание системного разрешения</summary>
-		public String Description { get { return Resources.GetPermission(this.Name); } }
+		public String Description => Resources.GetPermission(this.Name);
 
 		internal ApkUsesPermission(AndroidManifest parentNode, XmlNode usesPermissionNode)
 			: base(parentNode, usesPermissionNode)
-		{
-		}
+		{ }
 	}
 }

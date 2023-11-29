@@ -18,24 +18,24 @@ namespace AlphaOmega.Debug.Dex.Tables
 		}
 
 		/// <summary>The number of registers used by this code</summary>
-		public UInt16 registers_size { get { return base.GetValue<UInt16>((UInt16)columns.register_size); } }
+		public UInt16 registers_size => base.GetValue<UInt16>((UInt16)columns.register_size);
 
 		/// <summary>The number of words of incoming arguments to the method that this code is for</summary>
-		public UInt16 ins_size { get { return base.GetValue<UInt16>((UInt16)columns.ins_size); } }
+		public UInt16 ins_size => base.GetValue<UInt16>((UInt16)columns.ins_size);
 
 		/// <summary>The number of words of outgoing argument space required by this code for method invocation</summary>
-		public UInt16 outs_size { get { return base.GetValue<UInt16>((UInt16)columns.outs_size); } }
+		public UInt16 outs_size => base.GetValue<UInt16>((UInt16)columns.outs_size);
 
 		/// <summary>The number of try_items for this instance.</summary>
 		/// <remarks>If non-zero, then these appear as the tries array just after the insns in this instance.</remarks>
-		public UInt16 tries_size { get { return base.GetValue<UInt16>((UInt16)columns.tries_size); } }
+		public UInt16 tries_size => base.GetValue<UInt16>((UInt16)columns.tries_size);
 
 		/// <summary>Offset from the start of the file to the debug info (line numbers + local variable info) sequence for this code, or 0 if there simply is no information.</summary>
 		/// <remarks>
 		/// The offset, if non-zero, should be to a location in the data section.
 		/// The format of the data is specified by "debug_info_item" below.
 		/// </remarks>
-		public UInt32 debug_info_off { get { return base.GetValue<UInt32>((UInt16)columns.debug_info_off); } }
+		public UInt32 debug_info_off => base.GetValue<UInt32>((UInt16)columns.debug_info_off);
 
 		/// <summary>
 		/// Actual array of bytecode.
@@ -45,9 +45,9 @@ namespace AlphaOmega.Debug.Dex.Tables
 		/// Note that though this is defined as an array of ushort, there are some internal structures that prefer four-byte alignment.
 		/// Also, if this happens to be in an endian-swapped file, then the swapping is only done on individual ushorts and not on the larger internal structures.
 		/// </remarks>
-		public UInt16[] insns { get { return base.GetValue<UInt16[]>((UInt16)columns.insns); } }
+		public UInt16[] insns => base.GetValue<UInt16[]>((UInt16)columns.insns);
 
-		private UInt32[] triesI { get { return base.GetValue<UInt32[]>((UInt16)columns.tries); } }
+		private UInt32[] triesI => base.GetValue<UInt32[]>((UInt16)columns.tries);
 
 		/// <summary>Array indicating where in the code exceptions are caught and how to handle them.</summary>
 		/// <remarks>
@@ -65,7 +65,7 @@ namespace AlphaOmega.Debug.Dex.Tables
 			}
 		}
 
-		private UInt32[] handlersI { get { return base.GetValue<UInt32[]>((UInt16)columns.handlers); } }
+		private UInt32[] handlersI => base.GetValue<UInt32[]>((UInt16)columns.handlers);
 
 		/// <summary>
 		/// Bytes representing a list of lists of catch types and associated handler addresses.
@@ -77,7 +77,6 @@ namespace AlphaOmega.Debug.Dex.Tables
 			get
 			{
 				var table = base.File.encoded_catch_handler_list;
-
 				return this.handlersI == null
 					? null
 					: Array.ConvertAll(this.handlersI, delegate(UInt32 rowIndex) { return table[rowIndex]; });

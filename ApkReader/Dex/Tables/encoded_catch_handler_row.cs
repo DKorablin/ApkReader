@@ -21,9 +21,9 @@ namespace AlphaOmega.Debug.Dex.Tables
 		/// A size of 2 means that there are two explicitly typed catches and no catch-all.
 		/// And a size of -1 means that there is one typed catch along with a catch-all.
 		/// </example>
-		public Int32 size { get { return base.GetValue<Int32>((UInt16)columns.size); } }
+		public Int32 size => base.GetValue<Int32>((UInt16)columns.size);
 
-		private UInt32[] handlersI { get { return base.GetValue<UInt32[]>((UInt16)columns.handlers); } }
+		private UInt32[] handlersI => base.GetValue<UInt32[]>((UInt16)columns.handlers);
 
 		/// <summary>Stream of abs(size) encoded items, one for each caught type, in the order that the types should be tested.</summary>
 		public encoded_type_addr_pair_row[] handlers
@@ -37,6 +37,6 @@ namespace AlphaOmega.Debug.Dex.Tables
 
 		/// <summary>Bytecode address of the catch-all handler.</summary>
 		/// <remarks>This element is only present if size is non-positive.</remarks>
-		public UInt32? catch_all_addr { get { return base.GetValue<UInt32?>((UInt16)columns.catch_all_addr); } }
+		public UInt32? catch_all_addr => base.GetValue<UInt32?>((UInt16)columns.catch_all_addr);
 	}
 }

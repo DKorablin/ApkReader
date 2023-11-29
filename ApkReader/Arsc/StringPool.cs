@@ -7,21 +7,18 @@ namespace AlphaOmega.Debug.Arsc
 	/// <summary>Structure that houses a group of strings</summary>
 	public class StringPool
 	{
-		private readonly ArscApi.ResStringPool_Header _header;
-		private readonly String[] _strings;
-
 		/// <summary>String pool header</summary>
-		public ArscApi.ResStringPool_Header Header { get { return this._header; } }
+		public ArscApi.ResStringPool_Header Header { get; }
 
 		/// <summary>Strings array</summary>
-		public String[] Strings { get { return this._strings; } }
+		public String[] Strings { get; }
 
 		internal StringPool(Byte[] buffer)
 		{
 			using(MemoryStream stream = new MemoryStream(buffer))
 			using(BinaryReader reader = new BinaryReader(stream))
 			{
-				this._header = Utils.PtrToStructure<ArscApi.ResStringPool_Header>(reader);
+				this.Header = Utils.PtrToStructure<ArscApi.ResStringPool_Header>(reader);
 
 				Int32[] offsets = new Int32[this.Header.stringCount];
 				for(Int32 i = 0; i < this.Header.stringCount; ++i)
@@ -56,14 +53,14 @@ namespace AlphaOmega.Debug.Arsc
 					}
 				}
 
-				this._strings = strings;
+				this.Strings = strings;
 			}
 		}
 
 		internal StringPool(Int32 offset, BinaryReader reader)
 		{
 			reader.BaseStream.Seek(offset, SeekOrigin.Begin);
-			this._header = Utils.PtrToStructure<ArscApi.ResStringPool_Header>(reader);
+			this.Header = Utils.PtrToStructure<ArscApi.ResStringPool_Header>(reader);
 
 			Int32[] offsets = new Int32[this.Header.stringCount];
 			for(Int32 i = 0; i < this.Header.stringCount; ++i)
@@ -98,7 +95,7 @@ namespace AlphaOmega.Debug.Arsc
 				}
 			}
 
-			this._strings = strings;
+			this.Strings = strings;
 		}
 	}
 }

@@ -14,25 +14,25 @@ namespace AlphaOmega.Debug.Dex.Tables
 	[DebuggerDisplay("{proto_idx.shorty_idx.data} {name_idx.data} (Owner: {class_idx.descriptor_idx.data})")]
 	public class method_id_row : BaseRow
 	{
-		private UInt16 class_idxI { get { return base.GetValue<UInt16>(0); } }
+		private UInt16 class_idxI => base.GetValue<UInt16>(0);
 
-		private UInt16 proto_idxI { get { return base.GetValue<UInt16>(1); } }
+		private UInt16 proto_idxI => base.GetValue<UInt16>(1);
 
-		private UInt32 name_idxI { get { return base.GetValue<UInt32>(2); } }
+		private UInt32 name_idxI => base.GetValue<UInt32>(2);
 
 		/// <summary>
 		/// index into the type_ids list for the definer of this method.
 		/// This must be a class or array type, and not a primitive type.
 		/// </summary>
-		public type_id_row class_idx { get { return base.File.TYPE_ID_ITEM[this.class_idxI]; } }
+		public type_id_row class_idx => base.File.TYPE_ID_ITEM[this.class_idxI];
 
 		/// <summary>Index into the proto_ids list for the prototype of this method</summary>
-		public proto_id_row proto_idx { get { return base.File.PROTO_ID_ITEM[this.proto_idxI]; } }
+		public proto_id_row proto_idx => base.File.PROTO_ID_ITEM[this.proto_idxI];
 
 		/// <summary>
 		/// Index into the string_ids list for the name of this method.
 		/// The string must conform to the syntax for MemberName, defined above.
 		/// </summary>
-		public string_data_row name_idx { get { return base.File.STRING_DATA_ITEM[this.name_idxI]; } }
+		public string_data_row name_idx => base.File.STRING_DATA_ITEM[this.name_idxI];
 	}
 }

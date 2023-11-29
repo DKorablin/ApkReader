@@ -48,9 +48,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// <remarks>During Direct Boot, a service in your application can only access the data that is stored in device protected storage.</remarks>
 		[DefaultValue(false)]
 		public Boolean DirectBootAware
-		{
-			get { return base.GetBooleanAttribute("directBootAware").GetValueOrDefault(false); }
-		}
+			=> base.GetBooleanAttribute("directBootAware").GetValueOrDefault(false);
 
 		/// <summary>Whether or not the service can be instantiated by the system — "true" if it can be, and "false" if not</summary>
 		/// <remarks>
@@ -60,9 +58,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// </remarks>
 		[DefaultValue(true)]
 		public Boolean Enabled
-		{
-			get { return base.GetBooleanAttribute("enabled").GetValueOrDefault(true); }
-		}
+			=> base.GetBooleanAttribute("enabled").GetValueOrDefault(true);
 
 		/// <summary>
 		/// Whether or not components of other applications can invoke the service or interact with it — "true" if they can, and "false" if not.
@@ -79,10 +75,8 @@ namespace AlphaOmega.Debug.Manifest
 		/// You can also use a permission to limit the external entities that can interact with the service (see the permission attribute).
 		/// </remarks>
 		//[DefaultValue(false)]
-		public Boolean? Exported
-		{//TODO: Тут необходимо предусмотреть условие по фильтрам. Ибо от них зависит true или false
-			get { return base.GetBooleanAttribute("exported"); }
-		}
+		public Boolean? Exported//TODO: Тут необходимо предусмотреть условие по фильтрам. Ибо от них зависит true или false
+			=> base.GetBooleanAttribute("exported");
 
 		/// <summary>
 		/// Specify that the service is a foreground service that satisfies a particular use case.
@@ -119,10 +113,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// If set to true, this service will run under a special process that is isolated from the rest of the system and has no permissions of its own.
 		/// The only communication with it is through the Service API (binding and starting).
 		/// </summary>
-		public Boolean? IsolatedProcess
-		{
-			get { return base.GetBooleanAttribute("isolatedProcess"); }
-		}
+		public Boolean? IsolatedProcess => base.GetBooleanAttribute("isolatedProcess");
 
 		/// <summary>
 		/// A name for the service that can be displayed to users.
@@ -141,8 +132,7 @@ namespace AlphaOmega.Debug.Manifest
 				if(result == null)
 					return base.ParentNode.Label;
 
-				Int32 resourceId;
-				if(Int32.TryParse(result[0], out resourceId))
+				if(Int32.TryParse(result[0], out Int32 resourceId))
 				{
 					ResourceRow resource = base.GetResource(resourceId);
 					if(resource != null)
@@ -197,16 +187,14 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> result = base.Node.GetAttribute("process");
-				return result == null
-					? null
-					: result[0];
+				return result?[0];
 			}
 		}
 
 		/// <summary>Specifies the types of intents that an activity, service, or broadcast receiver can respond to</summary>
 		/// <remarks>
-		///  An intent filter declares the capabilities of its parent component — what an activity or service can do and what types of broadcasts a receiver can handle.
-		///  It opens the component to receiving intents of the advertised type, while filtering out those that are not meaningful for the component.
+		/// An intent filter declares the capabilities of its parent component — what an activity or service can do and what types of broadcasts a receiver can handle.
+		/// It opens the component to receiving intents of the advertised type, while filtering out those that are not meaningful for the component.
 		/// </remarks>
 		public IEnumerable<ApkIntentFilter> IntentFilter
 		{
@@ -233,7 +221,6 @@ namespace AlphaOmega.Debug.Manifest
 
 		internal ApkService(ApkApplication parentNode,XmlNode node)
 			: base(parentNode, node)
-		{
-		}
+		{ }
 	}
 }

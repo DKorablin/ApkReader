@@ -23,9 +23,7 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> result = base.Node.GetAttribute("path");
-				return result == null
-					? null
-					: result[0];
+				return result?[0];
 			}
 		}
 
@@ -39,9 +37,7 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> result = base.Node.GetAttribute("pathPattern");
-				return result == null
-					? null
-					: result[0];
+				return result?[0];
 			}
 		}
 
@@ -51,14 +47,11 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> result = base.Node.GetAttribute("pathPrefix");
-				return result == null
-					? null
-					: result[0];
+				return result?[0];
 			}
 		}
 		internal ApkGrantUriPermission(ApkProvider parentNode, XmlNode node)
 			: base(parentNode, node)
-		{
-		}
+		{ }
 	}
 }

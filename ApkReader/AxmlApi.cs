@@ -7,7 +7,7 @@ namespace AlphaOmega.Debug
 	public static class AxmlApi
 	{
 		/// <summary>Chunk types</summary>
-		public enum ChunkType : int
+		public enum ChunkType : Int32
 		{
 			/// <summary>Signalize that parser is at the very beginning of the document and nothing was read yet.</summary>
 			StartDocument = 0x00100100,
@@ -67,10 +67,10 @@ namespace AlphaOmega.Debug
 			public Int32 unk4;
 
 			/// <summary>Is AXML header valid</summary>
-			public Boolean IsValid { get { return this.signature == 0x80003; } }
+			public Boolean IsValid => this.signature == 0x80003;
 
 			/// <summary>ASCII Encoding used in</summary>
-			public Boolean IsAsciiEncoding { get { return this.encoding == 0x00000100; } }
+			public Boolean IsAsciiEncoding => this.encoding == 0x00000100;
 		}
 
 		/// <summary>chunk structure</summary>
@@ -167,7 +167,7 @@ namespace AlphaOmega.Debug
 			public Int32 value;
 
 			/// <summary>Value type</summary>
-			public AttributeValue ValueType { get { return (AttributeValue)(this._valueType >> 24);/*Padding +3 bytes*/ } }
+			public AttributeValue ValueType => (AttributeValue)(this._valueType >> 24);/*Padding +3 bytes*/
 		}
 	}
 }

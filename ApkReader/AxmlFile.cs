@@ -9,19 +9,17 @@ namespace AlphaOmega.Debug
 	/// <summary>Android XML file decoder</summary>
 	public class AxmlFile : IDisposable
 	{
+		/// <summary>Source loader</summary>
 		private IImageLoader _loader;
 		private UInt32[] _stringsOffset;
 		private String[] _strings;
 		private XmlNode _rootNode;
 
-		/// <summary>Source loader</summary>
-		private IImageLoader Loader { get { return this._loader; } }
-
 		/// <summary>AXML header</summary>
 		public AxmlApi.AxmlHeader Header { get; }
 
 		/// <summary>Decoded XML root node</summary>
-		public XmlNode RootNode { get { return this._rootNode ?? (this._rootNode = this.ReadXmlNode()); } }
+		public XmlNode RootNode => this._rootNode ?? (this._rootNode = this.ReadXmlNode());
 
 		/// <summary>String table</summary>
 		public String[] Strings
@@ -64,7 +62,7 @@ namespace AlphaOmega.Debug
 			this._loader = loader ?? throw new ArgumentNullException(nameof(loader));
 			this._loader.Endianness = EndianHelper.Endian.Little;
 
-			this.Header = this.Loader.PtrToStructure<AxmlApi.AxmlHeader>(0);
+			this.Header = this._loader.PtrToStructure<AxmlApi.AxmlHeader>(0);
 		}
 
 		/// <summary>Read strings table</summary>
@@ -78,7 +76,7 @@ namespace AlphaOmega.Debug
 			this._stringsOffset = new UInt32[this.Header.stringCount];
 			for(Int32 loop = 0; loop < this._stringsOffset.Length; loop++)
 			{
-				this._stringsOffset[loop] = this.Loader.PtrToStructure<UInt32>(offset);
+				this._stringsOffset[loop] = this._loader.PtrToStructure<UInt32>(offset);
 				offset += sizeof(UInt32);
 			}
 
@@ -86,13 +84,13 @@ namespace AlphaOmega.Debug
 			{
 				UInt32 startOffset = offset + this._stringsOffset[loop];
 
-				Int16 check = this.Loader.PtrToStructure<Int16>(startOffset);
+				Int16 check = this._loader.PtrToStructure<Int16>(startOffset);
 				Int32 stringSize = check & 0xff;//String lengh + 1 byte(?)
 				startOffset += sizeof(Int16);
 
 				this._strings[loop] = this.Header.IsAsciiEncoding
-					? this.Loader.PtrToStringAnsi(startOffset)
-					: Encoding.Unicode.GetString(this.Loader.ReadBytes(startOffset, (UInt32)stringSize * 2));
+					? this._loader.PtrToStringAnsi(startOffset)
+					: Encoding.Unicode.GetString(this._loader.ReadBytes(startOffset, (UInt32)stringSize * 2));
 
 				/*if(stringSize != this._strings[loop].Length)
 					throw new InvalidOperationException($"String size misbehave: Expected: {stringSize} Collected: {this._strings[loop].Length}");*/
@@ -115,7 +113,7 @@ namespace AlphaOmega.Debug
 			UInt32 offset = (UInt32)this.Header.xmlOffset;
 			while(offset < this.Header.FileSize)
 			{//HACK: Here some unknown data that we need to skip. But also there is a change that we can get into payload and not find XML...
-				Int32 startTag = this.Loader.PtrToStructure<Int32>(offset);
+				Int32 startTag = this._loader.PtrToStructure<Int32>(offset);
 				if(startTag == (Int32)AxmlApi.ChunkType.StartTag)
 					break;
 				else
@@ -124,37 +122,37 @@ namespace AlphaOmega.Debug
 
 			while(offset < this.Header.FileSize)
 			{
-				AxmlApi.Chunk chunk = this.Loader.PtrToStructure<AxmlApi.Chunk>(offset);
+				AxmlApi.Chunk chunk = this._loader.PtrToStructure<AxmlApi.Chunk>(offset);
 				offset += (UInt32)Marshal.SizeOf(typeof(AxmlApi.Chunk));
 
 				switch((AxmlApi.ChunkType)chunk.TagType)
 				{
 				case AxmlApi.ChunkType.StartDocument:
 				case AxmlApi.ChunkType.EndDocument:
-					AxmlApi.Document sDoc = this.Loader.PtrToStructure<AxmlApi.Document>(offset);
+					AxmlApi.Document sDoc = this._loader.PtrToStructure<AxmlApi.Document>(offset);
 					offset += (UInt32)Marshal.SizeOf(typeof(AxmlApi.Document));
 					yield return new AxmlChunk(chunk, sDoc);
 					break;
 				case AxmlApi.ChunkType.StartTag:
-					AxmlApi.StartTag sTag = this.Loader.PtrToStructure<AxmlApi.StartTag>(offset);
+					AxmlApi.StartTag sTag = this._loader.PtrToStructure<AxmlApi.StartTag>(offset);
 					offset += (UInt32)Marshal.SizeOf(typeof(AxmlApi.StartTag));
 
 					AxmlApi.Attribute[] attributes = new AxmlApi.Attribute[sTag.attributeCount];
 					for(Int32 loop = 0; loop < attributes.Length; loop++)
 					{
-						attributes[loop] = this.Loader.PtrToStructure<AxmlApi.Attribute>(offset);
+						attributes[loop] = this._loader.PtrToStructure<AxmlApi.Attribute>(offset);
 						offset += (UInt32)Marshal.SizeOf(typeof(AxmlApi.Attribute));
 					}
 
 					yield return new AxmlChunk(chunk, sTag, attributes);
 					break;
 				case AxmlApi.ChunkType.EndTag:
-					AxmlApi.EndTag eTag = this.Loader.PtrToStructure<AxmlApi.EndTag>(offset);
+					AxmlApi.EndTag eTag = this._loader.PtrToStructure<AxmlApi.EndTag>(offset);
 					offset += (UInt32)Marshal.SizeOf(typeof(AxmlApi.EndTag));
 					yield return new AxmlChunk(chunk, eTag);
 					break;
 				case AxmlApi.ChunkType.Text:
-					AxmlApi.Text text = this.Loader.PtrToStructure<AxmlApi.Text>(offset);
+					AxmlApi.Text text = this._loader.PtrToStructure<AxmlApi.Text>(offset);
 					offset += (UInt32)Marshal.SizeOf(typeof(AxmlApi.Text));
 					yield return new AxmlChunk(chunk, text);
 					break;

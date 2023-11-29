@@ -9,14 +9,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{A8E7CD9B-ABDE-4F5A-880F-29D06414FF3D}</ProjectGuid>
+    <ProjectGuid>{2AC45901-A18D-4D16-8CEF-021072754EA4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AlphaOmega.Debug</RootNamespace>
     <AssemblyName>ApkReader</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\..\..\..\AlphaOmega %28NoPwd%29.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
@@ -203,11 +201,4 @@
       <Compile Include="$(IntermediateOutputPath)Version.cs" />
     </ItemGroup>
   </Target>
-  <!--Target Name="AfterBuild">
-  </Target-->
-  <PropertyGroup>
-    <PostBuildEvent>if $(ConfigurationName) == Relea_e (
-..\..\..\..\..\..\ILMerge.exe  "/out:$(ProjectDir)..\..\bin\$(TargetFileName)" "$(TargetPath)" "$(TargetDir)ICSharpCode.SharpZipLib.dll"
-)</PostBuildEvent>
-  </PropertyGroup>
 </Project>

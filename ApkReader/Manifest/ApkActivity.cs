@@ -289,9 +289,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// </remarks>
 		[DefaultValue(false)]
 		public Boolean AllowEmbedded
-		{
-			get { return base.GetBooleanAttribute("allowEmbedded").GetValueOrDefault(false); }
-		}
+			=> base.GetBooleanAttribute("allowEmbedded").GetValueOrDefault(false);
 
 		/// <summary>
 		/// Whether or not the activity can move from the task that started it to the task it has an affinity for when that task is next brought to the front — "true" if it can move, and "false" if it must remain with the task where it started.
@@ -314,23 +312,19 @@ namespace AlphaOmega.Debug.Manifest
 		/// </remarks>
 		[DefaultValue(false)]
 		public Boolean AllowTaskReparenting
-		{
-			get { return base.GetBooleanAttribute("allowTaskReparenting").GetValueOrDefault(false); }
-		}
+			=> base.GetBooleanAttribute("allowTaskReparenting").GetValueOrDefault(false);
 
 		/// <summary>
 		/// Whether or not the state of the task that the activity is in will always be maintained by the system — "true" if it will be, and "false" if the system is allowed to reset the task to its initial state in certain situations.
 		/// This attribute is meaningful only for the root activity of a task; it's ignored for all other activities.
 		/// </summary>
 		/// <remarks>
-		///  Normally, the system clears a task (removes all activities from the stack above the root activity) in certain situations when the user re-selects that task from the home screen. Typically, this is done if the user hasn't visited the task for a certain amount of time, such as 30 minutes.
+		/// Normally, the system clears a task (removes all activities from the stack above the root activity) in certain situations when the user re-selects that task from the home screen. Typically, this is done if the user hasn't visited the task for a certain amount of time, such as 30 minutes.
 		/// However, when this attribute is "true", users will always return to the task in its last state, regardless of how they get there. This is useful, for example, in an application like the web browser where there is a lot of state (such as multiple open tabs) that users would not like to lose. 
 		/// </remarks>
 		[DefaultValue(false)]
 		public Boolean AlwaysRetainTaskState
-		{
-			get { return base.GetBooleanAttribute("alwaysRetainTaskState").GetValueOrDefault(false); }
-		}
+			=> base.GetBooleanAttribute("alwaysRetainTaskState").GetValueOrDefault(false);
 
 		/// <summary>Whether or not tasks launched by activities with this attribute remains in the overview screen until the last activity in the task is completed.</summary>
 		/// <remarks>
@@ -339,9 +333,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// It must be a boolean value, either "true" or "false".
 		/// </remarks>
 		public Boolean? AutoRemoveFromRecents
-		{
-			get { return base.GetBooleanAttribute("autoRemoveFromRecents"); }
-		}
+			=> base.GetBooleanAttribute("autoRemoveFromRecents");
 
 		/// <summary>The system uses the banner to represent an app in the Android TV home screen.</summary>
 		/// <remarks>
@@ -376,9 +368,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// </remarks>
 		[DefaultValue(false)]
 		public Boolean ClearTaskOnLaunch
-		{
-			get { return base.GetBooleanAttribute("clearTaskOnLaunch").GetValueOrDefault(false); }
-		}
+			=> base.GetBooleanAttribute("clearTaskOnLaunch").GetValueOrDefault(false);
 
 		/// <summary>Requests the activity to be displayed in wide color gamut mode on compatible devices</summary>
 		/// <remarks>
@@ -421,9 +411,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// <remarks>During Direct Boot, an activity in your application can only access the data that is stored in device protected storage</remarks>
 		[DefaultValue(false)]
 		public Boolean DirectBootAware
-		{
-			get { return base.GetBooleanAttribute("directBootAware").GetValueOrDefault(false); }
-		}
+			=> base.GetBooleanAttribute("directBootAware").GetValueOrDefault(false);
 
 		/// <summary>
 		/// Specifies how a new instance of an activity should be added to a task each time it is launched.
@@ -451,9 +439,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// </remarks>
 		[DefaultValue(true)]
 		public Boolean Enabled
-		{
-			get { return base.GetBooleanAttribute("enabled").GetValueOrDefault(true); }
-		}
+			=> base.GetBooleanAttribute("enabled").GetValueOrDefault(true);
 
 		/// <summary>Whether or not the task initiated by this activity should be excluded from the list of recently used applications, the overview screen.</summary>
 		/// <remarks>
@@ -462,9 +448,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// </remarks>
 		[DefaultValue(false)]
 		public Boolean ExcludeFromRecents
-		{
-			get { return base.GetBooleanAttribute("excludeFromRecents").GetValueOrDefault(false); }
-		}
+			=> base.GetBooleanAttribute("excludeFromRecents").GetValueOrDefault(false);
 
 		/// <summary>
 		/// This element sets whether the activity can be launched by components of other applications — "true" if it can be, and "false" if not. If "false", the activity can be launched only by components of the same application or applications with the same user ID.
@@ -480,9 +464,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// This attribute is not the only way to limit an activity's exposure to other applications. You can also use a permission to limit the external entities that can invoke the activity (see the permission attribute).
 		/// </remarks>
 		public Boolean? Exported
-		{
-			get { return base.GetBooleanAttribute("exported"); }
-		}
+			=> base.GetBooleanAttribute("exported");
 
 		/// <summary>Whether or not an existing instance of the activity should be shut down (finished) whenever the user again launches its task (chooses the task on the home screen) — "true" if it should be shut down, and "false" if not.</summary>
 		/// <remarks>
@@ -492,9 +474,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// </remarks>
 		[DefaultValue(false)]
 		public Boolean FinishOnTaskLaunch
-		{
-			get { return base.GetBooleanAttribute("finishOnTaskLaunch").GetValueOrDefault(false); }
-		}
+			=> base.GetBooleanAttribute("finishOnTaskLaunch").GetValueOrDefault(false);
 
 		/// <summary>Whether or not hardware-accelerated rendering should be enabled for this Activity — "true" if it should be enabled, and "false" if not.</summary>
 		/// <remarks>
@@ -507,9 +487,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// </remarks>
 		[DefaultValue(false)]
 		public Boolean HardwareAccelerated
-		{
-			get { return base.GetBooleanAttribute("hardwareAccelerated").GetValueOrDefault(false); }
-		}
+			=> base.GetBooleanAttribute("hardwareAccelerated").GetValueOrDefault(false);
 
 		/// <summary>An icon representing the activity</summary>
 		/// <remarks>
@@ -533,9 +511,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// If the android:immersive attribute is set to true in the app's manifest entry for this activity, the ActivityInfo.flags member always has its FLAG_IMMERSIVE bit set, even if the immersive mode is changed at runtime using the setImmersive() method.
 		/// </remarks>
 		public Boolean? Immersive
-		{
-			get { return base.GetBooleanAttribute("immersive"); }
-		}
+			=> base.GetBooleanAttribute("immersive");
 
 		/// <summary>A user-readable label for the activity</summary>
 		/// <remarks>
@@ -551,8 +527,7 @@ namespace AlphaOmega.Debug.Manifest
 				if(result == null)
 					return base.ParentNode.Label;
 
-				Int32 resourceId;
-				if(Int32.TryParse(result[0], out resourceId))
+				if(Int32.TryParse(result[0], out Int32 resourceId))
 				{
 					ResourceRow resource = base.GetResource(resourceId);
 					if(resource != null)
@@ -657,9 +632,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// </remarks>
 		[DefaultValue(false)]
 		public Boolean Multiprocess
-		{
-			get { return base.GetBooleanAttribute("multiprocess").GetValueOrDefault(false); }
-		}
+			=> base.GetBooleanAttribute("multiprocess").GetValueOrDefault(false);
 
 		/// <summary>The name of the class that implements the activity, a subclass of Activity</summary>
 		/// <remarks>Once you publish your application, you should not change this name (unless you've set android:exported="false").</remarks>
@@ -681,9 +654,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// </remarks>
 		[DefaultValue(false)]
 		public Boolean NoHistory
-		{
-			get { return base.GetBooleanAttribute("noHistory").GetValueOrDefault(false); }
-		}
+			=> base.GetBooleanAttribute("noHistory").GetValueOrDefault(false);
 
 		/// <summary>
 		/// The class name of the logical parent of the activity.
@@ -771,9 +742,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// <remarks>This attribute set to "true" also permits the activity's use of the ActivityManager.TaskDescription to change labels, colors and icons in the overview screen.</remarks>
 		[DefaultValue(false)]
 		public Boolean RelinquishTaskIdentity
-		{
-			get { return base.GetBooleanAttribute("relinquishTaskIdentity").GetValueOrDefault(false); }
-		}
+			=> base.GetBooleanAttribute("relinquishTaskIdentity").GetValueOrDefault(false);
 
 		/// <summary>Specifies whether the app supports multi-window display.</summary>
 		/// <remarks>
@@ -784,9 +753,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// You can set this attribute in either the <see cref="ApkActivity"/> or <see cref="ApkApplication"/> element.
 		/// </remarks>
 		public Boolean? ResizeableActivity
-		{
-			get { return base.GetBooleanAttribute("resizeableActivity"); }
-		}
+			=> base.GetBooleanAttribute("resizeableActivity");
 
 		/// <summary>The orientation of the activity's display on the device. The system ignores this attribute if the activity is running in multi-window mode.</summary>
 		public ScreenOrientationType ScreenOrientation
@@ -807,14 +774,17 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> result = base.Node.GetAttribute("showForAllUsers");
-				if(result == null)
+				switch(result?[0])
+				{
+				case null:
 					return (Boolean?)null;
-				else if(result[0] == "true")
+				case "true":
 					return true;
-				else if(result[0] == "false")
+				case "false":
 					return false;
-				else
+				default:
 					return base.GetResource(Convert.ToInt32(result[0])).Value == "true";
+				}
 			}
 		}
 
@@ -829,16 +799,12 @@ namespace AlphaOmega.Debug.Manifest
 		/// </remarks>
 		[DefaultValue(false)]
 		public Boolean StateNotNeeded
-		{
-			get { return base.GetBooleanAttribute("stateNotNeeded").GetValueOrDefault(false); }
-		}
+			=> base.GetBooleanAttribute("stateNotNeeded").GetValueOrDefault(false);
 
 		/// <summary>Specifies whether the activity supports Picture-in-Picture display</summary>
 		/// <remarks>This attribute was added in API level 24</remarks>
 		public Boolean? SupportsPictureInPicture
-		{
-			get { return base.GetBooleanAttribute("supportsPictureInPicture"); }
-		}
+			=> base.GetBooleanAttribute("supportsPictureInPicture");
 
 		/// <summary>
 		/// The task that the activity has an affinity for.
@@ -919,8 +885,8 @@ namespace AlphaOmega.Debug.Manifest
 
 		/// <summary>Specifies the types of intents that an activity, service, or broadcast receiver can respond to</summary>
 		/// <remarks>
-		///  An intent filter declares the capabilities of its parent component — what an activity or service can do and what types of broadcasts a receiver can handle.
-		///  It opens the component to receiving intents of the advertised type, while filtering out those that are not meaningful for the component.
+		/// An intent filter declares the capabilities of its parent component — what an activity or service can do and what types of broadcasts a receiver can handle.
+		/// It opens the component to receiving intents of the advertised type, while filtering out those that are not meaningful for the component.
 		/// </remarks>
 		public IEnumerable<ApkIntentFilter> IntentFilter
 		{
@@ -948,7 +914,6 @@ namespace AlphaOmega.Debug.Manifest
 
 		internal ApkActivity(ApkApplication application, XmlNode node)
 			: base(application, node)
-		{
-		}
+		{ }
 	}
 }

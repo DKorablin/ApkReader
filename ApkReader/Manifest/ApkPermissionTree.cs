@@ -40,8 +40,7 @@ namespace AlphaOmega.Debug.Manifest
 					return null;
 				else
 				{
-					Int32 resourceId;
-					if(Int32.TryParse(result[0], out resourceId))
+					if(Int32.TryParse(result[0], out Int32 resourceId))
 					{
 						ResourceRow resource = base.GetResource(resourceId);
 						if(resource != null)
@@ -54,19 +53,14 @@ namespace AlphaOmega.Debug.Manifest
 
 		/// <summary>The name that's at the base of the permission tree</summary>
 		/// <remarks>
-		///  It serves as a prefix to all permission names in the tree.
-		///  Java-style scoping should be used to ensure that the name is unique.
-		///  The name must have more than two period-separated segments in its path — for example, com.example.base is OK, but com.example is not.
+		/// It serves as a prefix to all permission names in the tree.
+		/// Java-style scoping should be used to ensure that the name is unique.
+		/// The name must have more than two period-separated segments in its path — for example, com.example.base is OK, but com.example is not.
 		/// </remarks>
-		public String Name
-		{
-			get { return base.Node.Attributes["name"][0]; }
-		}
+		public String Name => base.Node.Attributes["name"][0];
 
 		internal ApkPermissionTree(AndroidManifest parentNode, XmlNode node)
 			: base(parentNode, node)
-		{
-
-		}
+		{ }
 	}
 }

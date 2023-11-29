@@ -12,27 +12,22 @@ namespace AlphaOmega.Debug
 		private const Int16 RES_STRING_POOL_TYPE = 0x0001;
 		private const Int16 RES_TABLE_PACKAGE_TYPE = 0x0200;
 
-		private StringPool _valueStringPool;
-		private ArscApi.ResTable_Header _header;
 		private List<ResourcePackage> _package = new List<ResourcePackage>();
 
-		private Dictionary<Int32, List<ResourceRow>> _resourceMap = new Dictionary<Int32, List<ResourceRow>>();
-
 		/// <summary>Resource table</summary>
-		public Dictionary<Int32, List<ResourceRow>> ResourceMap { get { return this._resourceMap; } }
+		public Dictionary<Int32, List<ResourceRow>> ResourceMap { get; } = new Dictionary<Int32, List<ResourceRow>>();
 
 		/// <summary>Resource file header</summary>
-		public ArscApi.ResTable_Header Header { get { return this._header; } }
+		public ArscApi.ResTable_Header Header { get; private set; }
 
 		/// <summary>Value string pool</summary>
-		public StringPool ValueStringPool { get { return this._valueStringPool; } }
+		public StringPool ValueStringPool { get; private set; }
 
 		/// <summary>Create instance of resource file decompilator</summary>
 		/// <param name="stream">Payload</param>
 		public ArscFile(Stream stream)
 		{
-			if(stream == null)
-				throw new ArgumentNullException(nameof(stream));
+			_ = stream ?? throw new ArgumentNullException(nameof(stream));
 
 			using(BinaryReader reader = new BinaryReader(stream))
 				this.Initialize(reader);
@@ -42,8 +37,7 @@ namespace AlphaOmega.Debug
 		/// <param name="buffer">Payload</param>
 		public ArscFile(Byte[] buffer)
 		{
-			if(buffer == null)
-				throw new ArgumentNullException(nameof(buffer));
+			_ = buffer ?? throw new ArgumentNullException(nameof(buffer));
 
 			using(MemoryStream stream = new MemoryStream(buffer))
 			using(BinaryReader reader = new BinaryReader(stream))
@@ -52,11 +46,11 @@ namespace AlphaOmega.Debug
 
 		private void Initialize(BinaryReader reader)
 		{
-			this._header = Utils.PtrToStructure<ArscApi.ResTable_Header>(reader);
+			this.Header = Utils.PtrToStructure<ArscApi.ResTable_Header>(reader);
 
-			if(!this._header.IsValid)
-				throw new ArgumentException("No RES_TABLE_TYPE found!",nameof(_header));
-			if(this._header.header.size != reader.BaseStream.Length)
+			if(!this.Header.IsValid)
+				throw new ArgumentException("No RES_TABLE_TYPE found!",nameof(Header));
+			if(this.Header.header.size != reader.BaseStream.Length)
 				throw new OverflowException("The buffer size not matches to the resource table size.");
 
 			while(true)
@@ -70,10 +64,10 @@ namespace AlphaOmega.Debug
 				switch(chunk.type)
 				{
 				case RES_STRING_POOL_TYPE:
-					if(this._valueStringPool != null)
+					if(this.ValueStringPool != null)
 						throw new InvalidOperationException("String pool already defined");
 
-					this._valueStringPool = new StringPool(buffer);
+					this.ValueStringPool = new StringPool(buffer);
 					break;
 				case RES_TABLE_PACKAGE_TYPE:
 					this._package.Add(new ResourcePackage(buffer));
@@ -87,8 +81,8 @@ namespace AlphaOmega.Debug
 					break;
 			}
 
-			if(this._header.packageCount != this._package.Count)
-				throw new InvalidOperationException($"Expecting {this._header.packageCount} packages. Collected {this._package.Count} packages");
+			if(this.Header.packageCount != this._package.Count)
+				throw new InvalidOperationException($"Expecting {this.Header.packageCount} packages. Collected {this._package.Count} packages");
 
 			//====
 			this.CreateResourceMap();
@@ -106,7 +100,7 @@ namespace AlphaOmega.Debug
 						switch(simple.Value.Value.dataType)
 						{
 						case ArscApi.DATA_TYPE.STRING:
-							row = new ResourceRow(simple.Value.Value, this._valueStringPool.Strings[simple.Value.Value.data]);
+							row = new ResourceRow(simple.Value.Value, this.ValueStringPool.Strings[simple.Value.Value.data]);
 							break;
 						case ArscApi.DATA_TYPE.REFERENCE:
 							refKeys1.Add(simple.Key, simple.Value.Value);
@@ -122,14 +116,14 @@ namespace AlphaOmega.Debug
 
 					List<ResourceRow> values;
 					foreach(var refResource in refKeys1)
-						if(this._resourceMap.TryGetValue(refResource.Value.data, out values))
+						if(this.ResourceMap.TryGetValue(refResource.Value.data, out values))
 							this.AddToMap(refResource.Key, values.ToArray());
 				}
 		}
 
 		private void AddToMap(Int32 resId, params ResourceRow[] values)
 		{
-			Utils.AppendToDictionary<Int32, List<ResourceRow>>(this._resourceMap, resId, delegate(List<ResourceRow> list) { list.AddRange(values); });
+			Utils.AppendToDictionary<Int32, List<ResourceRow>>(this.ResourceMap, resId, delegate(List<ResourceRow> list) { list.AddRange(values); });
 			/*List<ResourceRow> valueList;
 			if(!this._resourceMap.TryGetValue(resId, out valueList))
 				this._resourceMap.Add(resId, valueList = new List<ResourceRow>());

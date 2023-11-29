@@ -10,14 +10,10 @@ namespace AlphaOmega.Debug.Manifest
 	public class ApkSupportsGlTexture : ApkNodeT<AndroidManifest>
 	{
 		/// <summary>Specifies a single GL texture compression format supported by the application, as a descriptor string</summary>
-		public String Name
-		{
-			get { return base.Node.Attributes["name"][0]; }
-		}
+		public String Name => base.Node.Attributes["name"][0];
 
 		internal ApkSupportsGlTexture(AndroidManifest manifest, XmlNode node)
 			: base(manifest, node)
-		{
-		}
+		{ }
 	}
 }

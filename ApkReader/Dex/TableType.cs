@@ -3,7 +3,7 @@
 namespace AlphaOmega.Debug.Dex
 {
 	/// <summary>Strongly typed dex table viewer</summary>
-	public enum TableType : ushort
+	public enum TableType : UInt16
 	{
 		/// <summary>string identifiers list</summary>
 		STRING_ID_ITEM = 0x0001,

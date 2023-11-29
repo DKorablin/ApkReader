@@ -50,8 +50,7 @@ namespace AlphaOmega.Debug.Manifest
 					return null;
 				else
 				{
-					Int32 resourceId;
-					if(Int32.TryParse(result[0], out resourceId))
+					if(Int32.TryParse(result[0], out Int32 resourceId))
 					{
 						ResourceRow resource = base.GetResource(resourceId);
 						if(resource != null)
@@ -69,16 +68,12 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> result = base.Node.GetAttribute("name");
-				return result == null
-					? null
-					: result[0];
+				return result?[0];
 			}
 		}
 
 		internal ApkPermissionGroup(AndroidManifest parentNode, XmlNode node)
 			: base(parentNode, node)
-		{
-
-		}
+		{ }
 	}
 }

@@ -9,7 +9,6 @@ namespace AlphaOmega.Debug
 	/// <summary>Android Package description</summary>
 	public class ApkFile : IDisposable
 	{
-		private Stream _apkStream;
 		private ZipFile _apk;
 		private AxmlFile _xml;
 		private ArscFile _res;
@@ -18,13 +17,10 @@ namespace AlphaOmega.Debug
 		private Boolean _isXmlExists = true;
 		private Boolean _isArscExists = true;
 
-		internal Stream ApkStream { get { return _apkStream; } }
+		internal Stream ApkStream { get; }
 
 		/// <summary>APK Signatures extraction and validation</summary>
-		public ApkSignature Signatures
-		{
-			get { return _signatures ?? (_signatures = new ApkSignature(this)); }
-		}
+		public ApkSignature Signatures => _signatures ?? (_signatures = new ApkSignature(this));
 
 		/// <summary>Raw AndroidManifest.xml</summary>
 		public AxmlFile AndroidManifestXml
@@ -38,7 +34,7 @@ namespace AlphaOmega.Debug
 					if(payload == null)
 						_isXmlExists = false;
 					else
-						this._xml = new AxmlFile(StreamLoader.FromMemory(payload, FileName));
+						this._xml = new AxmlFile(StreamLoader.FromMemory(payload));
 				}
 				return this._xml;
 			}
@@ -79,12 +75,7 @@ namespace AlphaOmega.Debug
 
 		/// <summary>Android manifest</summary>
 		public AndroidManifest AndroidManifest
-		{
-			get
-			{
-				return this._androidManifest ?? (this._androidManifest = AndroidManifest.Load(this.AndroidManifestXml, this.Resources));
-			}
-		}
+			=> this._androidManifest ?? (this._androidManifest = AndroidManifest.Load(this.AndroidManifestXml, this.Resources));
 
 		/// <summary>Specifies a system permission that the user must grant in order for the app to operate correctly</summary>
 		public IEnumerable<String> UsesPermission
@@ -145,25 +136,20 @@ namespace AlphaOmega.Debug
 		/// <param name="filePath">Physical file path</param>
 		public ApkFile(String filePath)
 			: this(new FileStream(filePath, FileMode.Open, FileAccess.Read))
-		{
-		}
+		{ }
 
 		/// <summary>Create instance of android package desctiption</summary>
 		/// <param name="buffer">Raw file bytes</param>
 		public ApkFile(Byte[] buffer)
 			: this(new MemoryStream(buffer))
-		{
-		}
+		{ }
 
 		/// <summary>Create instance of android package desctiption</summary>
 		/// <param name="stream">File stream</param>
 		public ApkFile(Stream stream)
 		{
-			if(stream == null)
-				throw new ArgumentNullException(nameof(stream));
-
-			this._apkStream = stream;
-			this._apk = new ZipFile(this._apkStream);
+			this.ApkStream = stream ?? throw new ArgumentNullException(nameof(stream));
+			this._apk = new ZipFile(this.ApkStream);
 		}
 
 		/// <summary>GetPackage contents</summary>

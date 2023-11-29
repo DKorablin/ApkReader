@@ -10,42 +10,36 @@ namespace AlphaOmega.Debug.Arsc
 		private const Int16 RES_TABLE_TYPE_TYPE = 0x0201;
 		private const Int16 RES_TABLE_TYPE_SPEC_TYPE = 0x0202;
 
-		private readonly ArscApi.PackageHeader _header;
-		private readonly StringPool _typeStringPool;
-		private readonly StringPool _keyStringPool;
-		private readonly List<TypeSpec> _typeSpecTable = new List<TypeSpec>();
-		private List<ResourceType> _typeTable = new List<ResourceType>();
-
 		/// <summary>Package header</summary>
-		public ArscApi.PackageHeader Header { get { return this._header; } }
+		public ArscApi.PackageHeader Header { get; }
 
 		/// <summary>Type string pool</summary>
-		public StringPool TypeStringPool { get { return this._typeStringPool; } }
+		public StringPool TypeStringPool { get; }
 
 		/// <summary>Key string pool</summary>
-		public StringPool KeyStringPool { get { return this._keyStringPool; } }
+		public StringPool KeyStringPool { get; }
 
 		/// <summary>Type tables</summary>
-		public List<ResourceType> TypeTable { get { return this._typeTable; } }
+		public List<ResourceType> TypeTable { get; } = new List<ResourceType>();
 
 		/// <summary>Type spec tables</summary>
-		public List<TypeSpec> TypeSpecTable { get { return this._typeSpecTable; } }
+		public List<TypeSpec> TypeSpecTable { get; } = new List<TypeSpec>();
 
 		internal ResourcePackage(Byte[] buffer)
 		{
 			using(MemoryStream stream = new MemoryStream(buffer))
 			using(BinaryReader reader = new BinaryReader(stream))
 			{
-				this._header = Utils.PtrToStructure<ArscApi.PackageHeader>(reader);
+				this.Header = Utils.PtrToStructure<ArscApi.PackageHeader>(reader);
 
-				if(!this._header.IsValid)
+				if(!this.Header.IsValid)
 					throw new Exception("TypeStrings must immediately follow the package structure header.");
 
-				this._typeStringPool = new StringPool(this._header.typeStrings_addr, reader);
+				this.TypeStringPool = new StringPool(this.Header.typeStrings_addr, reader);
 
-				this._keyStringPool = new StringPool(this._header.keyStrings_addr, reader);
+				this.KeyStringPool = new StringPool(this.Header.keyStrings_addr, reader);
 
-				reader.BaseStream.Seek(this._header.keyStrings_addr + this._keyStringPool.Header.header.size, SeekOrigin.Begin);
+				reader.BaseStream.Seek(this.Header.keyStrings_addr + this.KeyStringPool.Header.header.size, SeekOrigin.Begin);
 				while(true)
 				{
 					Int32 position = (Int32)reader.BaseStream.Position;
@@ -57,11 +51,11 @@ namespace AlphaOmega.Debug.Arsc
 					{
 					case RES_TABLE_TYPE_SPEC_TYPE:// Process the string pool
 						TypeSpec flags = new TypeSpec(tableBuffer);
-						this._typeSpecTable.Add(flags);
+						this.TypeSpecTable.Add(flags);
 						break;
 					case RES_TABLE_TYPE_TYPE:// Process the package
-						ResourceType resourceType = new ResourceType(this._header.id, tableBuffer);
-						this._typeTable.Add(resourceType);
+						ResourceType resourceType = new ResourceType(this.Header.id, tableBuffer);
+						this.TypeTable.Add(resourceType);
 						break;
 					}
 

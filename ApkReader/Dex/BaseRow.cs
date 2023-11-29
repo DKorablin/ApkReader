@@ -10,21 +10,21 @@ namespace AlphaOmega.Debug.Dex
 
 		internal Row Row
 		{
-			get { return this._row; }
-			set { this._row = value ?? throw new ArgumentNullException(nameof(value)); }
+			get => this._row;
+			set => this._row = value ?? throw new ArgumentNullException(nameof(value));
 		}
-		IRow IBaseRow.Row { get { return this._row; } }
+		IRow IBaseRow.Row => this._row;
 
 		/// <summary>Row index</summary>
-		internal UInt32 RowIndex { get { return this.Row.Index; } }
+		internal UInt32 RowIndex => this.Row.Index;
 
 		/// <summary>Offset from the beginning of the image</summary>
-		internal UInt32 RowOffset { get { return this.Row.Offset; } }
+		internal UInt32 RowOffset => this.Row.Offset;
 
 		internal DexFile File
 		{
-			get { return this._file; }
-			set { this._file = value ?? throw new ArgumentNullException(nameof(value)); }
+			get => this._file;
+			set => this._file = value ?? throw new ArgumentNullException(nameof(value));
 		}
 
 		/// <summary>Get value from base generic table by columnIndex</summary>
@@ -32,8 +32,6 @@ namespace AlphaOmega.Debug.Dex
 		/// <param name="columnIndex">Column index from generic table</param>
 		/// <returns>Stored typed value stored in the cell by column index</returns>
 		protected T GetValue<T>(UInt16 columnIndex)
-		{
-			return (T)this.Row[columnIndex].Value;
-		}
+			=> (T)this.Row[columnIndex].Value;
 	}
 }

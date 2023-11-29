@@ -6,14 +6,10 @@ namespace AlphaOmega.Debug.Dex
 	/// <summary>Generic structure container</summary>
 	public class Table : ITable
 	{
-		#region Fields
-		private readonly TableType _type;
-		private readonly Column[] _columns;
 		private readonly Dictionary<UInt32, Row> _rows;
-		#endregion Fields
 
 		/// <summary>All rows from current table</summary>
-		public IEnumerable<Row> Rows { get { return this._rows.Values; } }
+		public IEnumerable<Row> Rows => this._rows.Values;
 		IEnumerable<IRow> ITable.Rows
 		{
 			get
@@ -40,23 +36,23 @@ namespace AlphaOmega.Debug.Dex
 			}
 		}
 
-		IRow ITable.this[UInt32 rowIndex] { get { return this[rowIndex]; } }
+		IRow ITable.this[UInt32 rowIndex] => this[rowIndex];
 
 		/// <summary>Rows count in the table</summary>
-		public UInt32 RowsCount { get { return (UInt32)this._rows.Count; } }
+		public UInt32 RowsCount => (UInt32)this._rows.Count;
 
 		/// <summary>Columns from current table</summary>
-		public Column[] Columns { get { return this._columns; } }
-		IColumn[] ITable.Columns { get { return this._columns; } }
+		public Column[] Columns { get; }
+		IColumn[] ITable.Columns => this.Columns;
 
 		/// <summary>Type of current table</summary>
-		public TableType Type { get { return this._type; } }
-		Object ITable.Type { get { return this._type; } }
+		public TableType Type { get; }
+		Object ITable.Type => this.Type;
 
 		internal Table(TableType type)
 		{
-			this._type = type;
-			this._columns = Constant.GetTableColumns(type);
+			this.Type = type;
+			this.Columns = Constant.GetTableColumns(type);
 			this._rows = new Dictionary<UInt32, Row>();
 		}
 
@@ -140,8 +136,6 @@ namespace AlphaOmega.Debug.Dex
 		/// <param name="offset">Offset from beggining of current file</param>
 		/// <returns>Structured data</returns>
 		protected internal virtual Cell ReadCellPayload(DexFile file, UInt32 rowIndex, Column column, Cell[] cells, ref UInt32 offset)
-		{
-			return new Cell(file, column, ref offset);
-		}
+			=> new Cell(file, column, ref offset);
 	}
 }

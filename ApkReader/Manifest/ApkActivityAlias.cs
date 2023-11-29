@@ -25,9 +25,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// </remarks>
 		[DefaultValue(true)]
 		public Boolean Enabled
-		{
-			get { return base.GetBooleanAttribute("enabled").GetValueOrDefault(true); }
-		}
+			=> base.GetBooleanAttribute("enabled").GetValueOrDefault(true);
 
 		/// <summary>
 		/// Whether or not components of other applications can launch the target activity through this alias — "true" if they can, and "false" if not.
@@ -70,8 +68,7 @@ namespace AlphaOmega.Debug.Manifest
 				if(result == null)
 					return base.ParentNode.Label;
 
-				Int32 resourceId;
-				if(Int32.TryParse(result[0], out resourceId))
+				if(Int32.TryParse(result[0], out Int32 resourceId))
 				{
 					ResourceRow resource = base.GetResource(resourceId);
 					if(resource != null)
@@ -87,9 +84,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// But, unlike the name of the target activity, the alias name is arbitrary; it does not refer to an actual class.
 		/// </remarks>
 		public String Name
-		{
-			get { return base.Node.Attributes["name"][0]; }
-		}
+			=> base.Node.Attributes["name"][0];
 
 		/// <summary>
 		/// The name of a permission that clients must have to launch the target activity or get it to do something via the alias. If a caller of startActivity() or startActivityForResult() has not been granted the specified permission, the target activity will not be activated. 
@@ -100,9 +95,7 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> result = base.Node.GetAttribute("permission");
-				return result == null
-					? null
-					: result[0];
+				return result?[0];
 			}
 		}
 
@@ -113,16 +106,14 @@ namespace AlphaOmega.Debug.Manifest
 			get
 			{
 				List<String> result = base.Node.GetAttribute("targetActivity");
-				return result == null
-					? null
-					: result[0];
+				return result?[0];
 			}
 		}
 
 		/// <summary>Specifies the types of intents that an activity, service, or broadcast receiver can respond to</summary>
 		/// <remarks>
-		///  An intent filter declares the capabilities of its parent component — what an activity or service can do and what types of broadcasts a receiver can handle.
-		///  It opens the component to receiving intents of the advertised type, while filtering out those that are not meaningful for the component.
+		/// An intent filter declares the capabilities of its parent component — what an activity or service can do and what types of broadcasts a receiver can handle.
+		/// It opens the component to receiving intents of the advertised type, while filtering out those that are not meaningful for the component.
 		/// </remarks>
 		public IEnumerable<ApkIntentFilter> IntentFilter
 		{
@@ -149,8 +140,6 @@ namespace AlphaOmega.Debug.Manifest
 
 		internal ApkActivityAlias(ApkApplication parentNode, XmlNode node)
 			: base(parentNode, node)
-		{
-
-		}
+		{ }
 	}
 }

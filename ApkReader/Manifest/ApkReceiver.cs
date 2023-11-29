@@ -19,10 +19,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// <summary>Whether or not the broadcast receiver is direct-boot aware; that is, whether or not it can run before the user unlocks the device.</summary>
 		/// <remarks>During Direct Boot, a broadcast receiver in your application can only access the data that is stored in device protected storage.</remarks>
 		[DefaultValue(false)]
-		public Boolean DirectBootAware
-		{
-			get { return base.GetBooleanAttribute("directBootAware").GetValueOrDefault(false); }
-		}
+		public Boolean DirectBootAware => base.GetBooleanAttribute("directBootAware").GetValueOrDefault(false);
 
 		/// <summary>Whether or not the broadcast receiver can be instantiated by the system — "true" if it can be, and "false" if not.</summary>
 		/// <remarks>
@@ -30,10 +27,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// The <see cref="ApkApplication"/> and <see cref="ApkReceiver"/> attributes must both be "true" for the broadcast receiver to be enabled. If either is "false", it is disabled; it cannot be instantiated.
 		/// </remarks>
 		[DefaultValue(true)]
-		public Boolean Enabled
-		{
-			get { return base.GetBooleanAttribute("enabled").GetValueOrDefault(true); }
-		}
+		public Boolean Enabled => base.GetBooleanAttribute("enabled").GetValueOrDefault(true);
 
 		/// <summary>
 		/// Whether or not the broadcast receiver can receive messages from sources outside its application — "true" if it can, and "false" if not.
@@ -50,10 +44,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// You can also use a permission to limit the external entities that can send it messages (see the permission attribute).
 		/// </remarks>
 		[DefaultValue(true)]
-		public Boolean Exported
-		{
-			get { return base.GetBooleanAttribute("exported").GetValueOrDefault(true); }
-		}
+		public Boolean Exported => base.GetBooleanAttribute("exported").GetValueOrDefault(true);
 
 		/// <summary>An icon representing the broadcast receiver</summary>
 		/// <see cref="ApkApplication.Icon"/>
@@ -90,8 +81,7 @@ namespace AlphaOmega.Debug.Manifest
 				if(result == null)
 					return base.ParentNode.Label;
 
-				Int32 resourceId;
-				if(Int32.TryParse(result[0], out resourceId))
+				if(Int32.TryParse(result[0], out Int32 resourceId))
 				{
 					ResourceRow resource = base.GetResource(resourceId);
 					if(resource != null)
@@ -157,8 +147,8 @@ namespace AlphaOmega.Debug.Manifest
 
 		/// <summary>Specifies the types of intents that an activity, service, or broadcast receiver can respond to</summary>
 		/// <remarks>
-		///  An intent filter declares the capabilities of its parent component — what an activity or service can do and what types of broadcasts a receiver can handle.
-		///  It opens the component to receiving intents of the advertised type, while filtering out those that are not meaningful for the component.
+		/// An intent filter declares the capabilities of its parent component — what an activity or service can do and what types of broadcasts a receiver can handle.
+		/// It opens the component to receiving intents of the advertised type, while filtering out those that are not meaningful for the component.
 		/// </remarks>
 		public IEnumerable<ApkIntentFilter> IntentFilter
 		{
@@ -185,7 +175,6 @@ namespace AlphaOmega.Debug.Manifest
 
 		internal ApkReceiver(ApkApplication parentNode, XmlNode recieverNode)
 			: base(parentNode, recieverNode)
-		{
-		}
+		{ }
 	}
 }
