@@ -10,7 +10,7 @@ on:
     - cron: '36 23 * * 3'
     
 env:
-  SolutionName: ApkReader
+  SolutionName: ${{github.event.repository.name}}
 
 jobs:
   analyze:
@@ -50,10 +50,10 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
-    - name: Restore dependencies
+    - name: Restoring dependencies
       run: dotnet restore ${{env.SolutionName}}.sln
-    - name: Build .NET Standard v2.0
-      run: dotnet build ${{env.SolutionName}}.sln --configuration Release --no-restore
+    - name: Building .NET
+      run: dotnet build "${{github.workspace}}\${{env.SolutionName}}\${{env.SolutionName}}.csproj" --configuration Release --no-restore
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
