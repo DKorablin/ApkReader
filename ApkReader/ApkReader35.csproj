@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <!--This to lines are added to separate build process between .NET & .NET Standart-->
+    <!--This to lines are added to separate build process between .NET & .NET Standard-->
     <BaseOutputPath>$(MSBuildProjectDirectory)/obj/net20/$(MSBuildProjectName)/bin</BaseOutputPath>
     <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)/obj/net20/$(MSBuildProjectName)/obj</BaseIntermediateOutputPath>
     <Version Condition="'$(Version)' == ''">1.0.0.0</Version>
@@ -15,8 +15,6 @@
     <RootNamespace>AlphaOmega.Debug</RootNamespace>
     <AssemblyName>ApkReader</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\..\..\..\AlphaOmega %28NoPwd%29.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,6 +34,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\..\bin\ApkReader.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib">
@@ -175,11 +174,6 @@
     <EmbeddedResource Include="Intent.resx" />
     <EmbeddedResource Include="Permission.resx" />
     <EmbeddedResource Include="PermissionGroup.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\..\..\AlphaOmega %28NoPwd%29.snk">
-      <Link>AlphaOmega %28NoPwd%29.snk</Link>
-    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
