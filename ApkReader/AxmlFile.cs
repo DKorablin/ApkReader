@@ -179,11 +179,11 @@ namespace AlphaOmega.Debug
 					foreach(var attribute in chunk.Attributes)
 						switch(attribute.ValueType)
 						{
-						case AxmlApi.AttributeValue.String:
+						case AxmlApi.AttributeValue.STRING:
 							node.AddAttribue(this.Strings[attribute.name], this.Strings[attribute.value]);
 							break;
 						default:
-							node.AddAttribue(this.Strings[attribute.name], attribute.value.ToString());
+							node.AddAttribue(this.Strings[attribute.name], attribute.DataToString());
 							break;
 						}
 					if(parentNode != null)
