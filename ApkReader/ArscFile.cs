@@ -97,12 +97,12 @@ namespace AlphaOmega.Debug
 					foreach(var simple in t.Simple)
 					{
 						ResourceRow row = null;
-						switch(simple.Value.Value.dataType)
+						switch(simple.Value.Value.DataType)
 						{
-						case ArscApi.DATA_TYPE.STRING:
+						case ResourceValueDecoder.ValueType.STRING:
 							row = new ResourceRow(simple.Value.Value, this.ValueStringPool.Strings[simple.Value.Value.data]);
 							break;
-						case ArscApi.DATA_TYPE.REFERENCE:
+						case ResourceValueDecoder.ValueType.REFERENCE:
 							refKeys1.Add(simple.Key, simple.Value.Value);
 							break;
 						default:

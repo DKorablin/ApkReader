@@ -9,7 +9,7 @@ namespace AlphaOmega.Debug.Arsc
 		private readonly String _stringValue;
 
 		/// <summary>Data type</summary>
-		public ArscApi.DATA_TYPE DataType => this._descriptor.dataType;
+		public ResourceValueDecoder.ValueType DataType => this._descriptor.DataType;
 
 		/// <summary>Raw resource value</summary>
 		public Int32 Raw => this._descriptor.data;
@@ -19,12 +19,12 @@ namespace AlphaOmega.Debug.Arsc
 		{
 			get
 			{
-				switch(this._descriptor.dataType)
+				switch(this._descriptor.DataType)
 				{
-				case ArscApi.DATA_TYPE.STRING:
+				case ResourceValueDecoder.ValueType.STRING:
 					return this._stringValue;
 				default:
-					return this._descriptor.DataToString();
+					return ResourceValueDecoder.DataToString(this._descriptor.data, this._descriptor.DataType);
 				}
 			}
 		}
