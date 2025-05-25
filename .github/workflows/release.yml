@@ -90,7 +90,7 @@ jobs:
       uses: timheuer/base64-to-file@v1.2
       with:
         fileName: 'Signature.snk'
-        encodedString: ${{secrets.SIGN_KEY}}
+        encodedString: ${{secrets.SIGN_ASM_KEY}}
     - uses: actions/checkout@v4
       with:
         submodules: true
@@ -99,7 +99,16 @@ jobs:
     - name: Restoring NuGet packages
       run: nuget restore "${{github.workspace}}\${{env.SolutionName}}.sln"
     - name: Building .NET Framework
-      run: MSBuild -nologo -restore "${{github.workspace}}\${{env.SolutionName}}\${{env.SolutionName}}35.csproj" /property:Configuration=Release -property:OutputPath="${{github.workspace}}\bin\" -property:Version=${{needs.version.outputs.new_version}} -property:AssemblyOriginatorKeyFile="${{ steps.sign_key_file.outputs.filePath }}"
+      run: MSBuild -nologo -restore "${{github.workspace}}\${{env.SolutionName}}\${{env.SolutionName}}35.csproj" /property:Configuration=Release -property:OutputPath="${{github.workspace}}/bin" -property:Version=${{needs.version.outputs.new_version}} -property:AssemblyOriginatorKeyFile="${{steps.sign_key_file.outputs.filePath}}"
+    #TODO: I need to find a better approach to sign output files without explicitly specify filename and extension
+    - name: Signing portable executables
+      uses: dlemstra/code-sign-action@v1
+      with:
+        certificate: '${{secrets.SIGN_PE_CERTIFICATE}}'
+        password: '${{secrets.SIGN_PE_PASSWORD}}'
+        recursive: false
+        files: |
+          ${{github.workspace}}\bin\${{env.SolutionName}}.dll
     - name: Deploying artifacts
       uses: actions/upload-artifact@v4
       with:
@@ -111,14 +120,14 @@ jobs:
     name: Building .NET assembly
     needs: [version,files_exists]
     if: needs.files_exists.outputs.net_project_exists == 'true'
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
     - name: Decoding SNK
       id: sign_key_file
       uses: timheuer/base64-to-file@v1.2 
       with:
         fileName: 'Signature.snk'
-        encodedString: ${{secrets.SIGN_KEY}}
+        encodedString: ${{secrets.SIGN_ASM_KEY}}
     - uses: actions/checkout@v4
       with:
         submodules: true
@@ -129,7 +138,17 @@ jobs:
     - name: Restoring dependencies
       run: dotnet restore ${{env.SolutionName}}.sln
     - name: Building .NET
-      run: dotnet build "${{github.workspace}}\${{env.SolutionName}}\${{env.SolutionName}}.csproj" --configuration Release --no-restore /p:OutputPath="../bin/" /p:DocumentationFile="../bin/${{env.SolutionName}}.xml" /p:SignAssembly=true /p:AssemblyOriginatorKeyFile="${{steps.sign_key_file.outputs.filePath}}" /p:AssemblyVersion=${{needs.version.outputs.new_version}} /p:FileVersion=${{needs.version.outputs.new_version}} /p:InformationalVersion=${{needs.version.outputs.new_version}}
+      run: dotnet build "${{github.workspace}}\${{env.SolutionName}}\${{env.SolutionName}}.csproj" --configuration Release --no-restore /p:OutputPath="${{github.workspace}}/bin" /p:DocumentationFile="${{github.workspace}}/bin/${{env.SolutionName}}.xml" /p:SignAssembly=true /p:Version=${{needs.version.outputs.new_version}} /p:AssemblyOriginatorKeyFile="${{steps.sign_key_file.outputs.filePath}}"
+    #TODO: I need to find a better approach to sign output files without explicitly specify filename and extension
+    - name: Signing portable executables
+      uses: dlemstra/code-sign-action@v1
+      with:
+        certificate: '${{secrets.SIGN_PE_CERTIFICATE}}'
+        password: '${{secrets.SIGN_PE_PASSWORD}}'
+        recursive: false
+        files: |
+          ${{github.workspace}}\bin\${{env.SolutionName}}.exe
+          ${{github.workspace}}\bin\${{env.SolutionName}}.dll
     - name: Deploying artifacts
       uses: actions/upload-artifact@v4
       with:
@@ -216,4 +235,4 @@ jobs:
         fetch-depth: 0 #Fetch all history for all tags and branches
     - name: Removing version tag
       run: |
-        git tag -d ${{needs.version.outputs.new_tag}}
+        git push --delete origin ${{needs.version.outputs.new_tag}}
