@@ -36,13 +36,6 @@ namespace AlphaOmega.Debug
 			Declaration = 0x00100110,
 		}
 
-		/// <summary>Attibute value type</summary>
-		public enum AttributeValue
-		{
-			/// <summary>String value</summary>
-			String=0x03,
-		}
-
 		/// <summary>AXML header file</summary>
 		[StructLayout(LayoutKind.Sequential)]
 		public struct AxmlHeader
@@ -167,7 +160,7 @@ namespace AlphaOmega.Debug
 			public Int32 value;
 
 			/// <summary>Value type</summary>
-			public AttributeValue ValueType => (AttributeValue)(this._valueType >> 24);/*Padding +3 bytes*/
+			public ResourceValueDecoder.ValueType ValueType => (ResourceValueDecoder.ValueType)(this._valueType >> 24);/*Padding +3 bytes*/
 		}
 	}
 }
