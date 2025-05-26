@@ -2,6 +2,7 @@ using System;
 
 namespace AlphaOmega.Debug
 {
+    /// <summary>Decode binary resources</summary>
     public static class ResourceValueDecoder
     {
         /// <summary>Type of data</summary>
@@ -76,6 +77,8 @@ namespace AlphaOmega.Debug
             1.0f/(1<<15)*MANTISSA_MULT, 1.0f/(1<<23)*MANTISSA_MULT
         };
 
+        /// <summary>Convert resource value to String</summary>
+        /// <returns>String representation of the value</returns>
         public static String DataToString(Int32 data, ValueType type)
         {
             switch(type)

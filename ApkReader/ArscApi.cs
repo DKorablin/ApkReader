@@ -351,6 +351,7 @@ namespace AlphaOmega.Debug
 			/// <summary>The data for this item, as interpreted according to dataType.</summary>
 			public Int32 data;
 
+			/// <summary>Cast the data type to the common enumeration ResourceValueDecoder.ValueType</summary>
 			public ResourceValueDecoder.ValueType DataType => (ResourceValueDecoder.ValueType)dataType;
 		}
 
