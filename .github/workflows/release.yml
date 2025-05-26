@@ -1,8 +1,7 @@
 name: Test, Buid, Release
 
 on:
-  push:
-    branches: [ "master" ]
+  workflow_dispatch:
 
 env:
   SolutionName: ${{github.event.repository.name}}
@@ -56,9 +55,34 @@ jobs:
         github_token: ${{secrets.GITHUB_TOKEN}}
         #custom_tag: 2.0.7
 
+  files_exists:
+    name: Checking project existence
+    needs: [version]
+    runs-on: ubuntu-latest
+    outputs:
+      net_framework_project_exists: ${{steps.net_framework.outputs.files_exists}}
+      net_project_exists: ${{steps.net.outputs.files_exists}}
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: false
+    - name: .NET Framework project exists
+      id: net_framework
+      uses: andstor/file-existence-action@v3
+      with:
+        files: "${{github.workspace}}/${{env.SolutionName}}/${{env.SolutionName}}35.csproj"
+        ignore_case: true
+    - name: .NET project exists
+      id: net
+      uses: andstor/file-existence-action@v3
+      with:
+        files: "${{github.workspace}}/${{env.SolutionName}}/${{env.SolutionName}}.csproj"
+        ignore_case: true
+
   build_net_framework:
     name: Building .NET Framework assembly
-    needs: [version]
+    needs: [version,files_exists]
+    if: needs.files_exists.outputs.net_framework_project_exists == 'true'
     runs-on: windows-latest
     steps:
     - name: Decoding SNK
@@ -66,7 +90,7 @@ jobs:
       uses: timheuer/base64-to-file@v1.2
       with:
         fileName: 'Signature.snk'
-        encodedString: ${{secrets.SIGN_KEY}}
+        encodedString: ${{secrets.SIGN_ASM_KEY}}
     - uses: actions/checkout@v4
       with:
         submodules: true
@@ -75,7 +99,16 @@ jobs:
     - name: Restoring NuGet packages
       run: nuget restore "${{github.workspace}}\${{env.SolutionName}}.sln"
     - name: Building .NET Framework
-      run: MSBuild -nologo -restore "${{github.workspace}}\${{env.SolutionName}}\${{env.SolutionName}}35.csproj" /property:Configuration=Release -property:OutputPath="${{github.workspace}}/bin/" -property:Version=${{needs.version.outputs.new_version}} -property:AssemblyOriginatorKeyFile="${{ steps.sign_key_file.outputs.filePath }}"
+      run: MSBuild -nologo -restore "${{github.workspace}}\${{env.SolutionName}}\${{env.SolutionName}}35.csproj" /property:Configuration=Release -property:OutputPath="${{github.workspace}}/bin" -property:Version=${{needs.version.outputs.new_version}} -property:AssemblyOriginatorKeyFile="${{steps.sign_key_file.outputs.filePath}}"
+    #TODO: I need to find a better approach to sign output files without explicitly specify filename and extension
+    - name: Signing portable executables
+      uses: dlemstra/code-sign-action@v1
+      with:
+        certificate: '${{secrets.SIGN_PE_CERTIFICATE}}'
+        password: '${{secrets.SIGN_PE_PASSWORD}}'
+        recursive: false
+        files: |
+          ${{github.workspace}}\bin\${{env.SolutionName}}.dll
     - name: Deploying artifacts
       uses: actions/upload-artifact@v4
       with:
@@ -85,15 +118,16 @@ jobs:
 
   build_net:
     name: Building .NET assembly
-    needs: [version]
-    runs-on: ubuntu-latest
+    needs: [version,files_exists]
+    if: needs.files_exists.outputs.net_project_exists == 'true'
+    runs-on: windows-latest
     steps:
     - name: Decoding SNK
       id: sign_key_file
       uses: timheuer/base64-to-file@v1.2 
       with:
         fileName: 'Signature.snk'
-        encodedString: ${{secrets.SIGN_KEY}}
+        encodedString: ${{secrets.SIGN_ASM_KEY}}
     - uses: actions/checkout@v4
       with:
         submodules: true
@@ -104,7 +138,17 @@ jobs:
     - name: Restoring dependencies
       run: dotnet restore ${{env.SolutionName}}.sln
     - name: Building .NET
-      run: dotnet build "${{github.workspace}}\${{env.SolutionName}}\${{env.SolutionName}}.csproj" --configuration Release --no-restore /p:OutputPath="../bin/" /p:DocumentationFile="../bin/${{env.SolutionName}}.xml" /p:SignAssembly=true /p:AssemblyOriginatorKeyFile="${{steps.sign_key_file.outputs.filePath}}" /p:AssemblyVersion=${{needs.version.outputs.new_version}} /p:FileVersion=${{needs.version.outputs.new_version}} /p:InformationalVersion=${{needs.version.outputs.new_version}}
+      run: dotnet build "${{github.workspace}}\${{env.SolutionName}}\${{env.SolutionName}}.csproj" --configuration Release --no-restore /p:OutputPath="${{github.workspace}}/bin" /p:DocumentationFile="${{github.workspace}}/bin/${{env.SolutionName}}.xml" /p:SignAssembly=true /p:Version=${{needs.version.outputs.new_version}} /p:AssemblyOriginatorKeyFile="${{steps.sign_key_file.outputs.filePath}}"
+    #TODO: I need to find a better approach to sign output files without explicitly specify filename and extension
+    - name: Signing portable executables
+      uses: dlemstra/code-sign-action@v1
+      with:
+        certificate: '${{secrets.SIGN_PE_CERTIFICATE}}'
+        password: '${{secrets.SIGN_PE_PASSWORD}}'
+        recursive: false
+        files: |
+          ${{github.workspace}}\bin\${{env.SolutionName}}.exe
+          ${{github.workspace}}\bin\${{env.SolutionName}}.dll
     - name: Deploying artifacts
       uses: actions/upload-artifact@v4
       with:
@@ -114,18 +158,24 @@ jobs:
 
   deploy_release:
     name: Deploying release
-    needs: [version, build_net_framework, build_net]
+    needs:
+      - version
+      - build_net_framework
+      - build_net
+    if: |
+        always() &&
+        (needs.build_net_framework.result == 'skipped' || needs.build_net_framework.result == 'success') &&
+        (needs.build_net.result == 'skipped' || needs.build_net.result == 'success')
     runs-on: ubuntu-latest
-
     steps:
     - name: Extracting all artifacts
       uses: actions/download-artifact@v4
       with:
         path: bin
-    - name: Zipping artifact
+    - name: Zipping artifacts
       run: zip -qq -r ${{github.event.repository.name}}_${{needs.version.outputs.new_tag}}.zip *
       working-directory: ${{github.workspace}}/bin
-    - name: Deploying GitHub Release
+    - name: Deploying GitHub release
       uses: ncipollo/release-action@v1
       with:
         artifacts: ${{github.workspace}}/bin/${{github.event.repository.name}}_${{needs.version.outputs.new_tag}}.zip
@@ -137,7 +187,14 @@ jobs:
 
   deploy_nuget:
     name: Deploying NuGet package
-    needs: [version, build_net_framework, build_net]
+    needs:
+        - version
+        - build_net_framework
+        - build_net
+    if: |
+        always() &&
+        (needs.build_net_framework.result == 'skipped' || needs.build_net_framework.result == 'success') &&
+        (needs.build_net.result == 'skipped' || needs.build_net.result == 'success')
     runs-on: windows-latest
 
     steps:
@@ -154,7 +211,28 @@ jobs:
         path: bin
     - name: Packing artifacts
       run: nuget pack ${{env.SolutionName}}.dll.nuspec -Version ${{needs.version.outputs.new_version}} -OutputDirectory nupkg
-    - name: Pepare package source
-      run: dotnet nuget add source --username DKorablin --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/DKorablin/index.json"
-    - name: Deploying GitHub package
-      run: dotnet nuget push nupkg\*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
+    - name: Deploying to GitHub
+      run: dotnet nuget push nupkg\*.nupkg --skip-duplicate --api-key ${{ secrets.GITHUB_TOKEN }} --source https://nuget.pkg.github.com/DKorablin/index.json
+    - name: Deploying to NuGet
+      run: dotnet nuget push nupkg\*.nupkg --skip-duplicate --api-key ${{ secrets.NUGET_TOKEN }} --source https://api.nuget.org/v3/index.json
+
+  failure_cleanup:
+  #error: tag '${{needs.version.outputs.new_tag}}' not found.
+    name: Remove version tag on failure
+    needs:
+      - version
+      - build_net_framework
+      - build_net
+    if: |
+      always() &&
+      needs.build_net_framework.result != 'success' &&
+      needs.build_net.result != 'success'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: false
+        fetch-depth: 0 #Fetch all history for all tags and branches
+    - name: Removing version tag
+      run: |
+        git push --delete origin ${{needs.version.outputs.new_tag}}
