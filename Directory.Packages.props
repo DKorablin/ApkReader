@@ -1,6 +1,6 @@
 <Project>
 	<PropertyGroup>
-		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+		<ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
 	</PropertyGroup>
 	<ItemGroup>
 		<!--Source Link Support-->
@@ -12,11 +12,5 @@
 			<PrivateAssets>All</PrivateAssets>
 			<IncludeAssets>Runtime; Build; Native; contentfiles; Analyzers; buildtransitive</IncludeAssets>
 		</GlobalPackageReference>
-	</ItemGroup>
-	<ItemGroup Condition="'$(TargetFramework)' == 'net20'">
-		<PackageVersion Include="SharpZipLib" Version="0.86.0"/>
-	</ItemGroup>
-	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-		<PackageVersion Include="SharpZipLib" Version="1.4.2"/>
 	</ItemGroup>
 </Project>

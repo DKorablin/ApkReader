@@ -135,6 +135,7 @@ Large files: prefer stream constructor to avoid copying bytes.
 - Resource value convenience helpers
 - Multi-dex convenience enumeration
 - Unit tests coverage expansion
+- .NET Framework 2.0 version contains the reference to SharpZipLib 0.86.0 with vulnerabilities. Upgrade when possible.
 
 ## Development
 Clone and build:
