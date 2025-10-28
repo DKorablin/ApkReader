@@ -12,9 +12,9 @@ namespace AlphaOmega.Debug
 		/// <remarks>This value isn't defined to be 0, because that is in fact typically a valid index.</remarks>
 		public const UInt32 NO_INDEX = 0xffffffff;
 
-		/// <summary>The constant ENDIAN_CONSTANT is used to indicate the endianness of the file in whitch it is found.</summary>
+		/// <summary>The constant ENDIAN_CONSTANT is used to indicate the endianness of the file in which it is found.</summary>
 		/// <remarks>
-		/// Although the standart .dex format is little-endian, implementations may chooseto perform byte-swapping.
+		/// Although the standard .dex format is little-endian, implementations may choose to perform byte-swapping.
 		/// Should an implementation come across a header whose endian_tag is REVERSE_ENDIAN_CONSTANT instead of ENDIAN_CONSTANT, it would know that the file has been byte-swapping from the expected form.
 		/// </remarks>
 		public enum ENDIAN : UInt32
@@ -50,7 +50,7 @@ namespace AlphaOmega.Debug
 			/// <summary>Size of the entire file (including the header), in bytes.</summary>
 			public UInt32 file_size;
 
-			/// <summary>A limited amount of backwards/forwards compability without invalidating the format.</summary>
+			/// <summary>A limited amount of backwards/forwards compatibility without invalidating the format.</summary>
 			public UInt32 header_size;
 
 			/// <summary>Endianness tag.</summary>

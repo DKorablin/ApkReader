@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace AlphaOmega.Debug.Arsc
 {
@@ -20,7 +19,7 @@ namespace AlphaOmega.Debug.Arsc
 		/// <summary>Array of simple resources</summary>
 		public Dictionary<Int32, ResourceTypeEntrySimple> Simple { get; } = new Dictionary<Int32, ResourceTypeEntrySimple>();
 
-		/// <summary>Array of comples resources</summary>
+		/// <summary>Array of complex resources</summary>
 		public Dictionary<Int32, ResourceTypeEntryComplex> Complex { get; } = new Dictionary<Int32, ResourceTypeEntryComplex>();
 
 		internal ResourceType(Int32 packageId, Byte[] buffer)

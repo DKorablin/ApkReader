@@ -42,7 +42,7 @@ namespace AlphaOmega.Debug
 
 		/// <summary>Gets original file hash</summary>
 		/// <param name="zipFilePath">Path to file in the apk</param>
-		/// <returns>Previosly calculated hash or null if file not found</returns>
+		/// <returns>Previously calculated hash or null if file not found</returns>
 		public HashWithType this[String zipFilePath]
 			=> this._fileHash.TryGetValue(zipFilePath, out HashWithType result) ? result : null;
 
@@ -81,7 +81,7 @@ namespace AlphaOmega.Debug
 					if(!isSplitted)
 					{
 						if(lines[loop - 1].Length == 70)
-						{//Если строка больше 70 символов, то содержимое переносится на следующую строку
+						{//If the line is longer than 70 characters, the content is wrapped to the next line.
 							value += lines[loop].Trim();
 							isSplitted = MfFile.SplitToKeyValue(lines[loop + 1], out key1, out value1);
 							if(isSplitted)
@@ -117,12 +117,12 @@ namespace AlphaOmega.Debug
 			return true;
 		}
 
-		/// <summary>Validate hash insid the file with original file</summary>
-		/// <remarks>Insinde stream validation we have to convert to Byte[] to correctly validate file</remarks>
+		/// <summary>Validate hash inside the file with original file</summary>
+		/// <remarks>Inside stream validation we have to convert to Byte[] to correctly validate file</remarks>
 		/// <param name="zipFilePath">Path to the file inside APK file</param>
 		/// <param name="file">File contents</param>
 		/// <param name="fileSize">Size of the fine contents in stream</param>
-		/// <returns>Hash validated succesfully or has not found or hash invalid</returns>
+		/// <returns>Hash validated successfully or has not found or hash invalid</returns>
 		public Boolean ValidateHash(String zipFilePath, Stream file, Int64 fileSize)
 		{
 			Byte[] fileContents;
@@ -131,10 +131,10 @@ namespace AlphaOmega.Debug
 			return ValidateHash(zipFilePath, fileContents);
 		}
 
-		/// <summary>Validate hash insid the file with original file</summary>
+		/// <summary>Validate hash inside the file with original file</summary>
 		/// <param name="zipFilePath">Path to the file inside APK file</param>
 		/// <param name="file">File contents</param>
-		/// <returns>Hash validated succesfully or has not found or hash invalid</returns>
+		/// <returns>Hash validated successfully or has not found or hash invalid</returns>
 		public Boolean ValidateHash(String zipFilePath, Byte[] file)
 		{
 			HashWithType originalHash = this[zipFilePath];

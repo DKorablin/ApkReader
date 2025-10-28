@@ -117,10 +117,10 @@ namespace AlphaOmega.Debug
 			=> this._apk = apk;
 
 		/// <summary>Read all signature blocks from APK file</summary>
-		/// <remarks>This method will not validate package for integrity but only read apropriate structures from binary file</remarks>
+		/// <remarks>This method will not validate package for integrity but only read appropriate structures from binary file</remarks>
 		/// <param name="stream">Stream to APK file</param>
 		/// <param name="isValid">Returns true if stream is valid ZIP archive (But it can return 0 blocks)</param>
-		/// <returns>Stream of signature block IDs and known singature verifier object</returns>
+		/// <returns>Stream of signature block IDs and known signature verifier object</returns>
 		/// <exception cref="ArgumentNullException">Stream is null</exception>
 		/// <exception cref="ArgumentException">Stream is read only</exception>
 		public static Dictionary<ApkSignatureVerifier.BlockId, ApkSignatureVerifier> ReadSignatures(Stream stream, out Boolean isValid)
@@ -131,7 +131,7 @@ namespace AlphaOmega.Debug
 
 			Dictionary<ApkSignatureVerifier.BlockId, ApkSignatureVerifier> result = new Dictionary<ApkSignatureVerifier.BlockId, ApkSignatureVerifier>();
 
-			BinaryReader br = new BinaryReader(stream);//Using will close underlying stream, considering that we didn’t open it, it’s not up to us to close it
+			BinaryReader br = new BinaryReader(stream);//Using will close underlying stream, considering that we did’t open it, it’s not up to us to close it
 
 			//APK Signature Scheme v2 verification: ZIP End of Central Directory is not followed by more data
 			br.BaseStream.Position = br.BaseStream.Length - Marshal.SizeOf(typeof(EndOfCentralDirectoryFileHeader));

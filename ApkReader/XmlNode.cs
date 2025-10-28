@@ -50,7 +50,7 @@ namespace AlphaOmega.Debug
 			nodes.Add(node);
 		}
 
-		internal void AddAttribue(String name, String value)
+		internal void AddAttribute(String name, String value)
 		{
 			if(!this.Attributes.TryGetValue(name,out List<String> attributes))
 			{
@@ -71,7 +71,7 @@ namespace AlphaOmega.Debug
 		/// <summary>Convert oop XML to string XML</summary>
 		/// <returns>String xml representation</returns>
 		public String ConvertToString()
-			=> ConvertToString(0);
+			=> this.ConvertToString(0);
 
 		/// <summary>Convert oop XML to string XML</summary>
 		/// <param name="intendCount">Intent index</param>

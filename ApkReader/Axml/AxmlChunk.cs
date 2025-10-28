@@ -25,14 +25,14 @@ namespace AlphaOmega.Debug.Axml
 		private AxmlChunk(AxmlApi.Chunk chunk)
 			=> this.Chunk = chunk;
 
-		/// <summary>Create instance of andoid xml cunk with document node</summary>
+		/// <summary>Create instance of Android xml cunk with document node</summary>
 		/// <param name="chunk">axml chunk</param>
 		/// <param name="document">Document node</param>
 		public AxmlChunk(AxmlApi.Chunk chunk, AxmlApi.Document document)
 			: this(chunk)
 			=> this.Document = document;
 
-		/// <summary>Create instance of andoid xml cunk with document node</summary>
+		/// <summary>Create instance of Android xml cunk with document node</summary>
 		/// <param name="chunk">axml chunk</param>
 		/// <param name="tag">Tag begin node</param>
 		/// <param name="attributes">tag nodes</param>
@@ -43,14 +43,14 @@ namespace AlphaOmega.Debug.Axml
 			this.Attributes = attributes;
 		}
 
-		/// <summary>Create instance of android xml chunk with end tag node</summary>
+		/// <summary>Create instance of Android xml chunk with end tag node</summary>
 		/// <param name="chunk">axml chunk</param>
 		/// <param name="tag">Tag end node</param>
 		public AxmlChunk(AxmlApi.Chunk chunk, AxmlApi.EndTag tag)
 			: this(chunk)
 			=> this.EndTag = tag;
 
-		/// <summary>Create instance of of android xml chunk with text node</summary>
+		/// <summary>Create instance of of Android xml chunk with text node</summary>
 		/// <param name="chunk">axml chunk</param>
 		/// <param name="text">Text node</param>
 		public AxmlChunk(AxmlApi.Chunk chunk, AxmlApi.Text text)

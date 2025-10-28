@@ -172,19 +172,19 @@ namespace AlphaOmega.Debug
 
 		/// <summary>Get structure from specific RVA</summary>
 		/// <typeparam name="T">Structure to map</typeparam>
-		/// <param name="offset">RVA to the beggining of structure</param>
+		/// <param name="offset">RVA to the beginning of structure</param>
 		/// <returns>Mapped structure</returns>
 		public T PtrToStructure<T>(UInt32 offset) where T : struct
 			=> this.Loader.PtrToStructure<T>(offset);
 
 		/// <summary>Get string from specific RVA</summary>
-		/// <param name="offset">RVA to the beggining of string</param>
+		/// <param name="offset">RVA to the beginning of string</param>
 		/// <returns>Mapped string</returns>
 		public String PtrToStringAnsi(UInt32 offset)
 			=> this.Loader.PtrToStringAnsi(offset);
 
 		/// <summary>Read signed integer from image</summary>
-		/// <param name="offset">Offset from the beggining of the stream</param>
+		/// <param name="offset">Offset from the beginning of the stream</param>
 		/// <returns>Result</returns>
 		internal Int32 ReadSLeb128(ref UInt32 offset)
 		{//https://android.googlesource.com/platform/libcore/+/master/dex/src/main/java/com/android/dex/Leb128.java
@@ -213,7 +213,7 @@ namespace AlphaOmega.Debug
 		}
 
 		/// <summary>Reads in a 32-bit integer in compressed format.</summary>
-		/// <param name="offset">Offset from the beggining of the stream</param>
+		/// <param name="offset">Offset from the beginning of the stream</param>
 		/// <exception cref="InvalidOperationException">Invalid LEB128 data</exception>
 		/// <remarks>BinaryReader.Read7BitEncodedInt</remarks>
 		/// <returns>A 32-bit integer in compressed format.</returns>
@@ -239,7 +239,7 @@ namespace AlphaOmega.Debug
 		}
 
 		/// <summary>Get required section table</summary>
-		/// <param name="type">Type of thre required section header</param>
+		/// <param name="type">Type of required section header</param>
 		/// <returns>Section header or null</returns>
 		public DexApi.map_item? GetMapItem(DexApi.TYPE type)
 		{

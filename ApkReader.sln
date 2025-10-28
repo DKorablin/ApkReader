@@ -25,10 +25,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\test.yml = .github\workflows\test.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApkReader35", "ApkReader\ApkReader35.csproj", "{2AC45901-A18D-4D16-8CEF-021072754EA4}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo35", "Demo\Demo35.csproj", "{66089112-BFAC-4DE9-AF86-0F659275061B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,14 +38,6 @@ Global
 		{32ACE1FE-9080-4948-B89D-82F9972ECFBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{32ACE1FE-9080-4948-B89D-82F9972ECFBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32ACE1FE-9080-4948-B89D-82F9972ECFBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2AC45901-A18D-4D16-8CEF-021072754EA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2AC45901-A18D-4D16-8CEF-021072754EA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2AC45901-A18D-4D16-8CEF-021072754EA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2AC45901-A18D-4D16-8CEF-021072754EA4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{66089112-BFAC-4DE9-AF86-0F659275061B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{66089112-BFAC-4DE9-AF86-0F659275061B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{66089112-BFAC-4DE9-AF86-0F659275061B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{66089112-BFAC-4DE9-AF86-0F659275061B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -9,8 +9,8 @@ namespace AlphaOmega.Debug
 	{
 		/// <summary>Get structure from specific padding from the beginning of the image</summary>
 		/// <typeparam name="T">Structure type</typeparam>
-		/// <param name="reader">binaryreader</param>
-		/// <returns>Readed structure from image</returns>
+		/// <param name="reader">The binary reader instance.</param>
+		/// <returns>Read structure from image</returns>
 		internal static T PtrToStructure<T>(BinaryReader reader) where T : struct
 		{
 			Byte[] bytes = reader.ReadBytes(Marshal.SizeOf(typeof(T)));

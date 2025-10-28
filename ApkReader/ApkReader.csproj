@@ -1,25 +1,59 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
+		<TargetFrameworks>net20;netstandard2.0</TargetFrameworks>
 		<OutputType>Library</OutputType>
 		<RootNamespace>AlphaOmega.Debug</RootNamespace>
-		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-		<Configuration>Debug</Configuration>
+		<Configuration>Release</Configuration>
 		<Deterministic>false</Deterministic>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+		<GenerateDocumentationFile>False</GenerateDocumentationFile>
 	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-		<OutputPath>..\..\bin\</OutputPath>
-		<DocumentationFile>..\..\bin\ApkReader.xml</DocumentationFile>
-		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-		<CopyLocalLockFileAssemblies>True</CopyLocalLockFileAssemblies>
+
+	<!--nuspec-->
+	<PropertyGroup>
+		<PackageId>AlphaOmega.ApkReader</PackageId>
+		<Version>$(Version)</Version>
+		<Title>Android package reader (APK) format reader</Title>
+		<Description>Android package reader (apk), Davlik file reader (dex), Android xml file reader (xml), Android resource file reader (arsc).</Description>
+		<Authors>Danila Korablin</Authors>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReadmeFile>docs\README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/DKorablin/ApkReader</RepositoryUrl>
+		<PackageTags>Apk;Reader;Dex;axml;arsc;Parser</PackageTags>
 	</PropertyGroup>
+
 	<ItemGroup>
-		<PackageReference Include="SharpZipLib" Version="1.4.2" />
-		<!--PackageReference Include="SonarAnalyzer.CSharp" Version="10.9.0.115408">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference-->
+		<None Include="..\README.md" Pack="true" PackagePath="\docs" />
 	</ItemGroup>
+	
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+		<Optimize>true</Optimize>
+		<PublishSingleFile>true</PublishSingleFile>
+		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+	</PropertyGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+		<PackageReference Include="SharpZipLib" Version="1.4.2" />
+		<AssemblyAttributes Include="AssemblyMetadata">
+			<_Parameter1>ProjectUrl</_Parameter1>
+			<_Parameter2>https://github.com/DKorablin/ApkReader</_Parameter2>
+		</AssemblyAttributes>
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net20'">
+		<PackageReference Include="SharpZipLib" Version="0.86.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<!--Source Link Support-->
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
+			<PrivateAssets>All</PrivateAssets>
+		</PackageReference>
+		<!--Analyzers-->
+		<PackageReference Include="SonarAnalyzer.CSharp" Version="10.8.0.113526">
+			<PrivateAssets>All</PrivateAssets>
+			<IncludeAssets>Runtime; Build; Native; contentfiles; Analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+	
 	<ItemGroup>
 		<Compile Include="..\FileReader.Shared\ImageData\IBaseRow.cs">
 			<Link>Data\Interface\IBaseRow.cs</Link>

@@ -72,8 +72,8 @@ namespace AlphaOmega.Debug.Signature
 				foreach(BinaryReader slice in getLengthPrefixedSlice(reader))
 				{
 					SignatureAlgorithmType algorithm = (SignatureAlgorithmType)slice.ReadInt32();
-					Int32 digestArraylength = slice.ReadInt32();
-					Byte[] digest = slice.ReadBytes(digestArraylength);
+					Int32 digestArrayLength = slice.ReadInt32();
+					Byte[] digest = slice.ReadBytes(digestArrayLength);
 					result.Digests.Add(algorithm,digest);
 				}
 

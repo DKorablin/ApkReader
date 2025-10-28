@@ -57,7 +57,7 @@ namespace AlphaOmega.Debug
 			}
 		}
 
-		/// <summary>Check for overal Android Package vaidity</summary>
+		/// <summary>Check for overall Android Package validity</summary>
 		/// <remarks>This property will check only for specific files, but not for JAR or APK signatures</remarks>
 		public Boolean IsValid
 		{
@@ -138,13 +138,13 @@ namespace AlphaOmega.Debug
 			: this(new FileStream(filePath, FileMode.Open, FileAccess.Read))
 		{ }
 
-		/// <summary>Create instance of android package desctiption</summary>
+		/// <summary>Create instance of android package description</summary>
 		/// <param name="buffer">Raw file bytes</param>
 		public ApkFile(Byte[] buffer)
 			: this(new MemoryStream(buffer))
 		{ }
 
-		/// <summary>Create instance of android package desctiption</summary>
+		/// <summary>Create instance of android package description</summary>
 		/// <param name="stream">File stream</param>
 		public ApkFile(Stream stream)
 		{
@@ -180,7 +180,7 @@ namespace AlphaOmega.Debug
 				}
 		}
 
-		/// <summary>Получить файл в виде массива байт</summary>
+		/// <summary>Get file as byte array</summary>
 		/// <param name="zipFilePath">Path to the file inside APK</param>
 		/// <param name="checkSignature">Check file contents hash with APK Signature</param>
 		/// <returns>File contents of null if file not found or hashCheck failed</returns>

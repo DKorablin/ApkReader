@@ -23,7 +23,7 @@ namespace AlphaOmega.Debug
 		/// <summary>Value string pool</summary>
 		public StringPool ValueStringPool { get; private set; }
 
-		/// <summary>Create instance of resource file decompilator</summary>
+		/// <summary>Create instance of resource file decompiler.</summary>
 		/// <param name="stream">Payload</param>
 		public ArscFile(Stream stream)
 		{
@@ -33,7 +33,7 @@ namespace AlphaOmega.Debug
 				this.Initialize(reader);
 		}
 
-		/// <summary>Create instance of resource file decompilator</summary>
+		/// <summary>Create instance of resource file decompiler.</summary>
 		/// <param name="buffer">Payload</param>
 		public ArscFile(Byte[] buffer)
 		{
@@ -49,7 +49,7 @@ namespace AlphaOmega.Debug
 			this.Header = Utils.PtrToStructure<ArscApi.ResTable_Header>(reader);
 
 			if(!this.Header.IsValid)
-				throw new ArgumentException("No RES_TABLE_TYPE found!",nameof(Header));
+				throw new ArgumentException("No RES_TABLE_TYPE found!", nameof(Header));
 			if(this.Header.header.size != reader.BaseStream.Length)
 				throw new OverflowException("The buffer size not matches to the resource table size.");
 

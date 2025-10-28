@@ -33,7 +33,7 @@ namespace AlphaOmega.Debug.Arsc
 				this.Header = Utils.PtrToStructure<ArscApi.PackageHeader>(reader);
 
 				if(!this.Header.IsValid)
-					throw new Exception("TypeStrings must immediately follow the package structure header.");
+					throw new InvalidOperationException("TypeStrings must immediately follow the package structure header.");
 
 				this.TypeStringPool = new StringPool(this.Header.typeStrings_addr, reader);
 

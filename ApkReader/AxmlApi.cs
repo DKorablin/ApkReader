@@ -36,7 +36,7 @@ namespace AlphaOmega.Debug
 			Declaration = 0x00100110,
 		}
 
-		/// <summary>Attibute value type</summary>
+		/// <summary>Attribute value type</summary>
 		public enum AttributeValue
 		{
 			/// <summary>String value</summary>
@@ -103,7 +103,7 @@ namespace AlphaOmega.Debug
 			/// <summary>banana banana banana</summary>
 			public Int32 flags;
 
-			/// <summary>Tag attibutes count</summary>
+			/// <summary>Tag attributes count</summary>
 			public Int16 attributeCount;
 
 			/// <summary>banana banana banana</summary>

@@ -41,8 +41,8 @@ namespace AlphaOmega.Debug.Signature
 
 		internal ApkSignatureVerifier(ApkSignatureVerifier.BlockId id, Byte[] data)
 		{
-			Id = id;
-			Data = data;
+			this.Id = id;
+			this.Data = data;
 		}
 	}
 }

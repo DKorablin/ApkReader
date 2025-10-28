@@ -65,7 +65,7 @@ namespace AlphaOmega.Debug
 			public Int32 typeStrings_addr;
 
 			/// <summary>banana banana banana</summary>
-			public Int32 lastPlublic_type;
+			public Int32 lastPublic_type;
 
 			/// <summary>Address to keyStrings array</summary>
 			public Int32 keyStrings_addr;

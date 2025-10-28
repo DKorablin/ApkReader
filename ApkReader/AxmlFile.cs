@@ -85,7 +85,7 @@ namespace AlphaOmega.Debug
 				UInt32 startOffset = offset + this._stringsOffset[loop];
 
 				Int16 check = this._loader.PtrToStructure<Int16>(startOffset);
-				Int32 stringSize = check & 0xff;//String lengh + 1 byte(?)
+				Int32 stringSize = check & 0xff;//String length + 1 byte(?)
 				startOffset += sizeof(Int16);
 
 				this._strings[loop] = this.Header.IsAsciiEncoding
@@ -98,7 +98,7 @@ namespace AlphaOmega.Debug
 
 			/*for(Int32 loop = 0; loop < this._strings.Length; loop++)
 			{
-				UInt32 startOffset = offset + this._stringsOffset[loop] + sizeof(UInt16);//String lengh + 1 byte(?)
+				UInt32 startOffset = offset + this._stringsOffset[loop] + sizeof(UInt16);//String length + 1 byte(?)
 				this._strings[loop] = this.Loader.PtrToStringAnsi(startOffset);
 			}*/
 		}
@@ -180,10 +180,10 @@ namespace AlphaOmega.Debug
 						switch(attribute.ValueType)
 						{
 						case AxmlApi.AttributeValue.String:
-							node.AddAttribue(this.Strings[attribute.name], this.Strings[attribute.value]);
+							node.AddAttribute(this.Strings[attribute.name], this.Strings[attribute.value]);
 							break;
 						default:
-							node.AddAttribue(this.Strings[attribute.name], attribute.value.ToString());
+							node.AddAttribute(this.Strings[attribute.name], attribute.value.ToString());
 							break;
 						}
 					if(parentNode != null)
