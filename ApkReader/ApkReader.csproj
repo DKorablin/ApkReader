@@ -34,25 +34,10 @@
 		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
 	</PropertyGroup>
 	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-		<PackageReference Include="SharpZipLib" Version="1.4.2" />
 		<AssemblyAttributes Include="AssemblyMetadata">
 			<_Parameter1>ProjectUrl</_Parameter1>
 			<_Parameter2>https://github.com/DKorablin/ApkReader</_Parameter2>
 		</AssemblyAttributes>
-	</ItemGroup>
-	<ItemGroup Condition="'$(TargetFramework)' == 'net20'">
-		<PackageReference Include="SharpZipLib" Version="0.86.0" />
-	</ItemGroup>
-	<ItemGroup>
-		<!--Source Link Support-->
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
-			<PrivateAssets>All</PrivateAssets>
-		</PackageReference>
-		<!--Analyzers-->
-		<PackageReference Include="SonarAnalyzer.CSharp" Version="10.8.0.113526">
-			<PrivateAssets>All</PrivateAssets>
-			<IncludeAssets>Runtime; Build; Native; contentfiles; Analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 	</ItemGroup>
 	
 	<ItemGroup>
