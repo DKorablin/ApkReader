@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Text;
 
 namespace AlphaOmega.Debug.Dex
 {
@@ -68,13 +67,7 @@ namespace AlphaOmega.Debug.Dex
 			case ColumnType.String:
 				Int32 utf16_size = file.ReadULeb128(ref offset);
 				this.RawValue = (UInt32)utf16_size;
-				if(utf16_size > 0)
-				{
-					Byte[] bytes = file.Loader.ReadBytes(offset, (UInt32)utf16_size);
-					this.Value = Encoding.UTF8.GetString(bytes);
-
-					offset += (UInt32)utf16_size;
-				}
+				this.Value = ReadMUtf8(file, utf16_size, ref offset);
 				break;
 			case ColumnType.UInt16Array:
 				UInt32 itemsCount = this.RawValue = file.Loader.PtrToStructure<UInt32>(offset);
@@ -111,6 +104,99 @@ namespace AlphaOmega.Debug.Dex
 			default:
 				throw new NotImplementedException($"Type {column.ColumnType} not implemented");
 			}
+		}
+
+		private static String ReadMUtf8(DexFile file, Int32 utf16_size, ref UInt32 offset)
+		{
+			// Calculate worst-case byte size (3 bytes per char + 1 null terminator) to safely read
+			var maximumPossibleByteCount = checked((UInt32)utf16_size * 3 + 1);
+			var buffer = file.Loader.ReadBytes(offset, maximumPossibleByteCount);
+
+			// Find the actual null terminator to determine the real byte length
+			var nullTerminatorIndex = Array.IndexOf(buffer, (Byte)0x00);
+
+			if(nullTerminatorIndex < 0)
+				throw new InvalidOperationException("Invalid string_data_item: null terminator not found within the expected bounds.");
+
+			// Advance the global file offset past the string and its null terminator
+			offset += (UInt32)nullTerminatorIndex + 1;
+
+			var characterBuffer = new Char[utf16_size];
+
+			// Slice the raw data to exclude the null terminator for decoding
+			var encodedData = new Byte[nullTerminatorIndex];
+			Array.Copy(buffer, 0, encodedData, 0, nullTerminatorIndex);
+
+			var currentByteIndex = 0;
+			var currentCharacterIndex = 0;
+
+			while(currentByteIndex < encodedData.Length)
+			{
+				var firstByte = encodedData[currentByteIndex];
+				currentByteIndex++;
+
+				// Safety check to ensure we don't overflow our output buffer
+				if(currentCharacterIndex >= characterBuffer.Length)
+					throw new InvalidOperationException("Invalid string_data_item: decoded char count exceeds declared utf16_size.");
+
+				// Case 1: 1-byte sequence (ASCII) - 0xxxxxxx
+				if((firstByte & 0x80) == 0)
+				{
+					characterBuffer[currentCharacterIndex] = (Char)firstByte;
+					currentCharacterIndex++;
+					continue;
+				}
+
+				// Case 2: 2-byte sequence - 110xxxxx 10xxxxxx
+				if((firstByte & 0xE0) == 0xC0)
+				{
+					if(currentByteIndex >= encodedData.Length)
+						throw new InvalidOperationException("Invalid MUTF-8: truncated 2-byte sequence.");
+
+					var secondByte = encodedData[currentByteIndex];
+					currentByteIndex++;
+
+					// Special Case: MUTF-8 encodes null characters as 2 bytes (0xC0 0x80)
+					if(firstByte == 0xC0 && secondByte == 0x80)
+					{
+						characterBuffer[currentCharacterIndex] = '\0';
+					} else
+					{
+						// Standard 2-byte decoding
+						var utf16CodeUnit = ((firstByte & 0x1F) << 6) | (secondByte & 0x3F);
+						characterBuffer[currentCharacterIndex] = (Char)utf16CodeUnit;
+					}
+
+					currentCharacterIndex++;
+					continue;
+				}
+
+				// Case 3: 3-byte sequence - 1110xxxx 10xxxxxx 10xxxxxx
+				if((firstByte & 0xF0) == 0xE0)
+				{
+					if(currentByteIndex + 1 >= encodedData.Length)
+						throw new InvalidOperationException("Invalid MUTF-8: truncated 3-byte sequence.");
+
+					var secondByte = encodedData[currentByteIndex];
+					var thirdByte = encodedData[currentByteIndex + 1];
+					currentByteIndex += 2;
+
+					// Standard 3-byte decoding
+					var utf16CodeUnit = ((firstByte & 0x0F) << 12) | ((secondByte & 0x3F) << 6) | (thirdByte & 0x3F);
+					characterBuffer[currentCharacterIndex] = (Char)utf16CodeUnit;
+					currentCharacterIndex++;
+					continue;
+				}
+
+				// DEX uses MUTF-8 which does not support standard UTF-8 4-byte sequences
+				throw new InvalidOperationException("Invalid MUTF-8: 4-byte sequences are not used in DEX strings.");
+			}
+
+			// Ensure the number of decoded characters matches the declared ULEB128 size
+			if(currentCharacterIndex != utf16_size)
+				throw new InvalidOperationException("Invalid string_data_item: decoded UTF-16 length does not match utf16_size.");
+
+			return new String(characterBuffer);
 		}
 	}
 }
