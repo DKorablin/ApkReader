@@ -34,7 +34,7 @@ env:
   SolutionName: ${{github.event.repository.name}}
   NuGetPackageSourceCredentials_github_DKorablin: Username=${{github.actor}};Password=${{secrets.DEPLOYMENT_TOKEN}}
   DotNetVersion: ${{github.event.inputs.dotNetVersion || '8.0.x'}}
-  ArtifactsDir: ${{github.workspace}}\bin\
+  ArtifactsDir: ${{github.workspace}}\bin
 
 defaults:
   run:
