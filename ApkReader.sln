@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.5.33627.172
+# Visual Studio Version 18
+VisualStudioVersion = 18.2.11430.68
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApkReader", "ApkReader\ApkReader.csproj", "{A8E7CD9B-ABDE-4F5A-880F-29D06414FF3D}"
 EndProject
@@ -27,6 +27,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\test.yml = .github\workflows\test.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApkReader.Tests", "ApkReader.Tests\ApkReader.Tests.csproj", "{35335A42-2478-44FA-A76D-5CE114E30788}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{6E605717-CE2E-4E34-A842-62BF673D6FEA}"
+	ProjectSection(SolutionItems) = preProject
+		.github\scripts\Generate-CoverageReport.ps1 = .github\scripts\Generate-CoverageReport.ps1
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,12 +47,17 @@ Global
 		{32ACE1FE-9080-4948-B89D-82F9972ECFBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{32ACE1FE-9080-4948-B89D-82F9972ECFBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32ACE1FE-9080-4948-B89D-82F9972ECFBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35335A42-2478-44FA-A76D-5CE114E30788}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35335A42-2478-44FA-A76D-5CE114E30788}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35335A42-2478-44FA-A76D-5CE114E30788}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35335A42-2478-44FA-A76D-5CE114E30788}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7A821640-E767-4300-A92A-2B58FD1670A3} = {44218A52-6223-4453-8073-ACDC8DDEBD1E}
+		{6E605717-CE2E-4E34-A842-62BF673D6FEA} = {44218A52-6223-4453-8073-ACDC8DDEBD1E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {08C77AFE-54CF-4B6C-B927-9B110F38B321}

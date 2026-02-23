@@ -31,7 +31,7 @@ namespace AlphaOmega.Debug
 			}
 		}
 
-		internal delegate void AppendToDictionaryDelegate<T>(T value);
+		internal delegate void AppendToDictionaryDelegate<in T>(T value);
 
 		internal static void AppendToDictionary<K, V>(Dictionary<K, V> dictionary, K key, AppendToDictionaryDelegate<V> d) where V : new()
 		{

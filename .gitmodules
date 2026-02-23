@@ -1,3 +1,4 @@
 [submodule "FileReader.Shared"]
 	path = FileReader.Shared
 	url = https://DKorablin@github.com/DKorablin/FileReader.Shared
+	branch = main

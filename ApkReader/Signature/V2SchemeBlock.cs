@@ -12,9 +12,15 @@ namespace AlphaOmega.Debug.Signature
 		public Dictionary<ApkV2SignatureVerifier.SignatureAlgorithmType, Byte[]> Digests { get; internal set; } = new Dictionary<ApkV2SignatureVerifier.SignatureAlgorithmType, Byte[]>();
 
 		/// <summary>X.509 certificate chain representing the signer’s identity</summary>
-		public X509Certificate Certificate { get; internal set; }
+		public X509Certificate[] Certificates { get; internal set; }
 
 		/// <summary>Additional attributes as key-value pairs</summary>
 		public Dictionary<ApkV2SignatureVerifier.SignerAttributeId, Byte[]> Attributes { get; internal set; } = new Dictionary<ApkV2SignatureVerifier.SignerAttributeId, Byte[]>();
+
+		/// <summary>The list of signatures for each algorithm</summary>
+		public Dictionary<ApkV2SignatureVerifier.SignatureAlgorithmType, Byte[]> Signatures { get; internal set; } = new Dictionary<ApkV2SignatureVerifier.SignatureAlgorithmType, Byte[]>();
+
+		/// <summary>The public key</summary>
+		public Byte[] PublicKey { get; internal set; }
 	}
 }

@@ -12,7 +12,7 @@ namespace AlphaOmega.Debug
 		private const Int16 RES_STRING_POOL_TYPE = 0x0001;
 		private const Int16 RES_TABLE_PACKAGE_TYPE = 0x0200;
 
-		private List<ResourcePackage> _package = new List<ResourcePackage>();
+		private readonly List<ResourcePackage> _package = new List<ResourcePackage>();
 
 		/// <summary>Resource table</summary>
 		public Dictionary<Int32, List<ResourceRow>> ResourceMap { get; } = new Dictionary<Int32, List<ResourceRow>>();
@@ -49,7 +49,7 @@ namespace AlphaOmega.Debug
 			this.Header = Utils.PtrToStructure<ArscApi.ResTable_Header>(reader);
 
 			if(!this.Header.IsValid)
-				throw new ArgumentException("No RES_TABLE_TYPE found!", nameof(Header));
+				throw new ArgumentException("No RES_TABLE_TYPE found!", nameof(reader));
 			if(this.Header.header.size != reader.BaseStream.Length)
 				throw new OverflowException("The buffer size not matches to the resource table size.");
 
@@ -123,7 +123,7 @@ namespace AlphaOmega.Debug
 
 		private void AddToMap(Int32 resId, params ResourceRow[] values)
 		{
-			Utils.AppendToDictionary<Int32, List<ResourceRow>>(this.ResourceMap, resId, delegate(List<ResourceRow> list) { list.AddRange(values); });
+			Utils.AppendToDictionary<Int32, List<ResourceRow>>(this.ResourceMap, resId, list => list.AddRange(values));
 			/*List<ResourceRow> valueList;
 			if(!this._resourceMap.TryGetValue(resId, out valueList))
 				this._resourceMap.Add(resId, valueList = new List<ResourceRow>());

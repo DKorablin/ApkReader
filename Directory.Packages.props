@@ -1,16 +1,31 @@
 <Project>
 	<PropertyGroup>
-		<ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 	</PropertyGroup>
 	<ItemGroup>
+		<!--Shared Packages-->
+		<PackageVersion Include="SharpZipLib" Version="1.4.2" Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == ''" />
+		<PackageVersion Include="SharpZipLib" Version="0.86.0" Condition="'$(TargetFramework)' == 'net20'" />
+		
 		<!--Source Link Support-->
-		<GlobalPackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
+		<PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
 			<PrivateAssets>All</PrivateAssets>
-		</GlobalPackageReference>
+		</PackageVersion>
+		
 		<!--Analyzers-->
-		<GlobalPackageReference Include="SonarAnalyzer.CSharp" Version="10.8.0.113526">
+		<PackageVersion Include="SonarAnalyzer.CSharp" Version="10.8.0.113526">
 			<PrivateAssets>All</PrivateAssets>
 			<IncludeAssets>Runtime; Build; Native; contentfiles; Analyzers; buildtransitive</IncludeAssets>
-		</GlobalPackageReference>
-	</ItemGroup>
+		</PackageVersion>
+		
+		<!--Testing-->
+		<PackageVersion Include="Moq" Version="4.20.72" />
+		<PackageVersion Include="coverlet.collector" Version="6.0.2" />
+		<PackageVersion Include="coverlet.msbuild" Version="6.0.2" />
+		<PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+		<PackageVersion Include="NUnit" Version="3.13.3" />
+		<PackageVersion Include="NUnit3TestAdapter" Version="4.5.0" />
+		<PackageVersion Include="xunit" Version="2.9.2" />
+		<PackageVersion Include="xunit.runner.visualstudio" Version="2.8.2" />
+</ItemGroup>
 </Project>

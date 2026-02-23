@@ -2,7 +2,10 @@ name: Test, Build
 
 on:
   pull_request:
-    branches: [ "master" ]
+    branches: [ "main" ]
+  push:
+    branches: [ "main" ]
+
   workflow_dispatch:
     inputs:
       dotNetVersion:
@@ -14,42 +17,36 @@ env:
   SolutionName: ${{github.event.repository.name}}
   NuGetPackageSourceCredentials_github_DKorablin: Username=${{github.actor}};Password=${{secrets.GITHUB_TOKEN}}
   DotNetVersion: ${{github.event.inputs.dotNetVersion || '8.0.x'}}
-  ArtifactsDir: ${{github.workspace}}\bin
+  TestCoverageDir: ${{github.workspace}}\report\
 
+defaults:
+  run:
+    shell: pwsh
 jobs:
   test:
     name: Testing .NET (Windows)
     runs-on: windows-latest
     steps:
+    - name: Decoding strong-name key
+      id: sign_key_file
+      uses: timheuer/base64-to-file@v1.2
+      with:
+        fileName: 'Signature.snk'
+        encodedString: ${{secrets.SIGN_ASM_KEY}}
     - uses: actions/checkout@v4
       with:
         token: ${{secrets.SUBMODULE_TOKEN}}
         submodules: true
-    - name: Caching NuGet packages
-      uses: actions/cache@v4
-      with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('/Directory.Packages.props') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-
+    - name: Extract TFM from Version
+      id: tfm
+      run: |
+        $version = "${{env.DotNetVersion}}"
+        $majorVersion = $version -replace '\..*', ''
+        echo "framework=net$majorVersion" >> $env:GITHUB_OUTPUT
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{env.DotNetVersion}}
-    - name: Restoring dependencies
-      run: dotnet restore ${{env.SolutionName}}.sln
-    - name: Testing .NET
-      run: dotnet test ${{env.SolutionName}}.sln --no-build --verbosity normal
-
-  build:
-    name: Build
-    needs: [test]
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        token: ${{secrets.SUBMODULE_TOKEN}}
-        submodules: true
     - name: Caching NuGet packages
       uses: actions/cache@v4
       with:
@@ -57,14 +54,46 @@ jobs:
         key: ${{ runner.os }}-nuget-${{ hashFiles('/Directory.Packages.props') }}
         restore-keys: |
           ${{ runner.os }}-nuget-
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v2
-    - name: Restore
-      run: msbuild ${{env.SolutionName}}.sln /t:Restore
-    - name: Building multi-target project
+    - name: Testing .NET
       run: >
-        msbuild "${{env.SolutionName}}.sln"
+        dotnet test
+        /p:Framework=${{steps.tfm.outputs.framework}}
         /p:Configuration=Release
-        /p:ArtifactsDir="${{env.ArtifactsDir}}"
-        /p:SignAssembly=false
-        /p:GenerateDocumentationFile=true
+        /p:SignAssembly=true
+        /p:AssemblyOriginatorKeyFile="${{steps.sign_key_file.outputs.filePath}}"
+        /p:CollectCoverage=true
+        /p:CoverletOutputFormat="cobertura%2cjson%2copencover"
+        /p:CoverletOutput="${{env.TestCoverageDir}}"
+        /p:Include="[${{env.SolutionName}}]*"
+    - name: Install ReportGenerator tool
+      run: dotnet tool install -g dotnet-reportgenerator-globaltool
+    - name: Generate Code Coverage Report
+      if: always()
+      run: |
+        $file = Get-ChildItem -Path "${{env.TestCoverageDir}}" -Filter "coverage.*.cobertura.xml" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+        $file `
+          ? (reportgenerator -reports:$file.FullName -targetdir:"${{env.TestCoverageDir}}\html" -reporttypes:Html) `
+          : (Write-Host "::warning:: No Cobertura coverage files found in ${{env.TestCoverageDir}}")
+    - name: Upload Coverage Reports
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report-windows
+        path: ${{env.TestCoverageDir}}
+        if-no-files-found: error
+    - name: Publish Coverage Summary
+      if: always()
+      run: |
+        $coverageFiles = Get-ChildItem -Path "${{env.TestCoverageDir}}" -Filter "coverage.*.cobertura.xml" -Recurse
+        if ($coverageFiles) {
+          foreach ($file in $coverageFiles) {
+            $fileName = $file.BaseName
+            $tfm = $fileName -replace 'coverage\.', '' -replace '\.cobertura', ''
+            [xml]$xml = Get-Content $file.FullName
+            $lineRate = $xml.coverage.'line-rate'
+            $coverage = [math]::Round([double]$lineRate * 100, 2)
+            Write-Host "::notice::Code Coverage: ${coverage}% (Windows, ${tfm})"
+          }
+        } else {
+          Write-Host "::warning:: No Cobertura coverage files found in ${{env.TestCoverageDir}}"
+        }
