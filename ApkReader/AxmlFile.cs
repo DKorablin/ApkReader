@@ -11,7 +11,6 @@ namespace AlphaOmega.Debug
 	{
 		/// <summary>Source loader</summary>
 		private IImageLoader _loader;
-		private UInt32[] _stringsOffset;
 		private String[] _strings;
 		private XmlNode _rootNode;
 
@@ -19,28 +18,10 @@ namespace AlphaOmega.Debug
 		public AxmlApi.AxmlFileHeader Header { get; }
 
 		/// <summary>Decoded XML root node</summary>
-		public XmlNode RootNode => this._rootNode ?? (this._rootNode = this.ReadXmlNode());
+		public XmlNode RootNode { get => this._rootNode ?? (this._rootNode = this.ReadXmlNode()); }
 
 		/// <summary>String table</summary>
-		public String[] Strings
-		{
-			get
-			{
-				if(this._strings == null)
-					this.ReadStrings();
-				return this._strings;
-			}
-		}
-
-		private UInt32[] StringsOffset
-		{
-			get
-			{
-				if(this._stringsOffset == null)
-					this.ReadStrings();
-				return this._stringsOffset;
-			}
-		}
+		public String[] Strings { get => this._strings ?? (this._strings = this.ReadStrings()); }
 
 		/// <summary>Create instance of AXML file unpacker</summary>
 		/// <param name="loader">Source loader</param>
@@ -53,26 +34,26 @@ namespace AlphaOmega.Debug
 		}
 
 		/// <summary>Read strings table</summary>
-		private void ReadStrings()
+		private String[] ReadStrings()
 		{
 			if(!this.Header.IsValid)
 				throw new InvalidOperationException("Invalid header");
 
 			UInt32 offset = (UInt32)Marshal.SizeOf(typeof(AxmlApi.AxmlFileHeader));
-			this._strings = new String[this.Header.StringPool.stringCount];
-			this._stringsOffset = new UInt32[this.Header.StringPool.stringCount];
+			var result = new String[this.Header.StringPool.stringCount];
+			var stringsOffset = new UInt32[this.Header.StringPool.stringCount];
 
 			// 1. Read the offsets
-			for(Int32 loop = 0; loop < this._stringsOffset.Length; loop++)
+			for(Int32 loop = 0; loop < stringsOffset.Length; loop++)
 			{
-				this._stringsOffset[loop] = this._loader.PtrToStructure<UInt32>(offset);
+				stringsOffset[loop] = this._loader.PtrToStructure<UInt32>(offset);
 				offset += sizeof(UInt32);
 			}
 
 			// 2. Read the actual strings
-			for(Int32 loop = 0; loop < this._strings.Length; loop++)
+			for(Int32 loop = 0; loop < result.Length; loop++)
 			{
-				UInt32 startOffset = offset + this._stringsOffset[loop];
+				UInt32 startOffset = offset + stringsOffset[loop];
 
 				if(this.Header.StringPool.IsUtf8)
 				{ // UTF-8
@@ -82,14 +63,16 @@ namespace AlphaOmega.Debug
 					Int32 byteLen = this.ReadLen8(ref startOffset);
 
 					Byte[] data = this._loader.ReadBytes(startOffset, (UInt32)byteLen);
-					this._strings[loop] = Encoding.UTF8.GetString(data);
+					result[loop] = Encoding.UTF8.GetString(data);
 				} else
 				{// UTF-16
 					Int32 charLen = this.ReadLen16(ref startOffset);
 					Byte[] data = this._loader.ReadBytes(startOffset, (UInt32)charLen * 2);
-					this._strings[loop] = Encoding.Unicode.GetString(data);
+					result[loop] = Encoding.Unicode.GetString(data);
 				}
 			}
+
+			return result;
 		}
 
 		private Int32 ReadLen8(ref UInt32 offset)
