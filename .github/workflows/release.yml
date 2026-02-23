@@ -116,6 +116,25 @@ jobs:
         password: '${{secrets.SIGN_PE_PASSWORD}}'
         recursive: false
         files: ${{steps.find_binaries.outputs.files_to_sign}}
+    - name: Zipping artifacts
+      run: |
+        $basePath = "${{env.ArtifactsDir}}"
+        Get-ChildItem -Path $basePath -Directory | ForEach-Object {
+          $dirName = $_.Name
+          echo "Creating archive for $dirName"
+          $archiveName = "${{env.SolutionName}}_v${{needs.version.outputs.new_version}}_${dirName}.zip"
+          $destinationPath = Join-Path -Path $basePath -ChildPath $archiveName
+          Compress-Archive -Path "$($_.FullName)\*" -DestinationPath $destinationPath -Force
+        }
+    - name: Publish GitHub Release
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: ${{env.ArtifactsDir}}\*.zip
+        tag: ${{needs.version.outputs.new_tag}}
+        name: Auto ${{needs.version.outputs.new_tag}}
+        body: ${{needs.version.outputs.changelog}}
+        artifactErrorsFailBuild: true
+        generateReleaseNotes: true
     - name: Creating NuGet package
       run: >
         dotnet pack ${{env.SolutionName}}.sln --no-build --no-restore -c Release -o ${{env.ArtifactsDir}}\nupkg
@@ -137,25 +156,6 @@ jobs:
       run: dotnet nuget push ${{env.ArtifactsDir}}\nupkg\ --skip-duplicate --api-key ${{secrets.GITHUB_TOKEN}} --source https://nuget.pkg.github.com/DKorablin/index.json
     #- name: Deploying to NuGet
     #  run: dotnet nuget push ${{env.ArtifactsDir}}\nupkg\*.nupkg --skip-duplicate --api-key ${{steps.nuget_login.outputs.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
-    - name: Zipping artifacts
-      run: |
-        $basePath = "${{env.ArtifactsDir}}"
-        Get-ChildItem -Path $basePath -Directory | ForEach-Object {
-          $dirName = $_.Name
-          echo "Creating archive for $dirName"
-          $archiveName = "${{env.SolutionName}}_v${{needs.version.outputs.new_version}}_${dirName}.zip"
-          $destinationPath = Join-Path -Path $basePath -ChildPath $archiveName
-          Compress-Archive -Path "$($_.FullName)\*" -DestinationPath $destinationPath -Force
-        }
-    - name: Publish GitHub Release
-      uses: ncipollo/release-action@v1
-      with:
-        artifacts: ${{env.ArtifactsDir}}\*.zip
-        tag: ${{needs.version.outputs.new_tag}}
-        name: Auto ${{needs.version.outputs.new_tag}}
-        body: ${{needs.version.outputs.changelog}}
-        artifactErrorsFailBuild: true
-        generateReleaseNotes: true
 
   failure_cleanup:
     name: Cleanup Tag On Failure
