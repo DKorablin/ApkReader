@@ -71,8 +71,8 @@ jobs:
       with:
         token: ${{secrets.SUBMODULE_TOKEN}}
         submodules: true
-    - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v4
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
       with:
         dotnet-version: ${{env.DotNetVersion}}
     - name: Caching NuGet packages
@@ -83,10 +83,10 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-nuget-
     - name: Restore
-      run: dotnet restore
+      run: msbuild ${{env.SolutionName}}.sln /t:Restore
     - name: Building multi-target project
       run: >
-        dotnet build ${{env.SolutionName}}\${{env.SolutionName}}.csproj
+        msbuild ${{env.SolutionName}}\${{env.SolutionName}}.csproj
         /p:Configuration=Release --no-restore
         /p:ArtifactsDir="${{env.ArtifactsDir}}"
         /p:GenerateDocumentationFile=true
