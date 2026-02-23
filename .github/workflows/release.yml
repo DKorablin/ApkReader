@@ -74,7 +74,7 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
       with:
-        dotnet-version: ${{env.DotNetVersion}}
+        msbuild-architecture: x64
     - name: Caching NuGet packages
       uses: actions/cache@v4
       with:
