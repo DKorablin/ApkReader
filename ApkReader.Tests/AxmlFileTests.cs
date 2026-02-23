@@ -271,7 +271,7 @@ namespace ApkReader.Tests
 
 			AxmlApi.Document document = new AxmlApi.Document
 			{
-				@namespace = 0,
+				NamespaceIndex = 0,
 				name = 0
 			};
 
@@ -407,8 +407,8 @@ namespace ApkReader.Tests
 			AxmlApi.Text text = new AxmlApi.Text
 			{
 				tagName = 0,
-				unk1 = 0,
-				unk2 = 0
+				typedData_size = 0,
+				typedData_data = 0
 			};
 
 			_mockLoader.Setup(x => x.PtrToStructure<AxmlApi.Text>(It.IsAny<UInt32>()))
