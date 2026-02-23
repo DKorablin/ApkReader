@@ -172,8 +172,6 @@ namespace AlphaOmega.Debug
 				case ".xapk":
 				case ".dex":
 				case ".arsc":
-					yield return filePath;
-					break;
 				case ".xml":
 					yield return filePath;
 					break;
@@ -207,7 +205,15 @@ namespace AlphaOmega.Debug
 		/// <summary>Clears base apk file</summary>
 		public void Dispose()
 		{
-			if(this._apk != null)
+			this.Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		/// <summary>Dispose managed objects</summary>
+		/// <param name="disposing">Dispose managed objects</param>
+		protected virtual void Dispose(Boolean disposing)
+		{
+			if(disposing && this._apk != null)
 			{
 				this._apk.Close();
 				this._apk = null;

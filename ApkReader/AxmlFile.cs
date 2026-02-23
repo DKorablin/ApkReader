@@ -16,7 +16,7 @@ namespace AlphaOmega.Debug
 		private XmlNode _rootNode;
 
 		/// <summary>AXML header</summary>
-		public AxmlApi.AxmlHeader Header { get; }
+		public AxmlApi.AxmlFileHeader Header { get; }
 
 		/// <summary>Decoded XML root node</summary>
 		public XmlNode RootNode => this._rootNode ?? (this._rootNode = this.ReadXmlNode());
@@ -42,19 +42,6 @@ namespace AlphaOmega.Debug
 			}
 		}
 
-		private UInt32 DataOffset
-		{
-			get
-			{
-				UInt32 offset = (UInt32)((UInt32)Marshal.SizeOf(typeof(AxmlApi.AxmlHeader))
-					+ (this.Header.stringCount * sizeof(UInt32))
-					+ this.Strings[this._strings.Length - 1].Length
-					+ this.StringsOffset[this.StringsOffset.Length - 1]
-					+ (UInt32)sizeof(UInt16));
-				return Utils.AlignToInt(offset);
-			}
-		}
-
 		/// <summary>Create instance of AXML file unpacker</summary>
 		/// <param name="loader">Source loader</param>
 		public AxmlFile(IImageLoader loader)
@@ -62,7 +49,7 @@ namespace AlphaOmega.Debug
 			this._loader = loader ?? throw new ArgumentNullException(nameof(loader));
 			this._loader.Endianness = EndianHelper.Endian.Little;
 
-			this.Header = this._loader.PtrToStructure<AxmlApi.AxmlHeader>(0);
+			this.Header = this._loader.PtrToStructure<AxmlApi.AxmlFileHeader>(0);
 		}
 
 		/// <summary>Read strings table</summary>
@@ -71,36 +58,63 @@ namespace AlphaOmega.Debug
 			if(!this.Header.IsValid)
 				throw new InvalidOperationException("Invalid header");
 
-			UInt32 offset = (UInt32)Marshal.SizeOf(typeof(AxmlApi.AxmlHeader));
-			this._strings = new String[this.Header.stringCount];
-			this._stringsOffset = new UInt32[this.Header.stringCount];
+			UInt32 offset = (UInt32)Marshal.SizeOf(typeof(AxmlApi.AxmlFileHeader));
+			this._strings = new String[this.Header.StringPool.stringCount];
+			this._stringsOffset = new UInt32[this.Header.StringPool.stringCount];
+
+			// 1. Read the offsets
 			for(Int32 loop = 0; loop < this._stringsOffset.Length; loop++)
 			{
 				this._stringsOffset[loop] = this._loader.PtrToStructure<UInt32>(offset);
 				offset += sizeof(UInt32);
 			}
 
+			// 2. Read the actual strings
 			for(Int32 loop = 0; loop < this._strings.Length; loop++)
 			{
 				UInt32 startOffset = offset + this._stringsOffset[loop];
 
-				Int16 check = this._loader.PtrToStructure<Int16>(startOffset);
-				Int32 stringSize = check & 0xff;//String length + 1 byte(?)
-				startOffset += sizeof(Int16);
+				if(this.Header.StringPool.IsUtf8)
+				{ // UTF-8
+					// UTF-8 strings have two lengths: UTF-16 length and UTF-8 byte length
+					// We skip the first (char length) and use the second (byte length)
+					this.ReadLen8(ref startOffset); // Skip char length
+					Int32 byteLen = this.ReadLen8(ref startOffset);
 
-				this._strings[loop] = this.Header.IsAsciiEncoding
-					? this._loader.PtrToStringAnsi(startOffset)
-					: Encoding.Unicode.GetString(this._loader.ReadBytes(startOffset, (UInt32)stringSize * 2));
-
-				/*if(stringSize != this._strings[loop].Length)
-					throw new InvalidOperationException($"String size misbehave: Expected: {stringSize} Collected: {this._strings[loop].Length}");*/
+					Byte[] data = this._loader.ReadBytes(startOffset, (UInt32)byteLen);
+					this._strings[loop] = Encoding.UTF8.GetString(data);
+				} else
+				{// UTF-16
+					Int32 charLen = this.ReadLen16(ref startOffset);
+					Byte[] data = this._loader.ReadBytes(startOffset, (UInt32)charLen * 2);
+					this._strings[loop] = Encoding.Unicode.GetString(data);
+				}
 			}
+		}
 
-			/*for(Int32 loop = 0; loop < this._strings.Length; loop++)
+		private Int32 ReadLen8(ref UInt32 offset)
+		{
+			Byte len = this._loader.PtrToStructure<Byte>(offset++);
+			if((len & 0x80) != 0)
 			{
-				UInt32 startOffset = offset + this._stringsOffset[loop] + sizeof(UInt16);//String length + 1 byte(?)
-				this._strings[loop] = this.Loader.PtrToStringAnsi(startOffset);
-			}*/
+				// If high bit is set, use next byte as well
+				len = (Byte)((len & 0x7F) << 8);
+				len |= this._loader.PtrToStructure<Byte>(offset++);
+			}
+			return len;
+		}
+
+		private Int32 ReadLen16(ref UInt32 offset)
+		{
+			Int16 len = this._loader.PtrToStructure<Int16>(offset);
+			offset += 2;
+			if((len & 0x8000) != 0)
+			{
+				len = (Int16)((len & 0x7FFF) << 16);
+				len |= this._loader.PtrToStructure<Int16>(offset);
+				offset += 2;
+			}
+			return len;
 		}
 
 		/// <summary>Read encoded AXML chunks</summary>
@@ -110,55 +124,58 @@ namespace AlphaOmega.Debug
 			if(!this.Header.IsValid)
 				throw new InvalidOperationException("Invalid header");
 
-			UInt32 offset = (UInt32)this.Header.xmlOffset;
-			while(offset < this.Header.FileSize)
-			{//HACK: Here some unknown data that we need to skip. But also there is a change that we can get into payload and not find XML...
-				Int32 startTag = this._loader.PtrToStructure<Int32>(offset);
-				if(startTag == (Int32)AxmlApi.ChunkType.StartTag)
-					break;
-				else
-					offset += sizeof(Int32);
-			}
+			UInt32 offset = ((UInt32)Marshal.SizeOf(typeof(AxmlApi.AxmlFileHeader))
+				- (UInt32)Marshal.SizeOf(typeof(AxmlApi.StringPoolHeader)))
+				+ this.Header.StringPool.ChunkSize;
 
 			while(offset < this.Header.FileSize)
 			{
 				AxmlApi.Chunk chunk = this._loader.PtrToStructure<AxmlApi.Chunk>(offset);
-				offset += (UInt32)Marshal.SizeOf(typeof(AxmlApi.Chunk));
+				UInt32 currentDataPointer = checked((UInt32)(offset + chunk.HeaderSize));
 
-				switch((AxmlApi.ChunkType)chunk.TagType)
+				switch(chunk.TagType)
 				{
-				case AxmlApi.ChunkType.StartDocument:
-				case AxmlApi.ChunkType.EndDocument:
-					AxmlApi.Document sDoc = this._loader.PtrToStructure<AxmlApi.Document>(offset);
-					offset += (UInt32)Marshal.SizeOf(typeof(AxmlApi.Document));
+				case AxmlApi.ChunkType.RES_XML_RESOURCE_MAP_TYPE:
+					Int32 idCount = (Int32)((chunk.ChunkSize - chunk.HeaderSize) / 4);
+					UInt32[] resourceIds = new UInt32[idCount];
+					UInt32 dataOffset = checked((UInt32)(chunk.ChunkSize + chunk.HeaderSize));
+					for(Int32 i = 0; i < idCount; i++)
+					{
+						resourceIds[i] = this._loader.PtrToStructure<UInt32>(dataOffset);
+						dataOffset += sizeof(UInt32);
+					}
+					break;
+				case AxmlApi.ChunkType.RES_XML_START_NAMESPACE_TYPE:
+				case AxmlApi.ChunkType.RES_XML_END_NAMESPACE_TYPE:
+					AxmlApi.Document sDoc = this._loader.PtrToStructure<AxmlApi.Document>(currentDataPointer);
 					yield return new AxmlChunk(chunk, sDoc);
 					break;
-				case AxmlApi.ChunkType.StartTag:
-					AxmlApi.StartTag sTag = this._loader.PtrToStructure<AxmlApi.StartTag>(offset);
-					offset += (UInt32)Marshal.SizeOf(typeof(AxmlApi.StartTag));
+				case AxmlApi.ChunkType.RES_XML_START_ELEMENT_TYPE:
+					AxmlApi.StartTag sTag = this._loader.PtrToStructure<AxmlApi.StartTag>(currentDataPointer);
 
+					UInt32 attrPointer = currentDataPointer + (UInt32)Marshal.SizeOf(typeof(AxmlApi.StartTag));
 					AxmlApi.Attribute[] attributes = new AxmlApi.Attribute[sTag.attributeCount];
 					for(Int32 loop = 0; loop < attributes.Length; loop++)
 					{
-						attributes[loop] = this._loader.PtrToStructure<AxmlApi.Attribute>(offset);
-						offset += (UInt32)Marshal.SizeOf(typeof(AxmlApi.Attribute));
+						attributes[loop] = this._loader.PtrToStructure<AxmlApi.Attribute>(attrPointer);
+						attrPointer += (UInt32)Marshal.SizeOf(typeof(AxmlApi.Attribute));
 					}
 
 					yield return new AxmlChunk(chunk, sTag, attributes);
 					break;
-				case AxmlApi.ChunkType.EndTag:
-					AxmlApi.EndTag eTag = this._loader.PtrToStructure<AxmlApi.EndTag>(offset);
-					offset += (UInt32)Marshal.SizeOf(typeof(AxmlApi.EndTag));
+				case AxmlApi.ChunkType.RES_XML_END_ELEMENT_TYPE:
+					AxmlApi.EndTag eTag = this._loader.PtrToStructure<AxmlApi.EndTag>(currentDataPointer);
 					yield return new AxmlChunk(chunk, eTag);
 					break;
-				case AxmlApi.ChunkType.Text:
-					AxmlApi.Text text = this._loader.PtrToStructure<AxmlApi.Text>(offset);
-					offset += (UInt32)Marshal.SizeOf(typeof(AxmlApi.Text));
+				case AxmlApi.ChunkType.RES_XML_CDATA_TYPE:
+					AxmlApi.Text text = this._loader.PtrToStructure<AxmlApi.Text>(currentDataPointer);
 					yield return new AxmlChunk(chunk, text);
 					break;
 				default:
-					throw new NotSupportedException($"Chunk type {chunk.TagType} not supported");
+					throw new NotImplementedException($"Chunk type {chunk.TagType} not implemented");
 				}
+
+				offset += chunk.ChunkSize;
 			}
 		}
 
@@ -173,23 +190,36 @@ namespace AlphaOmega.Debug
 			foreach(AxmlChunk chunk in this.ReadXmlChunks())
 				switch(chunk.Chunk.TagType)
 				{
-				case AxmlApi.ChunkType.StartTag:
+				case AxmlApi.ChunkType.RES_XML_START_ELEMENT_TYPE:
 					XmlNode parentNode = node;
 					node = new XmlNode(parentNode, this.Strings[chunk.StartTag.Value.tagName]);
 					foreach(var attribute in chunk.Attributes)
+					{
+						String value;
 						switch(attribute.ValueType)
 						{
-						case AxmlApi.AttributeValue.String:
-							node.AddAttribute(this.Strings[attribute.name], this.Strings[attribute.value]);
+						case AxmlApi.DataType.REFERENCE:
+							value = $"@{attribute.Data:X8}";
+							break;
+						case AxmlApi.DataType.STRING:
+							value = this.Strings[attribute.Data];
+							break;
+						case AxmlApi.DataType.INT_BOOLEAN:
+							value = attribute.Data == 0 ? "false" : "true";
+							break;
+						case AxmlApi.DataType.INT_COLOR_ARGB8:
+							value = $"#{attribute.Data:X8}";
 							break;
 						default:
-							node.AddAttribute(this.Strings[attribute.name], attribute.value.ToString());
+							value = attribute.Data.ToString();
 							break;
 						}
+						node.AddAttribute(this.Strings[attribute.NameIndex], value);
+					}
 					if(parentNode != null)
 						parentNode.AddChildNode(node);
 					break;
-				case AxmlApi.ChunkType.EndTag:
+				case AxmlApi.ChunkType.RES_XML_END_ELEMENT_TYPE:
 					if(node.ParentNode != null)
 						node = node.ParentNode;
 					else//TODO: Document declaration missing

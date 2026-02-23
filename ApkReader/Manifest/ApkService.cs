@@ -17,17 +17,17 @@ namespace AlphaOmega.Debug.Manifest
 		/// <summary>Specify that the service is a foreground service that satisfies a particular use case</summary>
 		public enum ForegroundService
 		{
-			/// <summary>banana banana banana</summary>
+			/// <summary>The service is used for connecting or interacting with external devices (Bluetooth, NFC, IR, USB, or network)</summary>
 			connectedDevice,
-			/// <summary>banana banana banana</summary>
+			/// <summary>The service is used for data transfer operations such as sync, upload, download, backup, import, export, or fetching data over the network</summary>
 			dataSync,
-			/// <summary>banana banana banana</summary>
+			/// <summary>The service is used for location-related operations, typically to continue a user-initiated action related to device location</summary>
 			location,
-			/// <summary>banana banana banana</summary>
+			/// <summary>The service is used for playing audio or video content</summary>
 			mediaPlayback,
-			/// <summary>banana banana banana</summary>
+			/// <summary>The service is used for projecting media content or capturing screen recordings</summary>
 			mediaProjection,
-			/// <summary>banana banana banana</summary>
+			/// <summary>The service is used for ongoing phone calls or video calls</summary>
 			phoneCall,
 		}
 
@@ -75,7 +75,7 @@ namespace AlphaOmega.Debug.Manifest
 		/// You can also use a permission to limit the external entities that can interact with the service (see the permission attribute).
 		/// </remarks>
 		//[DefaultValue(false)]
-		public Boolean? Exported//TODO: Тут необходимо предусмотреть условие по фильтрам. Ибо от них зависит true или false
+		public Boolean? Exported//TODO: Here it is necessary to provide a condition for the filters, since true or false depends on them.
 			=> base.GetBooleanAttribute("exported");
 
 		/// <summary>
@@ -90,7 +90,7 @@ namespace AlphaOmega.Debug.Manifest
 				List<String> result = base.Node.GetAttribute("foregroundServiceType");
 				return result == null
 					? new ForegroundService[] { }
-					: Array.ConvertAll(result[0].Split('|'), delegate(String item) { return (ForegroundService)Enum.Parse(typeof(ForegroundService), item); });
+					: Array.ConvertAll(result[0].Split('|'), item => (ForegroundService)Enum.Parse(typeof(ForegroundService), item));
 			}
 		}
 

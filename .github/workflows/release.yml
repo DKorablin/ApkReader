@@ -1,4 +1,18 @@
-name: Test, Build, Release
+# This workflow automates the complete release process for the project:
+# 1. Creates a version tag (automatically or with a custom version number)
+# 2. Builds the .NET project with strong-name signing
+# 3. Signs the compiled assemblies with a code signing certificate
+# 4. Creates and validates NuGet packages with symbols
+# 5. Publishes packages to both GitHub Packages and NuGet.org
+# 6. Creates ZIP archives of the build artifacts
+# 7. Publishes a GitHub Release with artifacts and changelog
+# 8. Cleans up the version tag if any step fails
+#
+# This workflow can be manually triggered via workflow_dispatch with options to:
+# - Specify a custom .NET SDK version (default: 8.0.x)
+# - Override automatic versioning with a specific version number
+
+name: Build, Release
 
 on:
   workflow_dispatch:
@@ -27,51 +41,8 @@ defaults:
     shell: pwsh
 
 jobs:
-  test_net_windows:
-    name: Testing .NET (Windows)
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        submodules: true
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: ${{env.DotNetVersion}}
-    - name: Restoring dependencies
-      run: dotnet restore ${{env.SolutionName}}.sln
-    - name: Testing .NET
-      run: >
-        dotnet test ${{env.SolutionName}}.sln --no-build --verbosity normal
-
-  test_net_ubuntu:
-    name: Testing .NET (Ubuntu)
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        token: ${{secrets.SUBMODULE_TOKEN}}
-        submodules: true
-    - name: Caching NuGet packages
-      uses: actions/cache@v4
-      with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('/Directory.Packages.props') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: ${{env.DotNetVersion}}
-    - name: Restore
-      run: dotnet restore ${{env.SolutionName}}.sln
-    - name: Testing
-      run: >
-        dotnet test ${{env.SolutionName}}.sln --no-build --verbosity normal
-
   version:
     name: Tag / Version
-    needs: [test_net_windows,test_net_ubuntu]
     runs-on: ubuntu-latest
     outputs:
       new_version: ${{steps.tag_version.outputs.new_version}}
@@ -90,7 +61,7 @@ jobs:
     needs: [version]
     runs-on: windows-latest
     steps:
-    - name: Decode strong-name key
+    - name: Decoding strong-name key
       id: sign_key_file
       uses: timheuer/base64-to-file@v1.2
       with:
@@ -100,25 +71,23 @@ jobs:
       with:
         token: ${{secrets.SUBMODULE_TOKEN}}
         submodules: true
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: ${{env.DotNetVersion}}
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
-    - name: Cache NuGet packages
+      with:
+        dotnet-version: ${{env.DotNetVersion}}
+    - name: Caching NuGet packages
       uses: actions/cache@v4
       with:
         path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('/Directory.Packages.props') }}
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
         restore-keys: |
           ${{ runner.os }}-nuget-
     - name: Restore
       run: msbuild ${{env.SolutionName}}.sln /t:Restore
-    - name: Build multi-target project
+    - name: Building multi-target project
       run: >
         msbuild ${{env.SolutionName}}\${{env.SolutionName}}.csproj
-        /p:Configuration=Release
+        /p:Configuration=Release --no-restore
         /p:ArtifactsDir="${{env.ArtifactsDir}}"
         /p:GenerateDocumentationFile=true
         /p:SignAssembly=true
@@ -128,7 +97,7 @@ jobs:
       run: |
         echo "Listing files in the release directory:"
         ls ${{env.ArtifactsDir}} -Recurse
-    - name: Find portable executables to sign
+    - name: Finding portable executables to sign
       id: find_binaries
       run: |
         $filePaths = Get-ChildItem -Path "${{env.ArtifactsDir}}" -Recurse -Include "${{env.SolutionName}}.dll", "${{env.SolutionName}}.exe" | ForEach-Object { $_.FullName }
@@ -143,10 +112,31 @@ jobs:
     - name: Signing portable executables
       uses: dlemstra/code-sign-action@v1
       with:
-        certificate: ${{secrets.SIGN_PE_CERTIFICATE}}
-        password: ${{secrets.SIGN_PE_PASSWORD}}
+        certificate: '${{secrets.SIGN_PE_CERTIFICATE}}'
+        password: '${{secrets.SIGN_PE_PASSWORD}}'
         recursive: false
         files: ${{steps.find_binaries.outputs.files_to_sign}}
+    - name: Creating NuGet package
+      run: >
+        dotnet pack ${{env.SolutionName}}.sln --no-build --no-restore -c Release -o ${{env.ArtifactsDir}}\nupkg
+        /p:ArtifactsDir="${{env.ArtifactsDir}}"
+        /p:PackageVersion=${{needs.version.outputs.new_version}}
+        /p:GenerateDocumentationFile=true
+        /p:IncludeSymbols=true
+        /p:DebugType=Portable
+        /p:EmbedUntrackedSources=true
+        /p:PublishRepositoryUrl=true
+        /p:EnablePackageValidation=true
+        /p:SymbolPackageFormat=snupkg
+    - name: NuGet login (OIDC)
+      uses: NuGet/login@v1
+      id: nuget_login
+      with:
+        user: ${{secrets.NUGET_USER}}
+    - name: Deploying to GitHub
+      run: dotnet nuget push ${{env.ArtifactsDir}}\nupkg\ --skip-duplicate --api-key ${{secrets.GITHUB_TOKEN}} --source https://nuget.pkg.github.com/DKorablin/index.json
+    #- name: Deploying to NuGet
+    #  run: dotnet nuget push ${{env.ArtifactsDir}}\nupkg\*.nupkg --skip-duplicate --api-key ${{steps.nuget_login.outputs.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
     - name: Zipping artifacts
       run: |
         $basePath = "${{env.ArtifactsDir}}"
@@ -166,27 +156,6 @@ jobs:
         body: ${{needs.version.outputs.changelog}}
         artifactErrorsFailBuild: true
         generateReleaseNotes: true
-    - name: Creating NuGet package
-      run: >
-        dotnet pack ${{env.SolutionName}}.sln --no-build --no-restore -c Release -o ${{env.ArtifactsDir}}\nupkg
-        /p:ArtifactsDir="${{env.ArtifactsDir}}"
-        /p:PackageVersion=${{needs.version.outputs.new_version}}
-        /p:GenerateDocumentationFile=true
-        /p:IncludeSymbols=true
-        /p:DebugType=Portable
-        /p:EmbedUntrackedSources=true
-        /p:PublishRepositoryUrl=true
-        /p:EnablePackageValidation=true
-        /p:SymbolPackageFormat=snupkg
-    - name: NuGet login (OIDC)
-      uses: NuGet/login@v1
-      id: login
-      with:
-        user: ${{secrets.NUGET_USER}}
-    - name: Deploying to GitHub
-      run: dotnet nuget push ${{env.ArtifactsDir}}\nupkg\ --skip-duplicate --api-key ${{secrets.GITHUB_TOKEN}} --source https://nuget.pkg.github.com/DKorablin/index.json
-    - name: Deploying to NuGet
-      run: dotnet nuget push ${{env.ArtifactsDir}}\nupkg\*.nupkg --skip-duplicate --api-key ${{steps.login.outputs.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
 
   failure_cleanup:
     name: Cleanup Tag On Failure

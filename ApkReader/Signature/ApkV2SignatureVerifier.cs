@@ -46,7 +46,7 @@ namespace AlphaOmega.Debug.Signature
 		}
 
 		/// <summary>Known additional attribute values</summary>
-		public enum SignerAttributeValue : Int32
+		public enum SignerAttributeValue
 		{
 			/// <summary>ID of this signature scheme as used in X-Android-APK-Signed header used in JAR signing</summary>
 			SF_ATTRIBUTE_ANDROID_APK_SIGNED_ID = 2,
@@ -78,11 +78,13 @@ namespace AlphaOmega.Debug.Signature
 				}
 
 				//length-prefixed sequence of X.509 certificates
+				List<X509Certificate> certificates = new List<X509Certificate>();
 				foreach(BinaryReader slice in getLengthPrefixedSlice(reader))
 				{
 					Byte[] certData = slice.ReadBytes((Int32)slice.BaseStream.Length);
-					result.Certificate = new X509Certificate(certData);
+					certificates.Add(new X509Certificate(certData));
 				}
+				result.Certificates = certificates.ToArray();
 
 				//length-prefixed sequence of length-prefixed additional attributes
 				foreach(BinaryReader slice in getLengthPrefixedSlice(reader))
@@ -112,33 +114,38 @@ namespace AlphaOmega.Debug.Signature
 				{
 					SignatureAlgorithmType algorithmType = (SignatureAlgorithmType)slice.ReadInt32();
 					Int32 signatureLength = slice.ReadInt32();
-					Byte[] signedData = slice.ReadBytes(signatureLength);
+					Byte[] signaturesData = slice.ReadBytes(signatureLength);
+
+					result.Signatures.Add(algorithmType, signaturesData);
 				}
 
+				// Public key
 				Int32 publicKeyLength = reader.ReadInt32();
 				Byte[] publicKey = reader.ReadBytes(publicKeyLength);
+
+				result.PublicKey = publicKey;
 			}
 			return result;
-		}
 
-		private static IEnumerable<BinaryReader> getLengthPrefixedSlice(BinaryReader reader)
-		{
-			if(Utils.Remaining(reader) < sizeof(Int32))
-				throw new IOException("Remaining buffer too short to contain length of length-prefixed field.");
-
-			Int32 allSliceLength = reader.ReadInt32();
-			Int32 allSlicePositionEnd = (Int32)reader.BaseStream.Position + allSliceLength;
-			if(allSliceLength < 0)
-				throw new ArgumentException("Negative length");
-
-			while(reader.BaseStream.Position < allSlicePositionEnd)
+			IEnumerable<BinaryReader> getLengthPrefixedSlice(BinaryReader reader)
 			{
-				Int32 sliceLength = reader.ReadInt32();
-				if(sliceLength > allSlicePositionEnd)
-					throw new IOException("Length-prefixed field longer than remaining buffer.");
+				if(Utils.Remaining(reader) < sizeof(Int32))
+					throw new IOException("Remaining buffer too short to contain length of length-prefixed field.");
 
-				Byte[] slice = reader.ReadBytes(sliceLength);
-				yield return new BinaryReader(new MemoryStream(slice));
+				Int32 allSliceLength = reader.ReadInt32();
+				Int32 allSlicePositionEnd = (Int32)reader.BaseStream.Position + allSliceLength;
+				if(allSliceLength < 0)
+					throw new ArgumentException("Negative length");
+
+				while(reader.BaseStream.Position < allSlicePositionEnd)
+				{
+					Int32 sliceLength = reader.ReadInt32();
+					if(sliceLength > allSlicePositionEnd)
+						throw new IOException("Length-prefixed field longer than remaining buffer.");
+
+					Byte[] slice = reader.ReadBytes(sliceLength);
+					yield return new BinaryReader(new MemoryStream(slice));
+				}
 			}
 		}
 	}

@@ -90,6 +90,9 @@ namespace AlphaOmega.Debug
 		public ApkSignatureVerifier this[ApkSignatureVerifier.BlockId id]
 			=> this.Blocks.TryGetValue(id, out ApkSignatureVerifier result) ? result : (ApkSignatureVerifier)null;
 
+		internal ApkSignature(ApkFile apk)
+			=> this._apk = apk;
+
 		/// <summary>Try to get signature block by strongly typed block wrapper</summary>
 		/// <typeparam name="T">Strongly typed block wrapper type</typeparam>
 		/// <returns>Found strongly typed signature block</returns>
@@ -97,12 +100,11 @@ namespace AlphaOmega.Debug
 		public T GetBlockByType<T>() where T : ApkSignatureVerifier
 		{
 			if(typeof(T) == typeof(ApkV2SignatureVerifier))
-			{
 				return this.Blocks.TryGetValue(ApkSignatureVerifier.BlockId.APK_SIGNATURE_SCHEME_V2_BLOCK_ID, out ApkSignatureVerifier result)
 					? (T)result
 					: (T)null;
-			} else
-				throw new NotImplementedException();
+
+			throw new NotImplementedException();
 		}
 
 		/// <summary>Get all found signature blocks</summary>
@@ -112,9 +114,6 @@ namespace AlphaOmega.Debug
 
 		IEnumerator IEnumerable.GetEnumerator()
 			=> this.GetEnumerator();
-
-		internal ApkSignature(ApkFile apk)
-			=> this._apk = apk;
 
 		/// <summary>Read all signature blocks from APK file</summary>
 		/// <remarks>This method will not validate package for integrity but only read appropriate structures from binary file</remarks>

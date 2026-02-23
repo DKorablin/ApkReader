@@ -130,7 +130,8 @@ namespace Demo
 				else
 				{
 					V2SchemeBlock v2 = blockV2.GetSigningCertificate();
-					Console.WriteLine($"Certificate DN: {v2.Certificate.Issuer} From: {v2.Certificate.GetEffectiveDateString()} To: {v2.Certificate.GetExpirationDateString()}");
+					foreach(var certificate in v2.Certificates)
+						Console.WriteLine($"Certificate DN: {certificate.Issuer} From: {certificate.GetEffectiveDateString()} To: {certificate.GetExpirationDateString()}");
 					//v2.Certificate.Dispose();
 				}
 
@@ -245,11 +246,13 @@ namespace Demo
 		{
 			using(DexFile info = new DexFile(StreamLoader.FromFile(filePath)))
 			{
+				Boolean isValid = info.IsChecksumValid;
+				_console.ConsoleWriteMembers("Checksum is valid: {0}", isValid);
+
 				var items = info.STRING_ID_ITEM;
 
 				foreach(string_data_row row in info.STRING_DATA_ITEM)
 					_console.ConsoleWriteMembers(row);
-
 
 				_console.ConsoleWriteMembers(info.Header);
 
@@ -259,11 +262,13 @@ namespace Demo
 				foreach(annotation_set_row row in info.ANNOTATION_SET_ITEM)
 					_console.ConsoleWriteMembers(row);
 
-				foreach(annotation_set_ref_row row in info.ANNOTATION_SET_REF_LIST)
-					_console.ConsoleWriteMembers(row);
+				if(info.ANNOTATION_SET_REF_LIST != null)
+					foreach(annotation_set_ref_row row in info.ANNOTATION_SET_REF_LIST)
+						_console.ConsoleWriteMembers(row);
 
-				foreach(annotation_directory_row row in info.ANNOTATIONS_DIRECTORY_ITEM)
-					_console.ConsoleWriteMembers(row);
+				if(info.ANNOTATIONS_DIRECTORY_ITEM != null)
+					foreach(annotation_directory_row row in info.ANNOTATIONS_DIRECTORY_ITEM)
+						_console.ConsoleWriteMembers(row);
 
 				foreach(field_annotation_row row in info.field_annotation)
 					_console.ConsoleWriteMembers(row);
@@ -295,8 +300,9 @@ namespace Demo
 				foreach(encoded_type_addr_pair_row row in info.encoded_type_addr_pair)
 					_console.ConsoleWriteMembers(row);
 
-				foreach(type_list_row row in info.TYPE_LIST)
-					_console.ConsoleWriteMembers(row);
+				if(info.TYPE_LIST != null)
+					foreach(type_list_row row in info.TYPE_LIST)
+						_console.ConsoleWriteMembers(row);
 
 				foreach(type_id_row row in info.TYPE_ID_ITEM)
 					_console.ConsoleWriteMembers(row);

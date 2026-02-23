@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Text;
 using AlphaOmega.Debug.Dex;
 
 namespace AlphaOmega.Debug
@@ -16,6 +17,18 @@ namespace AlphaOmega.Debug
 
 		/// <summary>Header identifier and description</summary>
 		public DexApi.header_item Header { get ; }
+
+		/// <summary>Validates the checksum of a DEX file header</summary>
+		/// <param name="fullFileBytes">The entire contents of the DEX file</param>
+		/// <returns>True if the checksum is valid</returns>
+		public Boolean IsChecksumValid
+		{
+			get
+			{
+				Byte[] fullFileBytes = this.Loader.ReadBytes(0, (UInt32)this.Loader.Length);
+				return this.Header.IsChecksumValid(fullFileBytes);
+			}
+		}
 
 		/// <summary>
 		/// This is a list of the entire contents of a file, in order.
@@ -56,7 +69,15 @@ namespace AlphaOmega.Debug
 
 		/// <summary>Referenced from <see cref="Dex.Tables.class_def_row"/> and <see cref="Dex.Tables.proto_id_row"/></summary>
 		public BaseTable<Dex.Tables.type_list_row> TYPE_LIST
-			=> new BaseTable<Dex.Tables.type_list_row>(this, TableType.TYPE_LIST);
+		{
+			get
+			{
+				var table = new BaseTable<Dex.Tables.type_list_row>(this, TableType.TYPE_LIST);
+				return table.Table == null
+					? null
+					: table;
+			}
+		}
 
 		/// <summary>
 		/// Method prototype identifiers list.
@@ -123,27 +144,74 @@ namespace AlphaOmega.Debug
 		public BaseTable<Dex.Tables.encoded_type_addr_pair_row> encoded_type_addr_pair
 			=> new BaseTable<Dex.Tables.encoded_type_addr_pair_row>(this, TableType.encoded_type_addr_pair);
 
-		/// <summary>banana banana banana</summary>
+		/// <summary>Annotation directory items list.</summary>
+		/// <remarks>
+		/// Annotation directory items contain all annotations associated with a class, including
+		/// annotations on the class itself, on its fields, on its methods, and on method parameters.
+		/// Each annotation directory item serves as an index to locate all annotations related to
+		/// a specific class definition.
+		/// </remarks>
 		public BaseTable<Dex.Tables.annotation_directory_row> ANNOTATIONS_DIRECTORY_ITEM
-			=> new BaseTable<Dex.Tables.annotation_directory_row>(this, TableType.ANNOTATIONS_DIRECTORY_ITEM);
+		{
+			get
+			{
+				var table = new BaseTable<Dex.Tables.annotation_directory_row>(this, TableType.ANNOTATIONS_DIRECTORY_ITEM);
+				return table.Table == null
+					? null
+					: table;
+			}
+		}
 
-		/// <summary>banana banana banana</summary>
+		/// <summary>Field annotation items list.</summary>
+		/// <remarks>
+		/// Field annotation items associate annotations with specific fields defined in classes.
+		/// Each field annotation item specifies which field is being annotated and provides
+		/// an offset to the corresponding annotation set containing the actual annotations applied to that field.
+		/// </remarks>
 		public BaseTable<Dex.Tables.field_annotation_row> field_annotation
 			=> new BaseTable<Dex.Tables.field_annotation_row>(this, TableType.field_annotation);
 
-		/// <summary>banana banana banana</summary>
+		/// <summary>Method annotation items list.</summary>
+		/// <remarks>
+		/// Method annotation items associate annotations with specific methods defined in classes.
+		/// Each method annotation item specifies which method is being annotated and provides
+		/// an offset to the corresponding annotation set containing the actual annotations applied to that method.
+		/// </remarks>
 		public BaseTable<Dex.Tables.method_annotation_row> method_annotation
 			=> new BaseTable<Dex.Tables.method_annotation_row>(this, TableType.method_annotation);
 
-		/// <summary>banana banana banana</summary>
+		/// <summary>Parameter annotation items list.</summary>
+		/// <remarks>
+		/// Parameter annotation items associate annotations with specific parameters of methods defined in classes.
+		/// Each parameter annotation item specifies which parameter is being annotated and provides
+		/// an offset to the corresponding annotation set containing the actual annotations applied to that parameter.
+		/// </remarks>
 		public BaseTable<Dex.Tables.parameter_annotation_row> parameter_annotation
 			=> new BaseTable<Dex.Tables.parameter_annotation_row>(this, TableType.parameter_annotation);
 
-		/// <summary>banana banana banana</summary>
+		/// <summary>Annotation set reference list items.</summary>
+		/// <remarks>
+		/// Annotation set reference lists are variable-size arrays of offsets that reference
+		/// individual annotation set items. These are used in parameter annotation contexts to
+		/// specify which annotations apply to each parameter of a method. Returns null if no
+		/// annotation set reference lists are present in the file.
+		/// </remarks>
 		public BaseTable<Dex.Tables.annotation_set_ref_row> ANNOTATION_SET_REF_LIST
-			=> new BaseTable<Dex.Tables.annotation_set_ref_row>(this, TableType.ANNOTATION_SET_REF_LIST);
+		{
+			get
+			{
+				var table = new BaseTable<Dex.Tables.annotation_set_ref_row>(this, TableType.ANNOTATION_SET_REF_LIST);
+				return table.Table == null
+					? null
+					: table;
+			}
+		}
 
-		/// <summary>banana banana banana</summary>
+		/// <summary>Annotation set items list.</summary>
+		/// <remarks>
+		/// Annotation set items are collections of annotations applied to a single element, such as a class, field, method, or method parameter.
+		/// Each annotation set item contains an array of offsets that reference individual annotation items.
+		/// </remarks>
 		public BaseTable<Dex.Tables.annotation_set_row> ANNOTATION_SET_ITEM
 			=> new BaseTable<Dex.Tables.annotation_set_row>(this, TableType.ANNOTATION_SET_ITEM);
 
@@ -238,6 +306,86 @@ namespace AlphaOmega.Debug
 			return result;
 		}
 
+		/// <summary>Reads a MUTF-8 encoded string from the DEX file.</summary>
+		/// <param name="utf16_size">The declared size of the UTF-16 string.</param>
+		/// <param name="offset">The current offset within the DEX file.</param>
+		internal String ReadMUtf8(out Int32 utf16_size, ref UInt32 offset)
+		{
+			utf16_size = this.ReadULeb128(ref offset);
+
+			// Calculate worst-case byte size (3 bytes per char + 1 null terminator) to safely read
+			var maximumPossibleByteCount = checked((UInt32)utf16_size * 3 + 1);
+			var buffer = this.Loader.ReadBytes(offset, maximumPossibleByteCount);
+
+			// Find the actual null terminator to determine the real byte length
+			var nullTerminatorIndex = Array.IndexOf(buffer, (Byte)0x00);
+
+			if(nullTerminatorIndex < 0)
+				throw new InvalidOperationException("Invalid string_data_item: null terminator not found within the expected bounds.");
+
+			// Advance the global file offset past the string and its null terminator
+			offset += (UInt32)nullTerminatorIndex + 1;
+
+			var characterBuffer = new StringBuilder(utf16_size);
+
+			// Slice the raw data to exclude the null terminator for decoding
+			var encodedData = new Byte[nullTerminatorIndex];
+			Array.Copy(buffer, 0, encodedData, 0, nullTerminatorIndex);
+
+			var currentByteIndex = 0;
+
+			while(currentByteIndex < encodedData.Length)
+			{
+				var firstByte = encodedData[currentByteIndex];
+				currentByteIndex++;
+
+				// Safety check to ensure we don't overflow our output buffer
+				if(characterBuffer.Length >= characterBuffer.Capacity)
+					throw new InvalidOperationException("Invalid string_data_item: decoded char count exceeds declared utf16_size.");
+
+				if((firstByte & 0x80) == 0)// Case 1: 1-byte sequence (ASCII) - 0xxxxxxx
+					characterBuffer.Append((Char)firstByte);
+				else if((firstByte & 0xE0) == 0xC0)
+				{// Case 2: 2-byte sequence - 110xxxxx 10xxxxxx
+					if(currentByteIndex >= encodedData.Length)
+						throw new InvalidOperationException("Invalid MUTF-8: truncated 2-byte sequence.");
+
+					var secondByte = encodedData[currentByteIndex];
+					currentByteIndex++;
+
+					// Special Case: MUTF-8 encodes null characters as 2 bytes (0xC0 0x80)
+					if(firstByte == 0xC0 && secondByte == 0x80)
+						characterBuffer.Append('\0');
+					else
+					{
+						// Standard 2-byte decoding
+						var utf16CodeUnit = ((firstByte & 0x1F) << 6) | (secondByte & 0x3F);
+						characterBuffer.Append((Char)utf16CodeUnit);
+					}
+				}
+				else if((firstByte & 0xF0) == 0xE0)
+				{// Case 3: 3-byte sequence - 1110xxxx 10xxxxxx 10xxxxxx
+					if(currentByteIndex + 1 >= encodedData.Length)
+						throw new InvalidOperationException("Invalid MUTF-8: truncated 3-byte sequence.");
+
+					var secondByte = encodedData[currentByteIndex];
+					var thirdByte = encodedData[currentByteIndex + 1];
+					currentByteIndex += 2;
+
+					// Standard 3-byte decoding
+					var utf16CodeUnit = ((firstByte & 0x0F) << 12) | ((secondByte & 0x3F) << 6) | (thirdByte & 0x3F);
+					characterBuffer.Append((Char)utf16CodeUnit);
+				} else// DEX uses MUTF-8 which does not support standard UTF-8 4-byte sequences
+					throw new InvalidOperationException("Invalid MUTF-8: 4-byte sequences are not used in DEX strings.");
+			}
+
+			// Ensure the number of decoded characters matches the declared ULEB128 size
+			if(characterBuffer.Length != utf16_size)
+				throw new InvalidOperationException("Invalid string_data_item: decoded UTF-16 length does not match utf16_size.");
+
+			return characterBuffer.ToString();
+		}
+
 		/// <summary>Get required section table</summary>
 		/// <param name="type">Type of required section header</param>
 		/// <returns>Section header or null</returns>
@@ -247,7 +395,7 @@ namespace AlphaOmega.Debug
 				if(item.type == type)
 					return item;
 
-			return null;//TODO: Check for empty section
+			return null;
 		}
 
 		private T GetMapItemT<T>(DexApi.TYPE type) where T : Table, new()

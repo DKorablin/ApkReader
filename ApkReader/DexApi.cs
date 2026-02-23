@@ -38,7 +38,7 @@ namespace AlphaOmega.Debug
 			[MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
 			public Byte[] magic;
 
-			/// <summary>Used to detect corruption</summary>
+			/// <summary>Used to detect corruption via adler32 checksum</summary>
 			/// <remarks>adler32 checksum of the reset of the file (everything but magic and this field)</remarks>
 			public UInt32 checksum;
 
@@ -139,6 +139,40 @@ namespace AlphaOmega.Debug
 			/// <summary>Validating DEX header magic</summary>
 			public Boolean IsValid
 				=> this.magic[0] == 0x64 && this.magic[1] == 0x65 && this.magic[2] == 0x78 && this.magic[3] == 0x0a;
+
+			/// <summary>Validates the checksum of a DEX file header</summary>
+			/// <param name="fullFileBytes">The entire contents of the DEX file</param>
+			/// <returns>True if the checksum is valid</returns>
+			public Boolean IsChecksumValid(Byte[] fullFileBytes)
+			{
+				// The checksum is calculated over everything except the magic (8 bytes) 
+				// and the checksum field itself (4 bytes). Total skip = 12 bytes.
+				Int32 skipBytes = 12;
+				Int32 length = fullFileBytes.Length - skipBytes;
+
+				Byte[] dataToHash = new Byte[length];
+				Array.Copy(fullFileBytes, skipBytes, dataToHash, 0, length);
+
+				UInt32 calculated = CalculateAdler32(dataToHash);
+				return calculated == this.checksum;
+
+				/// <summary>Calculates the Adler32 checksum for a byte array</summary>
+				/// <param name="data">The byte array to checksum</param>
+				/// <returns>The calculated 32-bit unsigned integer checksum</returns>
+				UInt32 CalculateAdler32(Byte[] data)
+				{
+					const UInt32 MOD_ADLER = 65521;
+					UInt32 a = 1, b = 0;
+
+					foreach(Byte bVal in data)
+					{
+						a = (a + bVal) % MOD_ADLER;
+						b = (b + a) % MOD_ADLER;
+					}
+
+					return (b << 16) | a;
+				}
+			}
 		}
 
 		/// <summary>Type of the map items</summary>
@@ -167,9 +201,9 @@ namespace AlphaOmega.Debug
 			MAP_LIST = 0x1000,
 			/// <summary>Type identifiers list</summary>
 			TYPE_LIST = 0x1001,
-			/// <summary>banana banana banana</summary>
+			/// <summary>A list of offsets to annotation sets, used for method parameters</summary>
 			ANNOTATION_SET_REF_LIST = 0x1002,
-			/// <summary>banana banana banana</summary>
+			/// <summary>A set of specific annotations applied to a class, field, method, or parameter</summary>
 			ANNOTATION_SET_ITEM = 0x1003,
 			/// <summary>Class structure list</summary>
 			CLASS_DATA_ITEM = 0x2000,
@@ -179,11 +213,11 @@ namespace AlphaOmega.Debug
 			STRING_DATA_ITEM = 0x2002,
 			/// <summary>Not implemented item</summary>
 			DEBUG_INFO_ITEM = 0x2003,
-			/// <summary>Not implemented item</summary>
+			/// <summary>A single annotation, including its visibility and type</summary>
 			ANNOTATION_ITEM = 0x2004,
-			/// <summary>Not implemented item</summary>
+			/// <summary>A read-only array of encoded values</summary>
 			ENCODED_ARRAY_ITEM = 0x2005,
-			/// <summary>banana banana banana</summary>
+			/// <summary>Directory of all annotations associated with a class</summary>
 			ANNOTATIONS_DIRECTORY_ITEM = 0x2006,
 		}
 

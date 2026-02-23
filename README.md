@@ -88,6 +88,21 @@ static class Extensions
 - `ApkSignature` – APK signatures (V1 JAR manifest + V2+ signature block). Extracts issuer certificate (V2) where available
 - `MfFile` – JAR file integrity validation (MANIFEST.MF)
 
+## Component relationships
+```mermaid
+flowchart TD
+    ApkFile[ApkFile] --> AxmlFile[AxmlFile]
+    ApkFile --> AndroidManifest[AndroidManifest]
+    ApkFile --> ArscFile[ArscFile]
+    ApkFile --> DexFile[DexFile]
+    ApkFile --> ApkSignature[ApkSignature]
+    ApkSignature --> MfFile[MfFile]
+    ApkSignature --> V1Scheme[V1 Scheme JAR]
+    ApkSignature --> V2Scheme[V2+ Scheme Block]
+    AndroidManifest --> AxmlFile
+    AndroidManifest --> ArscFile
+```
+
 ## Signatures & Validation
 - V1 (JAR): validates file hashes via MANIFEST.MF
 - V2+: reads APK Signature Block (see Android docs)
@@ -104,6 +119,10 @@ byte[] manifestBytes = apk.GetFile("AndroidManifest.xml", checkSignature:true);
 byte[] dexBytes = apk.GetFile("classes.dex");
 ```
 `checkSignature:true` performs hash validation against V1 manifest when possible.
+
+## Projects using this package
+- [Plugin.ApkImageView](https://github.com/DKorablin/Plugin.ApkImageView) – APK content viewer plugin
+- [Plugin.AdbPackageManager](https://github.com/DKorablin/Plugin.AdbPackageManager) – ADB package manager UI plugin
 
 ## Supported structures (summary)
 - ApkFile
@@ -144,4 +163,3 @@ git clone https://github.com/DKorablin/ApkReader.git
 cd ApkReader
 # Build (uses multi-target project)
 dotnet build
-```

@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace AlphaOmega.Debug
 {
-	/// <summary>Resource file format specifications</summary>
+	/// <summary>Resource file format specifications for Android .arsc files</summary>
 	public static class ArscApi
 	{
 		/// <summary>Resource file header</summary>
@@ -46,14 +46,14 @@ namespace AlphaOmega.Debug
 			public Int32 size;
 		}
 
-		/// <summary>Package header</summary>
+		/// <summary>Package header containing the resource names and types for a specific namespace</summary>
 		[StructLayout(LayoutKind.Sequential)]
 		public struct PackageHeader
 		{
 			/// <summary>Chunk header</summary>
 			public ResChunk_Header header;
 
-			/// <summary>Package id; usually 0x7F for application resources</summary>
+			/// <summary>Package id; usually 0x7F for application resources, 0x01 for system resources</summary>
 			public Int32 id;
 
 			/// <summary>Package name</summary>
@@ -61,16 +61,16 @@ namespace AlphaOmega.Debug
 			[MarshalAs(UnmanagedType.ByValArray, SizeConst = 255)]
 			public Byte[] name;
 
-			/// <summary>Address to typeStrings array</summary>
+			/// <summary>Offset to the string pool containing the names of the resource types (e.g., "drawable", "string")</summary>
 			public Int32 typeStrings_addr;
 
-			/// <summary>banana banana banana</summary>
+			/// <summary>Index of the last public type in this package</summary>
 			public Int32 lastPublic_type;
 
-			/// <summary>Address to keyStrings array</summary>
+			/// <summary>Offset to the string pool containing the names of the resource keys (e.g., "app_name", "main_layout")</summary>
 			public Int32 keyStrings_addr;
 
-			/// <summary>banana banana banana</summary>
+			/// <summary>Index of the last public key in this package</summary>
 			public Int32 lastPublic_key;
 
 			/// <summary>Package name string</summary>
@@ -131,25 +131,25 @@ namespace AlphaOmega.Debug
 			/// <summary>chunk header</summary>
 			public ResChunk_Header header;
 
-			/// <summary>banana banana banana</summary>
+			/// <summary>The type identifier this chunk corresponds to (index into typeStrings)</summary>
 			public Byte id;
 
-			/// <summary>banana banana banana</summary>
+			/// <summary>Must be zero. Reserved for future use.</summary>
 			public Byte res0;
 
-			/// <summary>banana banana banana</summary>
+			/// <summary>Must be zero. Reserved for future use.</summary>
 			public Int16 res1;
 
-			/// <summary>banana banana banana</summary>
+			/// <summary>Number of uint32_t entry indices that follow this structure</summary>
 			public Int32 entryCount;
 
-			/// <summary>banana banana banana</summary>
+			/// <summary>Offset from the start of the header to the beginning of the ResTable_entry data</summary>
 			public Int32 entriesStart;
 
-			/// <summary>banana banana banana</summary>
+			/// <summary>The size of the ResTable_Config structure included in this chunk</summary>
 			public Int32 configSize;
 
-			/// <summary>Res table config</summary>
+			/// <summary>The configuration (locale, screen density, etc.) this set of resources is for</summary>
 			public ResTable_Config config;
 
 			/// <summary>Check for valid header</summary>
@@ -522,7 +522,7 @@ namespace AlphaOmega.Debug
 		[StructLayout(LayoutKind.Sequential)]
 		public struct ResTable_ref
 		{
-			/// <summary>banana banana banana</summary>
+			/// <summary>The full 32-bit resource identifier (Package, Type, Entry)</summary>
 			public Int32 ident;
 		}
 

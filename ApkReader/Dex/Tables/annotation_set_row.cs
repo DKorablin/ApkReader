@@ -3,12 +3,26 @@ using System.Diagnostics;
 
 namespace AlphaOmega.Debug.Dex.Tables
 {
-	/// <summary>banana banana banana</summary>
+	/// <summary>Represents an annotation set item in a DEX file.</summary>
+	/// <remarks>
+	/// An annotation set is a collection of annotation items applied to a single element
+	/// (such as a class, field, method, or method parameter).
+	/// It contains an array of offsets that reference individual annotation items, each describing a specific annotation
+	/// applied to that element.
+	/// </remarks>
 	[DebuggerDisplay("Count: {"+nameof(annotation_off)+"}")]
 	public class annotation_set_row : BaseRow
 	{
-		/// <summary>Offset from the start of the file to an annotation.</summary>
-		/// <remarks>The offset should be to a location in the data section, and the format of the data at that location is specified by "annotation_item" below.</remarks>
+		/// <summary>
+		/// Gets the array of offsets to individual annotation items in this set.
+		/// 
+		/// Each offset in the array points to an annotation_item structure in the file's data section
+		/// that describes a specific annotation applied to the associated element.
+		/// </summary>
+		/// <remarks>
+		/// The offsets should all point to locations in the data section, with the format specified by "annotation_item" in the DEX specification.
+		/// The offsets are typically maintained in sorted order.
+		/// </remarks>
 		public UInt32[] annotation_off => base.GetValue<UInt32[]>(0);
 	}
 }
