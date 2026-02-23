@@ -87,7 +87,7 @@ jobs:
     - name: Building multi-target project
       run: >
         msbuild ${{env.SolutionName}}\${{env.SolutionName}}.csproj
-        /p:Configuration=Release --no-restore
+        /p:Configuration=Release
         /p:ArtifactsDir="${{env.ArtifactsDir}}"
         /p:GenerateDocumentationFile=true
         /p:SignAssembly=true
