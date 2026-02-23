@@ -19,7 +19,6 @@ namespace AlphaOmega.Debug
 		public DexApi.header_item Header { get ; }
 
 		/// <summary>Validates the checksum of a DEX file header</summary>
-		/// <param name="fullFileBytes">The entire contents of the DEX file</param>
 		/// <returns>True if the checksum is valid</returns>
 		public Boolean IsChecksumValid
 		{
