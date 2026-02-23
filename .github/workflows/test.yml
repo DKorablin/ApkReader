@@ -57,7 +57,7 @@ jobs:
     - name: Testing .NET
       run: >
         dotnet test
-        /p:Framework=${{steps.tfm.outputs.framework}}
+        --framework=${{steps.tfm.outputs.framework}}
         /p:Configuration=Release
         /p:SignAssembly=true
         /p:AssemblyOriginatorKeyFile="${{steps.sign_key_file.outputs.filePath}}"
