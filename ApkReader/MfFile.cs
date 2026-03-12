@@ -7,13 +7,14 @@ using System.Text;
 namespace AlphaOmega.Debug
 {
 	/// <summary>MANIFEST.MF file reader and validator</summary>
-	public class MfFile:IEnumerable<KeyValuePair<String, MfFile.HashWithType>>
+	public class MfFile : IEnumerable<KeyValuePair<String, MfFile.HashWithType>>
 	{
 		/// <summary>Hash type description</summary>
 		public class HashWithType
 		{
 			/// <summary>Hash type</summary>
 			public HashType Type { get; set; }
+
 			/// <summary>Hash</summary>
 			public String Hash { get; set; }
 		}
@@ -27,6 +28,12 @@ namespace AlphaOmega.Debug
 			Sha256,
 			/// <summary>SHA-1</summary>
 			Sha1,
+			/// <summary>MD5</summary>
+			/// <remarks>
+			/// MD5 is cryptographically broken and should not be used for integrity checks.
+			/// This is included for compatibility with legacy APKs only.
+			/// </remarks>
+			Md5,
 		}
 
 		private readonly Dictionary<String, HashWithType> _fileHash;
@@ -38,7 +45,7 @@ namespace AlphaOmega.Debug
 		public String BuiltBy { get; }
 
 		/// <summary>Created-By</summary>
-		public String CreatedBy { get ; }
+		public String CreatedBy { get; }
 
 		/// <summary>Gets original file hash</summary>
 		/// <param name="zipFilePath">Path to file in the apk</param>
@@ -91,12 +98,16 @@ namespace AlphaOmega.Debug
 							continue;
 					}
 
-					switch(key1){
+					switch(key1)
+					{
 					case "SHA-256-Digest":
 						this._fileHash.Add(value, new HashWithType() { Type = HashType.Sha256, Hash = value1, });
 						break;
 					case "SHA1-Digest":
 						this._fileHash.Add(value, new HashWithType() { Type = HashType.Sha1, Hash = value1, });
+						break;
+					case "MD5-Digest":
+						this._fileHash.Add(value, new HashWithType() { Type = HashType.Md5, Hash = value1, });
 						break;
 					}
 					break;
@@ -150,6 +161,10 @@ namespace AlphaOmega.Debug
 				break;
 			case HashType.Sha1:
 				using(SHA1 h = SHA1.Create())
+					realHash = h.ComputeHash(file);
+				break;
+			case HashType.Md5:
+				using(MD5 h = MD5.Create())
 					realHash = h.ComputeHash(file);
 				break;
 			default:
